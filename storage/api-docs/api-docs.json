@@ -1,0 +1,433 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Product API",
+        "description": "API for managing products and their images",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000",
+            "description": "Local server"
+        },
+        {
+            "url": "http://93.171.223.29",
+            "description": "Remote server"
+        }
+    ],
+    "paths": {
+        "/api/otp/generate": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Generate OTP for seller",
+                "operationId": "081228e853685a7b3013eaa9f6069353",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "phone_number"
+                                ],
+                                "properties": {
+                                    "phone_number": {
+                                        "type": "string",
+                                        "example": "65656585"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OTP generated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "sellerOtp": {
+                                            "type": "object"
+                                        },
+                                        "success": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "/api/otp/login": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Login with OTP",
+                "operationId": "99b14aa9ee8c9aa00ba3f429a11a0410",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "seller_id",
+                                    "otp"
+                                ],
+                                "properties": {
+                                    "seller_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "otp": {
+                                        "type": "string",
+                                        "example": "123456"
+                                    },
+                                    "device_token": {
+                                        "type": "string",
+                                        "example": "device_token_here"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "access_token": {
+                                            "type": "string"
+                                        },
+                                        "token_type": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    },
+                    "400": {
+                        "description": "Invalid OTP or expired OTP"
+                    }
+                }
+            }
+        },
+        "/api/products": {
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Get paginated list of products",
+                "operationId": "ab015cc2055ac75e6d23c628675c26e7",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Product"
+                                            }
+                                        },
+                                        "links": {
+                                            "type": "object"
+                                        },
+                                        "meta": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error"
+                    }
+                }
+            }
+        },
+        "/api/products/{id}": {
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Get a specific product",
+                "operationId": "47affec446a4e21ba3cbf0b6b14abb44",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Product"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Product not found"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Delete a product",
+                "operationId": "33173a96c7ab5ed4ba9ceaffb4c6003d",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Product deleted successfully"
+                    },
+                    "404": {
+                        "description": "Product not found"
+                    }
+                }
+            }
+        },
+        "/api/products/search": {
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Search for products",
+                "operationId": "131a3b23ed0ecb009a18b85cc2d55ba2",
+                "parameters": [
+                    {
+                        "name": "query",
+                        "in": "query",
+                        "description": "Search query string",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Product"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/products/category/{category_id}": {
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Get products by category",
+                "operationId": "84bc5884f89e75f3d024977eb330febb",
+                "parameters": [
+                    {
+                        "name": "category_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Product"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Product": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Product Name"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Product Description"
+                    },
+                    "price": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 99.99
+                    },
+                    "discount": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 10
+                    },
+                    "attributes": {
+                        "type": "string",
+                        "example": "{'color': 'red', 'size': 'large'}"
+                    },
+                    "code": {
+                        "type": "string",
+                        "example": "AbC123"
+                    },
+                    "status": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "category_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "ProductRequest": {
+                "required": [
+                    "name",
+                    "price",
+                    "description",
+                    "discount",
+                    "attributes",
+                    "status",
+                    "category_id"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "Updated Product Name"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Updated Product Description"
+                    },
+                    "price": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 129.99
+                    },
+                    "discount": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 15
+                    },
+                    "attributes": {
+                        "type": "string",
+                        "example": "{'color': 'blue', 'size': 'medium'}"
+                    },
+                    "status": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "category_id": {
+                        "type": "integer",
+                        "example": 2
+                    },
+                    "images": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "format": "binary"
+                        }
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "securitySchemes": {
+            "sanctum": {
+                "type": "apiKey",
+                "description": "Enter token in format (Bearer <token>)",
+                "name": "Authorization",
+                "in": "header"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Authentication",
+            "description": "API Endpoints for Seller Authentication"
+        },
+        {
+            "name": "Products",
+            "description": "API Endpoints of Products"
+        }
+    ]
+}

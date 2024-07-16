@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # You can override the included template(s) by including variable overrides
 # SAST customization: https://docs.gitlab.com/ee/user/application_security/sast/#customizing-the-sast-settings
 # Secret Detection customization: https://docs.gitlab.com/ee/user/application_security/secret_detection/pipeline/#customization
@@ -11,3 +12,20 @@ sast:
   stage: test
 include:
 - template: Security/SAST.gitlab-ci.yml
+=======
+stages:
+  - deploy
+
+deploy:
+  stage: deploy
+  script:
+    - apt-get update -yqq
+    - apt-get install -yqq git
+    - git config --global credential.helper store
+    - git clone https://oauth2:${CI_JOB_TOKEN}@gitlab.com/Esca6585/sowgatly.git
+    - cd repository
+    - composer install
+    - php artisan migrate --force
+  only:
+    - main
+>>>>>>> a3d3ba414b95803adafcff21eacc97fab8dc2885
