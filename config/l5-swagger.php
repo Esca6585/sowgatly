@@ -5,7 +5,7 @@ return [
     'documentations' => [
         'default' => [
             'api' => [
-                'title' => 'L5 Swagger UI',
+                'title' => 'Sowgatly Swagger UI',
             ],
 
             'routes' => [
@@ -40,6 +40,7 @@ return [
                 */
                 'annotations' => [
                     base_path('app'),
+                    base_path('routes'),
                 ],
 
             ],
@@ -156,6 +157,12 @@ return [
                 /*
                  * Examples of Security schemes
                 */
+                'sanctum' => [ // Unique name of security
+                    'type' => 'apiKey', // Valid values are "basic", "apiKey" or "oauth2".
+                    'description' => 'Enter token in format (Bearer <token>)',
+                    'name' => 'Authorization', // The name of the header or query parameter to be used.
+                    'in' => 'header', // The location of the API key. Valid values are "query" or "header".
+                ],
                 /*
                 'api_key_security_example' => [ // Unique name of security
                     'type' => 'apiKey', // The type of the security scheme. Valid values are "basic", "apiKey" or "oauth2".
@@ -190,12 +197,6 @@ return [
                             "scopes" => []
                         ],
                     ],
-                ],
-                'sanctum' => [ // Unique name of security
-                    'type' => 'apiKey', // Valid values are "basic", "apiKey" or "oauth2".
-                    'description' => 'Enter token in format (Bearer <token>)',
-                    'name' => 'Authorization', // The name of the header or query parameter to be used.
-                    'in' => 'header', // The location of the API key. Valid values are "query" or "header".
                 ],
                 */
             ],
@@ -294,7 +295,8 @@ return [
          * Constants which can be used in annotations
          */
         'constants' => [
-            'L5_SWAGGER_CONST_HOST' => env('L5_SWAGGER_CONST_HOST', 'http://my-default-host.com'),
+            'L5_SWAGGER_CONST_LOCAL_HOST' => env('L5_SWAGGER_CONST_LOCAL_HOST', 'http://localhost:8000'),
+            'L5_SWAGGER_CONST_REMOTE_HOST' => env('L5_SWAGGER_CONST_REMOTE_HOST', 'http://localhost:8000'),
         ],
     ],
 ];

@@ -102,7 +102,7 @@ class Generator
                                         if (!$loaded && $namespace === 'OpenApi\\Annotations\\') {
                                             if (in_array(strtolower(substr($class, 20)), ['definition', 'path'])) {
                                                 // Detected an 2.x annotation?
-                                                throw new \Exception('The annotation @SWG\\' . substr($class, 20) . '() is deprecated. Found in ' . Generator::$context . "\nFor more information read the migration guide: https://github.com/zircote/swagger-php/blob/master/docs/Migrating-to-v3.md");
+                                                throw new OpenApiException('The annotation @SWG\\' . substr($class, 20) . '() is deprecated. Found in ' . Generator::$context . "\nFor more information read the migration guide: https://github.com/zircote/swagger-php/blob/master/docs/Migrating-to-v3.md");
                                             }
                                         }
 
@@ -219,12 +219,24 @@ class Generator
                 $value = 'true' == $value;
             }
 
+            if ($isList = ('[]' == substr($key, -2))) {
+                $key = substr($key, 0, -2);
+            }
             $token = explode('.', $key);
             if (2 == count($token)) {
                 // 'operationId.hash' => false
-                $normalised[$token[0]][$token[1]] = $value;
+                // namespaced / processor
+                if ($isList) {
+                    $normalised[$token[0]][$token[1]][] = $value;
+                } else {
+                    $normalised[$token[0]][$token[1]] = $value;
+                }
             } else {
-                $normalised[$key] = $value;
+                if ($isList) {
+                    $normalised[$key][] = $value;
+                } else {
+                    $normalised[$key] = $value;
+                }
             }
         }
 
@@ -263,7 +275,10 @@ class Generator
                 new Processors\MergeJsonContent(),
                 new Processors\MergeXmlContent(),
                 new Processors\OperationId(),
+                new Processors\AugmentTags(),
                 new Processors\CleanUnmerged(),
+                new Processors\PathFilter(),
+                new Processors\CleanUnusedComponents(),
             ]);
         }
 
@@ -286,7 +301,7 @@ class Generator
         return $this->processorPipeline->walk($walker);
     }
 
-    public function setProcessorPipeline(Pipeline $processor): Generator
+    public function setProcessorPipeline(?Pipeline $processor): Generator
     {
         $this->processorPipeline = $processor;
 
@@ -422,18 +437,22 @@ class Generator
                 'analysis' => null,
                 'processor' => null,
                 'processors' => null,
+                'config' => [],
                 'logger' => null,
                 'validate' => true,
                 'version' => null,
             ];
+
+        $processorPipeline = $config['processor'] ??
+            $config['processors'] ? new Pipeline($config['processors']) : null;
 
         return (new Generator($config['logger']))
             ->setVersion($config['version'])
             ->setAliases($config['aliases'])
             ->setNamespaces($config['namespaces'])
             ->setAnalyser($config['analyser'])
-            ->setProcessorPipeline($config['processor'])
-            ->setProcessorPipeline(new Pipeline($config['processors']))
+            ->setProcessorPipeline($processorPipeline)
+            ->setConfig($config['config'])
             ->generate($sources, $config['analysis'], $config['validate']);
     }
 

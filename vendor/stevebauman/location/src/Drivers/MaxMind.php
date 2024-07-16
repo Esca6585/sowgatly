@@ -8,11 +8,13 @@ use GeoIp2\Model\City;
 use GeoIp2\Model\Country;
 use GeoIp2\WebService\Client;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Fluent;
 use Illuminate\Support\Str;
 use PharData;
 use PharFileInfo;
+use RecursiveIteratorIterator;
 use Stevebauman\Location\Position;
 use Stevebauman\Location\Request;
 
@@ -24,7 +26,7 @@ class MaxMind extends Driver implements Updatable
     public function update(Command $command): void
     {
         @mkdir(
-            $root = Str::beforeLast($this->getDatabasePath(), DIRECTORY_SEPARATOR)
+            $root = Str::of($this->getDatabasePath())->dirname()
         );
 
         $storage = Storage::build([
@@ -32,19 +34,21 @@ class MaxMind extends Driver implements Updatable
             'root' => $root,
         ]);
 
-        $storage->put(
-            $tar = 'maxmind.tar.gz',
-            fopen($this->getDatabaseUrl(), 'r')
+        $tarFilePath = $storage->path(
+            $tarFileName = 'maxmind.tar.gz'
         );
 
-        $file = $this->discoverDatabaseFile(
-            $archive = new PharData($storage->path($tar))
+        Http::withOptions(['sink' => $tarFilePath])->throw()->get(
+            $this->getDatabaseUrl()
         );
 
-        $relativePath = implode('/', [
-            Str::afterLast($file->getPath(), DIRECTORY_SEPARATOR),
-            $file->getFilename(),
-        ]);
+        $archive = new PharData($tarFilePath);
+
+        $file = $this->discoverDatabaseFile($archive);
+
+        $directory = Str::of($file->getPath())->basename();
+
+        $relativePath = implode('/', [$directory, $file->getFilename()]);
 
         $archive->extractTo($storage->path('/'), $relativePath, true);
 
@@ -53,7 +57,8 @@ class MaxMind extends Driver implements Updatable
             fopen($storage->path($relativePath), 'r')
         );
 
-        $storage->delete($tar);
+        $storage->delete($tarFileName);
+        $storage->deleteDirectory($directory);
     }
 
     /**
@@ -63,14 +68,7 @@ class MaxMind extends Driver implements Updatable
      */
     protected function discoverDatabaseFile(PharData $archive): PharFileInfo
     {
-        /** @var \FilesystemIterator $file */
-        foreach ($archive as $file) {
-            if ($file->isDir()) {
-                return $this->discoverDatabaseFile(
-                    new PharData($file->getPathName())
-                );
-            }
-
+        foreach (new RecursiveIteratorIterator($archive) as $file) {
             if (pathinfo($file, PATHINFO_EXTENSION) === 'mmdb') {
                 return $file;
             }
@@ -184,7 +182,7 @@ class MaxMind extends Driver implements Updatable
      */
     protected function getLicenseKey(): string
     {
-        return config('location.maxmind.web.license_key');
+        return config('location.maxmind.license_key', config('location.maxmind.web.license_key'));
     }
 
     /**

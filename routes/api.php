@@ -14,18 +14,148 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/welcome', function () {
-    return 'welcome';
+/**
+ * @OA\Info(
+ *     title="Your API Name",
+ *     version="1.0.0",
+ *     description="Your API Description"
+ * )
+ */
+
+/**
+ * @OA\Post(
+ *     path="/api/otp/generate",
+ *     summary="Generate OTP",
+ *     tags={"Authentication"}
+ * )
+ */
+
+/**
+ * @OA\Post(
+ *     path="/api/otp/login",
+ *     summary="Login with OTP",
+ *     tags={"Authentication"}
+ * )
+ */
+
+/**
+ * @OA\Info(
+ *     title="Your API Name",
+ *     version="1.0.0",
+ *     description="Your API Description"
+ * )
+ */
+
+/**
+ * @OA\Get(
+ *     path="/api/products",
+ *     summary="List all products",
+ *     tags={"Products"},
+ *     @OA\Response(
+ *         response=200,
+ *         description="Successful operation",
+ *         @OA\JsonContent(type="array", @OA\Items(ref="#/components/schemas/Product"))
+ *     )
+ * )
+ */
+
+/**
+ * @OA\Post(
+ *     path="/api/products",
+ *     summary="Create a new product",
+ *     tags={"Products"},
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(ref="#/components/schemas/ProductRequest")
+ *     ),
+ *     @OA\Response(
+ *         response=201,
+ *         description="Successful operation",
+ *         @OA\JsonContent(ref="#/components/schemas/Product")
+ *     )
+ * )
+ */
+
+/**
+ * @OA\Get(
+ *     path="/api/products/{id}",
+ *     summary="Get a specific product",
+ *     tags={"Products"},
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         required=true,
+ *         @OA\Schema(type="integer")
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Successful operation",
+ *         @OA\JsonContent(ref="#/components/schemas/Product")
+ *     ),
+ *     @OA\Response(
+ *         response=404,
+ *         description="Product not found"
+ *     )
+ * )
+ */
+
+/**
+ * @OA\Put(
+ *     path="/api/products/{id}",
+ *     summary="Update a specific product",
+ *     tags={"Products"},
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         required=true,
+ *         @OA\Schema(type="integer")
+ *     ),
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(ref="#/components/schemas/ProductRequest")
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Successful operation",
+ *         @OA\JsonContent(ref="#/components/schemas/Product")
+ *     ),
+ *     @OA\Response(
+ *         response=404,
+ *         description="Product not found"
+ *     )
+ * )
+ */
+
+/**
+ * @OA\Delete(
+ *     path="/api/products/{id}",
+ *     summary="Delete a specific product",
+ *     tags={"Products"},
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         required=true,
+ *         @OA\Schema(type="integer")
+ *     ),
+ *     @OA\Response(
+ *         response=204,
+ *         description="Successful operation"
+ *     ),
+ *     @OA\Response(
+ *         response=404,
+ *         description="Product not found"
+ *     )
+ * )
+ */
+ 
+Route::controller(App\Http\Controllers\API\AuthOtpController::class)->group(function(){
+    Route::post('otp/generate', 'generate')->name('otp.generate');
+    
+    Route::post('otp/login', 'loginWithOtp')->name('otp.getlogin');
 });
 
-Route::controller(App\Http\Controllers\Auth\AuthOtpController::class)->group(function(){
-    Route::get('otp/login', 'login')->name('otp.login');
-
-    Route::post('otp/generate', 'generate')->name('otp.generate');
-
-    Route::get('otp/verification/{user_id}', 'verification')->name('otp.verification');
-
-    Route::post('otp/login', 'loginWithOtp')->name('otp.getlogin');
+Route::middleware('auth:sanctum')->group(function () {
+    Route::apiResource('products', App\Http\Controllers\API\ProductController::class);
 });
 
 Route::post('/register', [App\Http\Controllers\User\Auth\AuthController::class, 'register']);

@@ -18,13 +18,13 @@ class AdminSeeder extends Seeder
     {
         Admin::firstOrCreate(
             [
-                'username' => 'admin',
+                'username' => 'admin-sowgatly',
                 'email' => 'esca656585@gmail.com',
             ],
             [
                 'first_name' => 'Admin',
                 'last_name' => 'Adminow',
-                'password' => Hash::make('password'),
+                'password' => Hash::make('password-sowgatly'),
             ]
         );
     }

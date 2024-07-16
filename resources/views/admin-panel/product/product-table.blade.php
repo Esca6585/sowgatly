@@ -27,9 +27,7 @@
                 <td>{{ $product->getDiscountPrice() }} TMT</td>
                 <td>
                     @if($product->attributes)
-                    @foreach($product->attributes as $key => $attribute)
-                        {{ $key }} => {{ $attribute }}
-                    @endforeach
+                    
                     @endif
                 </td>
                 <td>

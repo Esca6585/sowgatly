@@ -11,3 +11,6 @@
 *.app
 .snapshots/*
 
+/vendor
+/node_modules
+.env

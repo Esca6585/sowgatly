@@ -47,6 +47,22 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | HTTP Client Options
+    |--------------------------------------------------------------------------
+    |
+    | Here you may configure the options used by the underlying
+    | Laravel HTTP client. This will be used in drivers that
+    | request info via HTTP requests through API services.
+    |
+    */
+
+    'http' => [
+        'timeout' => 3,
+        'connect_timeout' => 3,
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Localhost Testing
     |--------------------------------------------------------------------------
     |
@@ -77,10 +93,11 @@ return [
     */
 
     'maxmind' => [
+        'license_key' => env('MAXMIND_LICENSE_KEY'),
+
         'web' => [
             'enabled' => false,
             'user_id' => env('MAXMIND_USER_ID'),
-            'license_key' => env('MAXMIND_LICENSE_KEY'),
             'options' => ['host' => 'geoip.maxmind.com'],
         ],
 
