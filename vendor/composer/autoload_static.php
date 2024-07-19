@@ -700,8 +700,10 @@ class ComposerStaticInit9c491b8531eec05ba41a11d9276a5749
     );
 
     public static $classMap = array (
+        'App\\Console\\Commands\\GenerateSwaggerJson' => __DIR__ . '/../..' . '/app/Console/Commands/GenerateSwaggerJson.php',
         'App\\Console\\Kernel' => __DIR__ . '/../..' . '/app/Console/Kernel.php',
         'App\\Exceptions\\Handler' => __DIR__ . '/../..' . '/app/Exceptions/Handler.php',
+        'App\\Http\\Controllers\\API\\AuthOtpController' => __DIR__ . '/../..' . '/app/Http/Controllers/API/AuthOtpController.php',
         'App\\Http\\Controllers\\API\\ProductController' => __DIR__ . '/../..' . '/app/Http/Controllers/API/ProductController.php',
         'App\\Http\\Controllers\\API\\SwaggerController' => __DIR__ . '/../..' . '/app/Http/Controllers/API/SwaggerController.php',
         'App\\Http\\Controllers\\AdminControllers\\Admin\\AdminController' => __DIR__ . '/../..' . '/app/Http/Controllers/AdminControllers/Admin/AdminController.php',
@@ -720,7 +722,6 @@ class ComposerStaticInit9c491b8531eec05ba41a11d9276a5749
         'App\\Http\\Controllers\\Admin\\Auth\\AuthController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/Auth/AuthController.php',
         'App\\Http\\Controllers\\Auth\\AdminLoginController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/AdminLoginController.php',
         'App\\Http\\Controllers\\Auth\\AdminLogoutController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/AdminLogoutController.php',
-        'App\\Http\\Controllers\\Auth\\AuthOtpController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/AuthOtpController.php',
         'App\\Http\\Controllers\\Auth\\AuthenticatedSessionController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/AuthenticatedSessionController.php',
         'App\\Http\\Controllers\\Auth\\ConfirmPasswordController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/ConfirmPasswordController.php',
         'App\\Http\\Controllers\\Auth\\ConfirmablePasswordController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/ConfirmablePasswordController.php',
@@ -766,6 +767,9 @@ class ComposerStaticInit9c491b8531eec05ba41a11d9276a5749
         'App\\Http\\Requests\\ShopRequest' => __DIR__ . '/../..' . '/app/Http/Requests/ShopRequest.php',
         'App\\Http\\Requests\\UserCreateRequest' => __DIR__ . '/../..' . '/app/Http/Requests/UserCreateRequest.php',
         'App\\Http\\Requests\\UserEditRequest' => __DIR__ . '/../..' . '/app/Http/Requests/UserEditRequest.php',
+        'App\\Http\\Resources\\CategoryResource' => __DIR__ . '/../..' . '/app/Http/Resources/CategoryResource.php',
+        'App\\Http\\Resources\\ImageResource' => __DIR__ . '/../..' . '/app/Http/Resources/ImageResource.php',
+        'App\\Http\\Resources\\ProductResource' => __DIR__ . '/../..' . '/app/Http/Resources/ProductResource.php',
         'App\\Models\\Admin' => __DIR__ . '/../..' . '/app/Models/Admin.php',
         'App\\Models\\Application' => __DIR__ . '/../..' . '/app/Models/Application.php',
         'App\\Models\\Attribute' => __DIR__ . '/../..' . '/app/Models/Attribute.php',

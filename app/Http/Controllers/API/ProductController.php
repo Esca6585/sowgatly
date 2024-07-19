@@ -25,6 +25,7 @@ class ProductController extends Controller
      *     path="/api/products",
      *     summary="Get paginated list of products",
      *     tags={"Products"},
+     *     security={{"sanctum":{}}},
      *     @OA\Parameter(
      *         name="page",
      *         in="query",
@@ -63,6 +64,7 @@ class ProductController extends Controller
      *     path="/api/products",
      *     summary="Create a new product",
      *     tags={"Products"},
+     *     security={{"sanctum":{}}},
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(ref="#/components/schemas/ProductRequest")
@@ -135,6 +137,7 @@ class ProductController extends Controller
      *     path="/api/products/{id}",
      *     summary="Get a specific product",
      *     tags={"Products"},
+     *     security={{"sanctum":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -162,6 +165,7 @@ class ProductController extends Controller
      * @OA\Put(
      *     path="/api/products/{id}",
      *     summary="Update an existing product",
+     *     security={{"sanctum":{}}},
      *     tags={"Products"},
      *     @OA\Parameter(
      *         name="id",
@@ -248,6 +252,7 @@ class ProductController extends Controller
      * @OA\Delete(
      *     path="/api/products/{id}",
      *     summary="Delete a product",
+     *     security={{"sanctum":{}}},
      *     tags={"Products"},
      *     @OA\Parameter(
      *         name="id",
@@ -282,6 +287,7 @@ class ProductController extends Controller
      * @OA\Get(
      *     path="/api/products/search",
      *     summary="Search for products",
+     *     security={{"sanctum":{}}},
      *     tags={"Products"},
      *     @OA\Parameter(
      *         name="query",
@@ -315,6 +321,7 @@ class ProductController extends Controller
      * @OA\Get(
      *     path="/api/products/category/{category_id}",
      *     summary="Get products by category",
+     *     security={{"sanctum":{}}},
      *     tags={"Products"},
      *     @OA\Parameter(
      *         name="category_id",

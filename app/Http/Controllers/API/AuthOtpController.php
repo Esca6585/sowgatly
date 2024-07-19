@@ -95,7 +95,7 @@ class AuthOtpController extends Controller
      *         @OA\JsonContent(
      *             required={"seller_id", "otp"},
      *             @OA\Property(property="seller_id", type="integer", example=1),
-     *             @OA\Property(property="otp", type="string", example="123456"),
+     *             @OA\Property(property="otp", type="integer", example=123456),
      *             @OA\Property(property="device_token", type="string", example="device_token_here")
      *         )
      *     ),
@@ -160,7 +160,7 @@ class AuthOtpController extends Controller
                 }
             }
     
-            $token = $seller->createToken('auth_token')->plainTextToken;
+            $token = $seller->createToken('api-token')->plainTextToken;
     
             return response()->json([
                 'access_token' => $token,

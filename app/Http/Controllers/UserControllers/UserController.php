@@ -9,6 +9,7 @@ use Stevebauman\Location\Facades\Location;
 use SapientPro\ImageComparatorLaravel\Facades\Comparator;
 use SapientPro\ImageComparator\Strategy\DifferenceHashStrategy;
 use SapientPro\ImageComparator\ImageComparator;
+use Str;
 use Auth;
 
 class UserController extends Controller

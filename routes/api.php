@@ -156,6 +156,7 @@ Route::controller(App\Http\Controllers\API\AuthOtpController::class)->group(func
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('products', App\Http\Controllers\API\ProductController::class);
+    Route::get('/user', [App\Http\Controllers\Admin\Api\AdminController::class, 'user']);
 });
 
 Route::post('/register', [App\Http\Controllers\User\Auth\AuthController::class, 'register']);

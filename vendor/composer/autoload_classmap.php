@@ -6,8 +6,10 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'App\\Console\\Commands\\GenerateSwaggerJson' => $baseDir . '/app/Console/Commands/GenerateSwaggerJson.php',
     'App\\Console\\Kernel' => $baseDir . '/app/Console/Kernel.php',
     'App\\Exceptions\\Handler' => $baseDir . '/app/Exceptions/Handler.php',
+    'App\\Http\\Controllers\\API\\AuthOtpController' => $baseDir . '/app/Http/Controllers/API/AuthOtpController.php',
     'App\\Http\\Controllers\\API\\ProductController' => $baseDir . '/app/Http/Controllers/API/ProductController.php',
     'App\\Http\\Controllers\\API\\SwaggerController' => $baseDir . '/app/Http/Controllers/API/SwaggerController.php',
     'App\\Http\\Controllers\\AdminControllers\\Admin\\AdminController' => $baseDir . '/app/Http/Controllers/AdminControllers/Admin/AdminController.php',
@@ -26,7 +28,6 @@ return array(
     'App\\Http\\Controllers\\Admin\\Auth\\AuthController' => $baseDir . '/app/Http/Controllers/Admin/Auth/AuthController.php',
     'App\\Http\\Controllers\\Auth\\AdminLoginController' => $baseDir . '/app/Http/Controllers/Auth/AdminLoginController.php',
     'App\\Http\\Controllers\\Auth\\AdminLogoutController' => $baseDir . '/app/Http/Controllers/Auth/AdminLogoutController.php',
-    'App\\Http\\Controllers\\Auth\\AuthOtpController' => $baseDir . '/app/Http/Controllers/Auth/AuthOtpController.php',
     'App\\Http\\Controllers\\Auth\\AuthenticatedSessionController' => $baseDir . '/app/Http/Controllers/Auth/AuthenticatedSessionController.php',
     'App\\Http\\Controllers\\Auth\\ConfirmPasswordController' => $baseDir . '/app/Http/Controllers/Auth/ConfirmPasswordController.php',
     'App\\Http\\Controllers\\Auth\\ConfirmablePasswordController' => $baseDir . '/app/Http/Controllers/Auth/ConfirmablePasswordController.php',
@@ -72,6 +73,9 @@ return array(
     'App\\Http\\Requests\\ShopRequest' => $baseDir . '/app/Http/Requests/ShopRequest.php',
     'App\\Http\\Requests\\UserCreateRequest' => $baseDir . '/app/Http/Requests/UserCreateRequest.php',
     'App\\Http\\Requests\\UserEditRequest' => $baseDir . '/app/Http/Requests/UserEditRequest.php',
+    'App\\Http\\Resources\\CategoryResource' => $baseDir . '/app/Http/Resources/CategoryResource.php',
+    'App\\Http\\Resources\\ImageResource' => $baseDir . '/app/Http/Resources/ImageResource.php',
+    'App\\Http\\Resources\\ProductResource' => $baseDir . '/app/Http/Resources/ProductResource.php',
     'App\\Models\\Admin' => $baseDir . '/app/Models/Admin.php',
     'App\\Models\\Application' => $baseDir . '/app/Models/Application.php',
     'App\\Models\\Attribute' => $baseDir . '/app/Models/Attribute.php',
