@@ -26,7 +26,7 @@ class ShopSeeder extends Seeder
                 'sat_sun_open' => '09:00',
                 'sat_sun_close' => '13:00',
                 'image' => 'shop/shop-seeder/modahouse-logo.jpg',
-                'seller_id' => 1,
+                'user_id' => 1,
             ]
         );
 
@@ -40,7 +40,7 @@ class ShopSeeder extends Seeder
                 'sat_sun_open' => 'işlänok',
                 'sat_sun_close' => 'işlänok',
                 'image' => 'shop/shop-seeder/sowgatly-logo.png',
-                'seller_id' => 2,
+                'user_id' => 2,
             ]
         );
     }

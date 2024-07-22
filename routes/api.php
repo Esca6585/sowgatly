@@ -13,149 +13,21 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
-/**
- * @OA\Info(
- *     title="Your API Name",
- *     version="1.0.0",
- *     description="Your API Description"
- * )
- */
-
-/**
- * @OA\Post(
- *     path="/api/otp/generate",
- *     summary="Generate OTP",
- *     tags={"Authentication"}
- * )
- */
-
-/**
- * @OA\Post(
- *     path="/api/otp/login",
- *     summary="Login with OTP",
- *     tags={"Authentication"}
- * )
- */
-
-/**
- * @OA\Info(
- *     title="Your API Name",
- *     version="1.0.0",
- *     description="Your API Description"
- * )
- */
-
-/**
- * @OA\Get(
- *     path="/api/products",
- *     summary="List all products",
- *     tags={"Products"},
- *     @OA\Response(
- *         response=200,
- *         description="Successful operation",
- *         @OA\JsonContent(type="array", @OA\Items(ref="#/components/schemas/Product"))
- *     )
- * )
- */
-
-/**
- * @OA\Post(
- *     path="/api/products",
- *     summary="Create a new product",
- *     tags={"Products"},
- *     @OA\RequestBody(
- *         required=true,
- *         @OA\JsonContent(ref="#/components/schemas/ProductRequest")
- *     ),
- *     @OA\Response(
- *         response=201,
- *         description="Successful operation",
- *         @OA\JsonContent(ref="#/components/schemas/Product")
- *     )
- * )
- */
-
-/**
- * @OA\Get(
- *     path="/api/products/{id}",
- *     summary="Get a specific product",
- *     tags={"Products"},
- *     @OA\Parameter(
- *         name="id",
- *         in="path",
- *         required=true,
- *         @OA\Schema(type="integer")
- *     ),
- *     @OA\Response(
- *         response=200,
- *         description="Successful operation",
- *         @OA\JsonContent(ref="#/components/schemas/Product")
- *     ),
- *     @OA\Response(
- *         response=404,
- *         description="Product not found"
- *     )
- * )
- */
-
-/**
- * @OA\Put(
- *     path="/api/products/{id}",
- *     summary="Update a specific product",
- *     tags={"Products"},
- *     @OA\Parameter(
- *         name="id",
- *         in="path",
- *         required=true,
- *         @OA\Schema(type="integer")
- *     ),
- *     @OA\RequestBody(
- *         required=true,
- *         @OA\JsonContent(ref="#/components/schemas/ProductRequest")
- *     ),
- *     @OA\Response(
- *         response=200,
- *         description="Successful operation",
- *         @OA\JsonContent(ref="#/components/schemas/Product")
- *     ),
- *     @OA\Response(
- *         response=404,
- *         description="Product not found"
- *     )
- * )
- */
-
-/**
- * @OA\Delete(
- *     path="/api/products/{id}",
- *     summary="Delete a specific product",
- *     tags={"Products"},
- *     @OA\Parameter(
- *         name="id",
- *         in="path",
- *         required=true,
- *         @OA\Schema(type="integer")
- *     ),
- *     @OA\Response(
- *         response=204,
- *         description="Successful operation"
- *     ),
- *     @OA\Response(
- *         response=404,
- *         description="Product not found"
- *     )
- * )
- */
  
 Route::controller(App\Http\Controllers\API\AuthOtpController::class)->group(function(){
     Route::post('otp/generate', 'generate')->name('otp.generate');
-    
     Route::post('otp/login', 'loginWithOtp')->name('otp.getlogin');
 });
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('products', App\Http\Controllers\API\ProductController::class);
+    Route::get('product/search', [App\Http\Controllers\API\ProductController::class , 'search']);
+    Route::get('product/category/{category_id}', [App\Http\Controllers\API\ProductController::class , 'getByCategory']);
+    
+    Route::apiResource('categories', App\Http\Controllers\API\CategoryController::class);
+    Route::get('/categories/parents', [App\Http\Controllers\API\CategoryController::class, 'getParentCategories']);
+    Route::get('/categories/{id}/subcategories', [App\Http\Controllers\API\CategoryController::class, 'getSubcategories']);
+
     Route::get('/user', [App\Http\Controllers\Admin\Api\AdminController::class, 'user']);
 });
 

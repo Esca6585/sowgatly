@@ -169,27 +169,15 @@
                                             <div class="card card-custom card-stretch">
                                                 <div class="card-body p-0 rounded px-10 py-15 d-flex align-items-center justify-content-center">
                                                     <h1>
-                                                        {{ $user->first_name }}
-                                                        {{ $user->last_name }}
+                                                        {{ $user->name }}
                                                     </h1>
                                                 </div>
                                             </div>
                                             <!--end::Image-->
                                         </div>
                                         <div class="col-xxl-7 pl-xxl-11">
-                                            <h4 class="font-weight-bolder text-dark mb-7">{{ $user->first_name }}</h4>
-                                            <h4 class="font-weight-bolder text-dark mb-7">{{ $user->last_name }}</h4>
-                                            <h4 class="font-weight-bolder text-dark mb-7">{{ $user->email }}</h4>
+                                            <h4 class="font-weight-bolder text-dark mb-7">{{ $user->name }}</h4>
                                             <h4 class="font-weight-bolder text-dark mb-7">{{ $user->phone_number }}</h4>
-                                            <h4 class="font-weight-bolder text-dark mb-7">
-                                                @if($user->roles->pluck("name")->first() == 'raýat')
-                                                    <span class="badge badge-warning">{{ $user->roles->pluck("name")->first() }}</span>
-                                                @elseif($user->roles->pluck("name")->first() == 'telekeçi')
-                                                    <span class="badge badge-primary">{{ $user->roles->pluck("name")->first() }}</span>
-                                                @elseif($user->roles->pluck("name")->first() == 'döwlet-edara')
-                                                    <span class="badge badge-success">{{ $user->roles->pluck("name")->first() }}</span>
-                                                @endif
-                                            </h4>
                                         </div>
                                 
                                         <div class="section__container__body mx-4 mt-10">

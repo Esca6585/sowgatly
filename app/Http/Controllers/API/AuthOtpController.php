@@ -5,15 +5,15 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Seller;
+use App\Models\user;
 use App\Models\Device;
-use App\Models\SellerOtp;
+use App\Models\UserOtp;
 use Twilio\Rest\Client;
 
 /**
  * @OA\Tag(
  *     name="Authentication",
- *     description="API Endpoints for Seller Authentication"
+ *     description="API Endpoints for user Authentication"
  * )
  */
 class AuthOtpController extends Controller
@@ -21,7 +21,7 @@ class AuthOtpController extends Controller
     /**
      * @OA\Post(
      *     path="/api/otp/generate",
-     *     summary="Generate OTP for seller",
+     *     summary="Generate OTP for user",
      *     tags={"Authentication"},
      *     @OA\RequestBody(
      *         @OA\JsonContent(
@@ -33,7 +33,7 @@ class AuthOtpController extends Controller
      *         response=200,
      *         description="OTP generated successfully",
      *         @OA\JsonContent(
-     *             @OA\Property(property="sellerOtp", type="object"),
+     *             @OA\Property(property="userOtp", type="object"),
      *             @OA\Property(property="success", type="string")
      *         )
      *     ),
@@ -47,15 +47,15 @@ class AuthOtpController extends Controller
     {
         /* Validate Data */
         $request->validate([
-            'phone_number' => 'required|exists:sellers,phone_number'
+            'phone_number' => 'required|exists:users,phone_number'
         ]);
   
         /* Generate An OTP */
-        $sellerOtp = $this->generateOtp($request->phone_number);
-        $sellerOtp->sendSMS($request->phone_number);
+        $userOtp = $this->generateOtp($request->phone_number);
+        $userOtp->sendSMS($request->phone_number);
 
         return response()->json([
-            'sellerOtp' => $sellerOtp,
+            'userOtp' => $userOtp,
             'success' => 'OTP has been sent on Your Mobile Number.',
         ]);
     }
@@ -67,20 +67,20 @@ class AuthOtpController extends Controller
      */
     public function generateOtp($phone_number)
     {
-        $seller = Seller::where('phone_number', $phone_number)->first();
+        $user = User::where('phone_number', $phone_number)->first();
   
-        /* Seller Does not Have Any Existing OTP */
-        $sellerOtp = SellerOtp::where('seller_id', $seller->id)->latest()->first();
+        /* user Does not Have Any Existing OTP */
+        $userOtp = UserOtp::where('user_id', $user->id)->latest()->first();
   
         $now = now();
   
-        if($sellerOtp && $now->isBefore($sellerOtp->expire_at)){
-            return $sellerOtp;
+        if($userOtp && $now->isBefore($userOtp->expire_at)){
+            return $userOtp;
         }
   
         /* Create a New OTP */
-        return SellerOtp::create([
-            'seller_id' => $seller->id,
+        return UserOtp::create([
+            'user_id' => $user->id,
             'otp' => rand(123456, 999999),
             'expire_at' => $now->addMinutes(10)
         ]);
@@ -93,10 +93,9 @@ class AuthOtpController extends Controller
      *     tags={"Authentication"},
      *     @OA\RequestBody(
      *         @OA\JsonContent(
-     *             required={"seller_id", "otp"},
-     *             @OA\Property(property="seller_id", type="integer", example=1),
+     *             required={"user_id", "otp"},
+     *             @OA\Property(property="user_id", type="integer", example=1),
      *             @OA\Property(property="otp", type="integer", example=123456),
-     *             @OA\Property(property="device_token", type="string", example="device_token_here")
      *         )
      *     ),
      *     @OA\Response(
@@ -121,37 +120,37 @@ class AuthOtpController extends Controller
     {
         /* Validation */
         $request->validate([
-            'seller_id' => 'required|exists:sellers,id',
+            'user_id' => 'required|exists:users,id',
             'otp' => 'required'
         ]);  
   
         /* Validation Logic */
-        $sellerOtp = SellerOtp::where('seller_id', $request->seller_id)->where('otp', $request->otp)->first();
+        $userOtp = UserOtp::where('user_id', $request->user_id)->where('otp', $request->otp)->first();
   
         $now = now();
-        if (!$sellerOtp) {
+        if (!$userOtp) {
             return response()->json([
                 'error' => 'Your OTP is not correct!',
             ]);
-        } else if($sellerOtp && $now->isAfter($sellerOtp->expire_at)){
+        } else if($userOtp && $now->isAfter($userOtp->expire_at)){
             return response()->json([
                 'error' => 'Your OTP has been expired!',
             ]);
         }
     
-        $seller = Seller::whereId($request->seller_id)->first();
+        $user = User::whereId($request->user_id)->first();
   
-        if($seller){
+        if($user){
               
-            $sellerOtp->update([
+            $userOtp->update([
                 'expire_at' => now()
             ]);
   
             if($request->header('Device') == 'Mobile') {
-                $device = Device::where('seller_id', $seller->id)->first();
+                $device = Device::where('user_id', $user->id)->first();
                 if($device == null) {
                     $add = new Device();
-                    $add->seller_id = $seller->id;
+                    $add->user_id = $user->id;
                     $add->token = $request->device_token;
                     $add->save();
                 } else {
@@ -160,7 +159,7 @@ class AuthOtpController extends Controller
                 }
             }
     
-            $token = $seller->createToken('api-token')->plainTextToken;
+            $token = $user->createToken('api-token')->plainTextToken;
     
             return response()->json([
                 'access_token' => $token,

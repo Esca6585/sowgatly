@@ -21,7 +21,7 @@
                 "tags": [
                     "Authentication"
                 ],
-                "summary": "Generate OTP for seller",
+                "summary": "Generate OTP for user",
                 "operationId": "081228e853685a7b3013eaa9f6069353",
                 "requestBody": {
                     "content": {
@@ -48,7 +48,7 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "sellerOtp": {
+                                        "userOtp": {
                                             "type": "object"
                                         },
                                         "success": {
@@ -78,21 +78,17 @@
                         "application/json": {
                             "schema": {
                                 "required": [
-                                    "seller_id",
+                                    "user_id",
                                     "otp"
                                 ],
                                 "properties": {
-                                    "seller_id": {
+                                    "user_id": {
                                         "type": "integer",
                                         "example": 1
                                     },
                                     "otp": {
                                         "type": "integer",
                                         "example": 123456
-                                    },
-                                    "device_token": {
-                                        "type": "string",
-                                        "example": "device_token_here"
                                     }
                                 },
                                 "type": "object"
@@ -126,6 +122,233 @@
                         "description": "Invalid OTP or expired OTP"
                     }
                 }
+            }
+        },
+        "/api/categories/parents": {
+            "get": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Get all parent categories",
+                "operationId": "fec113e743d9235f247f8ba80b2e06fc",
+                "responses": {
+                    "200": {
+                        "description": "List of parent categories"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/categories/{id}/subcategories": {
+            "get": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Get all subcategories by parent category ID",
+                "operationId": "3d489dd311a2b2ae582ced3c4e0a4e37",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of subcategories"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/categories": {
+            "get": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Get all categories",
+                "operationId": "8e17a9627dbed245cf032f867569cf11",
+                "responses": {
+                    "200": {
+                        "description": "List of categories"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Create a new category",
+                "operationId": "2140f330d926c3e118cab9391dc4ff42",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name_tm": {
+                                        "type": "string",
+                                        "example": "test_tm"
+                                    },
+                                    "name_en": {
+                                        "type": "string",
+                                        "example": "test_en"
+                                    },
+                                    "name_ru": {
+                                        "type": "string",
+                                        "example": "test_ru"
+                                    },
+                                    "image": {
+                                        "type": "string"
+                                    },
+                                    "category_id": {
+                                        "type": "integer",
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Category created"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/categories/{id}": {
+            "get": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Get a category",
+                "operationId": "6a038665b20191638e1608ea8897bf64",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Category details"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Update a category",
+                "operationId": "e4e7aaba2eee4d7e813dea85bf3cf3ed",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name_tm": {
+                                        "type": "string",
+                                        "example": "test_tm"
+                                    },
+                                    "name_en": {
+                                        "type": "string",
+                                        "example": "test_en"
+                                    },
+                                    "name_ru": {
+                                        "type": "string",
+                                        "example": "test_ru"
+                                    },
+                                    "image": {
+                                        "type": "string"
+                                    },
+                                    "category_id": {
+                                        "type": "integer",
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Category updated"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Delete a category",
+                "operationId": "f365d407ea3098d6b545847b09322b13",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Category deleted"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
             }
         },
         "/api/products": {
@@ -251,13 +474,13 @@
                 ]
             }
         },
-        "/api/products/search": {
+        "/api/product/search": {
             "get": {
                 "tags": [
                     "Products"
                 ],
-                "summary": "Search for products",
-                "operationId": "131a3b23ed0ecb009a18b85cc2d55ba2",
+                "summary": "Search for product",
+                "operationId": "d80b7efa5b94717d2aaeb1a38d9066cd",
                 "parameters": [
                     {
                         "name": "query",
@@ -291,13 +514,13 @@
                 ]
             }
         },
-        "/api/products/category/{category_id}": {
+        "/api/product/category/{category_id}": {
             "get": {
                 "tags": [
                     "Products"
                 ],
                 "summary": "Get products by category",
-                "operationId": "84bc5884f89e75f3d024977eb330febb",
+                "operationId": "fb0abfa680d510029dd03b8c08d7b5f0",
                 "parameters": [
                     {
                         "name": "category_id",
@@ -357,10 +580,6 @@
         "schemas": {
             "Product": {
                 "properties": {
-                    "id": {
-                        "type": "integer",
-                        "example": 1
-                    },
                     "name": {
                         "type": "string",
                         "example": "Product Name"
@@ -383,25 +602,13 @@
                         "type": "string",
                         "example": "{'color': 'red', 'size': 'large'}"
                     },
-                    "code": {
+                    "images": {
                         "type": "string",
-                        "example": "AbC123"
-                    },
-                    "status": {
-                        "type": "boolean",
-                        "example": true
+                        "example": "{'color': 'red', 'size': 'large'}"
                     },
                     "category_id": {
                         "type": "integer",
                         "example": 1
-                    },
-                    "created_at": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "updated_at": {
-                        "type": "string",
-                        "format": "date-time"
                     }
                 },
                 "type": "object"
@@ -439,20 +646,9 @@
                         "type": "string",
                         "example": "{'color': 'blue', 'size': 'medium'}"
                     },
-                    "status": {
-                        "type": "boolean",
-                        "example": true
-                    },
                     "category_id": {
                         "type": "integer",
                         "example": 2
-                    },
-                    "images": {
-                        "type": "array",
-                        "items": {
-                            "type": "string",
-                            "format": "binary"
-                        }
                     }
                 },
                 "type": "object"
@@ -470,7 +666,11 @@
     "tags": [
         {
             "name": "Authentication",
-            "description": "API Endpoints for Seller Authentication"
+            "description": "API Endpoints for user Authentication"
+        },
+        {
+            "name": "Categories",
+            "description": "API Endpoints of Categories"
         },
         {
             "name": "Products",

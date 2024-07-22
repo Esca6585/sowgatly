@@ -11,16 +11,6 @@ class Product extends Model
     
     protected $table = 'products';
 
-    protected $casts = [
-        'name' => 'string',
-        'description' => 'string',
-        'price' => 'float',
-        'discount' => 'float',
-        'attributes' => 'array',
-        'category_id' => 'integer',
-        'status' => 'boolean',
-    ];
-
     protected $fillable = [
         'name',
         'description',
@@ -30,6 +20,16 @@ class Product extends Model
         'code',
         'category_id',
         'status',
+    ];
+    
+    protected $casts = [
+        'name' => 'string',
+        'description' => 'string',
+        'price' => 'float',
+        'discount' => 'float',
+        'attributes' => 'array',
+        'category_id' => 'integer',
+        'status' => 'boolean',
     ];
 
     protected function fillableData()

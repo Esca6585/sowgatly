@@ -58,9 +58,10 @@
                         </a>
                     </li>
 
-                    <li class="menu-item {{ Request::is('*/admin/seller*') ? 'menu-item-active' : '' }}">
-                        <a href="{{ route('seller.index', app()->getlocale() ) }}" class="menu-link">
-                            <span class="menu-text">{{ __('Sellers') }}</span>
+                    
+                    <li class="menu-item {{ Request::is('*/admin/user*') ? 'menu-item-active' : '' }}">
+                        <a href="{{ route('user.index', app()->getlocale() ) }}" class="menu-link">
+                            <span class="menu-text">{{ __('Users') }}</span>
                             <i class="menu-arrow"></i>
                         </a>
                     </li>
@@ -89,13 +90,6 @@
                     <li class="menu-item {{ Request::is('*/admin/admin*') ? 'menu-item-active' : '' }}">
                         <a href="{{ route('admin.index', app()->getlocale() ) }}" class="menu-link">
                             <span class="menu-text">{{ __('Admins') }}</span>
-                            <i class="menu-arrow"></i>
-                        </a>
-                    </li>
-
-                    <li class="menu-item {{ Request::is('*/admin/user*') ? 'menu-item-active' : '' }}">
-                        <a href="{{ route('user.index', app()->getlocale() ) }}" class="menu-link">
-                            <span class="menu-text">{{ __('Users') }}</span>
                             <i class="menu-arrow"></i>
                         </a>
                     </li>

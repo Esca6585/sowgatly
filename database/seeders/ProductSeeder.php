@@ -34,7 +34,7 @@ class ProductSeeder extends Seeder
             $product = Product::create([
                 'name' => $faker->words(3, true),
                 'description' => $faker->sentence,
-                'price' => $faker->randomFloat(2, 10, 1000),
+                'price' => $faker->numberBetween(10, 999),
                 'discount' => $faker->numberBetween(0, 50),
                 'attributes' => json_encode([
                     'color' => $faker->colorName,

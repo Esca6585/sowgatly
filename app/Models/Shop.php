@@ -20,7 +20,7 @@ class Shop extends Model
         'mon_fri_close',
         'sat_sun_open',
         'sat_sun_close',
-        'seller_id',
+        'user_id',
     ];
 
     protected function fillableData()
@@ -28,8 +28,8 @@ class Shop extends Model
         return $this->fillable;
     }
 
-    public function seller()
+    public function user()
     {
-        return $this->belongsTo(Seller::class,'seller_id', 'id');
+        return $this->belongsTo(User::class,'user_id', 'id');
     }
 }

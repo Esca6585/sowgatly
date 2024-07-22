@@ -5,9 +5,9 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
-use App\Models\Seller;
+use App\Models\User;
 
-class SellerSeeder extends Seeder
+class UserSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -16,25 +16,25 @@ class SellerSeeder extends Seeder
      */
     public function run()
     {
-        Seller::firstOrCreate(
+        User::firstOrCreate(
             [
                 'phone_number' => 65656585,
             ],
             [
                 'name' => 'Rahmanberdi Ahmedow',
-                'image' => 'seller/seller-seeder/logo.png',
+                'image' => 'user/user-seeder/logo.png',
                 'password' => Hash::make('password'),
                 'status' => true,
             ]
         );
 
-        Seller::firstOrCreate(
+        User::firstOrCreate(
             [
                 'phone_number' => 71406778,
             ],
             [
                 'name' => 'Rahymberdi Ahmedow',
-                'image' => 'seller/seller-seeder/logo.png',
+                'image' => 'user/user-seeder/logo.png',
                 'password' => Hash::make('password'),
                 'status' => true,
             ]

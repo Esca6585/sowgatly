@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Category;
+use Faker\Factory as Faker;
 
 class CategorySeeder extends Seeder
 {
@@ -15,6 +16,8 @@ class CategorySeeder extends Seeder
      */
     public function run()
     {
+        $faker = Faker::create();
+
         $parentCategories = [
             [
                 'name_tm' => 'Monobuketler',
@@ -304,16 +307,16 @@ class CategorySeeder extends Seeder
                 'category_id' => null,
             ],
             [
-                'name_tm' => 'test',
-                'name_en' => 'Sttestationery',
-                'name_ru' => 'Канцtestелярские товары',
+                'name_tm' => $faker->words(1, true),
+                'name_en' => 'S$faker->words(1, true)tionery',
+                'name_ru' => 'Кан$faker->words(1, true)лярские товары',
                 'image' => 'category/category-seeder/stationery.png',
                 'category_id' => null,
             ],
             [
-                'name_tm' => 'test',
-                'name_en' => 'Ottesther',
-                'name_ru' => 'Другtestое',
+                'name_tm' => $faker->words(1, true),
+                'name_en' => 'O$faker->words(1, true)er',
+                'name_ru' => 'Дру$faker->words(1, true)е',
                 'image' => 'category/category-seeder/other_group.png',
                 'category_id' => null,
             ],
@@ -321,187 +324,161 @@ class CategorySeeder extends Seeder
 
         $subCategories = [
             [
-                'name_tm' => 'test',
-                'name_en' => 'test',
-                'name_ru' => 'test',
+                'name_tm' => $faker->words(1, true),
+                'name_en' => $faker->words(1, true),
+                'name_ru' => $faker->words(1, true),
                 'image' => 'category/category-seeder/other_group.png',
-                'category_id' => 1,
             ],
             [
-                'name_tm' => 'test',
-                'name_en' => 'test',
-                'name_ru' => 'test',
+                'name_tm' => $faker->words(1, true),
+                'name_en' => $faker->words(1, true),
+                'name_ru' => $faker->words(1, true),
                 'image' => 'category/category-seeder/other_group.png',
-                'category_id' => 1,
             ],
             [
-                'name_tm' => 'test',
-                'name_en' => 'test',
-                'name_ru' => 'test',
+                'name_tm' => $faker->words(1, true),
+                'name_en' => $faker->words(1, true),
+                'name_ru' => $faker->words(1, true),
                 'image' => 'category/category-seeder/other_group.png',
-                'category_id' => 1,
             ],
             [
-                'name_tm' => 'test',
-                'name_en' => 'test',
-                'name_ru' => 'test',
+                'name_tm' => $faker->words(1, true),
+                'name_en' => $faker->words(1, true),
+                'name_ru' => $faker->words(1, true),
                 'image' => 'category/category-seeder/other_group.png',
-                'category_id' => 1,
             ],
             [
-                'name_tm' => 'test',
-                'name_en' => 'test',
-                'name_ru' => 'test',
+                'name_tm' => $faker->words(1, true),
+                'name_en' => $faker->words(1, true),
+                'name_ru' => $faker->words(1, true),
                 'image' => 'category/category-seeder/other_group.png',
-                'category_id' => 1,
             ],
             [
-                'name_tm' => 'test',
-                'name_en' => 'test',
-                'name_ru' => 'test',
+                'name_tm' => $faker->words(1, true),
+                'name_en' => $faker->words(1, true),
+                'name_ru' => $faker->words(1, true),
                 'image' => 'category/category-seeder/other_group.png',
-                'category_id' => 1,
             ],
             [
-                'name_tm' => 'test',
-                'name_en' => 'test',
-                'name_ru' => 'test',
+                'name_tm' => $faker->words(1, true),
+                'name_en' => $faker->words(1, true),
+                'name_ru' => $faker->words(1, true),
                 'image' => 'category/category-seeder/other_group.png',
-                'category_id' => 1,
             ],
             [
-                'name_tm' => 'test',
-                'name_en' => 'test',
-                'name_ru' => 'test',
+                'name_tm' => $faker->words(1, true),
+                'name_en' => $faker->words(1, true),
+                'name_ru' => $faker->words(1, true),
                 'image' => 'category/category-seeder/other_group.png',
-                'category_id' => 1,
             ],
             [
-                'name_tm' => 'test',
-                'name_en' => 'test',
-                'name_ru' => 'test',
+                'name_tm' => $faker->words(1, true),
+                'name_en' => $faker->words(1, true),
+                'name_ru' => $faker->words(1, true),
                 'image' => 'category/category-seeder/other_group.png',
-                'category_id' => 1,
             ],
             [
-                'name_tm' => 'test',
-                'name_en' => 'test',
-                'name_ru' => 'test',
+                'name_tm' => $faker->words(1, true),
+                'name_en' => $faker->words(1, true),
+                'name_ru' => $faker->words(1, true),
                 'image' => 'category/category-seeder/other_group.png',
-                'category_id' => 1,
             ],
             [
-                'name_tm' => 'test',
-                'name_en' => 'test',
-                'name_ru' => 'test',
+                'name_tm' => $faker->words(1, true),
+                'name_en' => $faker->words(1, true),
+                'name_ru' => $faker->words(1, true),
                 'image' => 'category/category-seeder/other_group.png',
-                'category_id' => 1,
             ],
             [
-                'name_tm' => 'test',
-                'name_en' => 'test',
-                'name_ru' => 'test',
+                'name_tm' => $faker->words(1, true),
+                'name_en' => $faker->words(1, true),
+                'name_ru' => $faker->words(1, true),
                 'image' => 'category/category-seeder/other_group.png',
-                'category_id' => 1,
             ],
             [
-                'name_tm' => 'test',
-                'name_en' => 'test',
-                'name_ru' => 'test',
+                'name_tm' => $faker->words(1, true),
+                'name_en' => $faker->words(1, true),
+                'name_ru' => $faker->words(1, true),
                 'image' => 'category/category-seeder/other_group.png',
-                'category_id' => 1,
             ],
             [
-                'name_tm' => 'test',
-                'name_en' => 'test',
-                'name_ru' => 'test',
+                'name_tm' => $faker->words(1, true),
+                'name_en' => $faker->words(1, true),
+                'name_ru' => $faker->words(1, true),
                 'image' => 'category/category-seeder/other_group.png',
-                'category_id' => 1,
             ],
             [
-                'name_tm' => 'test',
-                'name_en' => 'test',
-                'name_ru' => 'test',
+                'name_tm' => $faker->words(1, true),
+                'name_en' => $faker->words(1, true),
+                'name_ru' => $faker->words(1, true),
                 'image' => 'category/category-seeder/other_group.png',
-                'category_id' => 1,
             ],
             [
-                'name_tm' => 'test',
-                'name_en' => 'test',
-                'name_ru' => 'test',
+                'name_tm' => $faker->words(1, true),
+                'name_en' => $faker->words(1, true),
+                'name_ru' => $faker->words(1, true),
                 'image' => 'category/category-seeder/other_group.png',
-                'category_id' => 1,
             ],
             [
-                'name_tm' => 'test',
-                'name_en' => 'test',
-                'name_ru' => 'test',
+                'name_tm' => $faker->words(1, true),
+                'name_en' => $faker->words(1, true),
+                'name_ru' => $faker->words(1, true),
                 'image' => 'category/category-seeder/other_group.png',
-                'category_id' => 1,
             ],
             [
-                'name_tm' => 'test',
-                'name_en' => 'test',
-                'name_ru' => 'test',
+                'name_tm' => $faker->words(1, true),
+                'name_en' => $faker->words(1, true),
+                'name_ru' => $faker->words(1, true),
                 'image' => 'category/category-seeder/other_group.png',
-                'category_id' => 1,
             ],
             
             [
-                'name_tm' => 'test',
-                'name_en' => 'test',
-                'name_ru' => 'test',
+                'name_tm' => $faker->words(1, true),
+                'name_en' => $faker->words(1, true),
+                'name_ru' => $faker->words(1, true),
                 'image' => 'category/category-seeder/other_group.png',
-                'category_id' => 2,
             ],
             [
-                'name_tm' => 'test',
-                'name_en' => 'test',
-                'name_ru' => 'test',
+                'name_tm' => $faker->words(1, true),
+                'name_en' => $faker->words(1, true),
+                'name_ru' => $faker->words(1, true),
                 'image' => 'category/category-seeder/other_group.png',
-                'category_id' => 2,
             ],
             [
-                'name_tm' => 'test',
-                'name_en' => 'test',
-                'name_ru' => 'test',
+                'name_tm' => $faker->words(1, true),
+                'name_en' => $faker->words(1, true),
+                'name_ru' => $faker->words(1, true),
                 'image' => 'category/category-seeder/other_group.png',
-                'category_id' => 2,
             ],    
             [
-                'name_tm' => 'test',
-                'name_en' => 'test',
-                'name_ru' => 'test',
+                'name_tm' => $faker->words(1, true),
+                'name_en' => $faker->words(1, true),
+                'name_ru' => $faker->words(1, true),
                 'image' => 'category/category-seeder/other_group.png',
-                'category_id' => 2,
             ],    
             [
-                'name_tm' => 'test',
-                'name_en' => 'test',
-                'name_ru' => 'test',
+                'name_tm' => $faker->words(1, true),
+                'name_en' => $faker->words(1, true),
+                'name_ru' => $faker->words(1, true),
                 'image' => 'category/category-seeder/other_group.png',
-                'category_id' => 2,
             ],    
             [
-                'name_tm' => 'test',
-                'name_en' => 'test',
-                'name_ru' => 'test',
+                'name_tm' => $faker->words(1, true),
+                'name_en' => $faker->words(1, true),
+                'name_ru' => $faker->words(1, true),
                 'image' => 'category/category-seeder/other_group.png',
-                'category_id' => 2,
             ],   
             [
-                'name_tm' => 'test',
-                'name_en' => 'test',
-                'name_ru' => 'test',
+                'name_tm' => $faker->words(1, true),
+                'name_en' => $faker->words(1, true),
+                'name_ru' => $faker->words(1, true),
                 'image' => 'category/category-seeder/other_group.png',
-                'category_id' => 2,
             ],    
             [
-                'name_tm' => 'test',
-                'name_en' => 'test',
-                'name_ru' => 'test',
+                'name_tm' => $faker->words(1, true),
+                'name_en' => $faker->words(1, true),
+                'name_ru' => $faker->words(1, true),
                 'image' => 'category/category-seeder/other_group.png',
-                'category_id' => 2,
             ],    
         ];
 
@@ -518,18 +495,19 @@ class CategorySeeder extends Seeder
         }
         // <-- end:: Parent Category -->
 
-        // <-- begin:: Sub Category -->
-        foreach ($subCategories as $subCategory) 
-        {
-            Category::create([
-                'name_tm' => $subCategory['name_tm'],
-                'name_en' => $subCategory['name_en'],
-                'name_ru' => $subCategory['name_ru'],
-                'image' => $subCategory['image'],
-                'category_id' => $subCategory['category_id'],
-            ]); 
+        for($i=0; $i<3; $i++){
+            // <-- begin:: Sub Category -->
+            foreach ($subCategories as $subCategory) 
+            {
+                Category::create([
+                    'name_tm' => $subCategory['name_tm'],
+                    'name_en' => $subCategory['name_en'],
+                    'name_ru' => $subCategory['name_ru'],
+                    'image' => $subCategory['image'],
+                    'category_id' => $faker->numberBetween(1, 43),
+                ]); 
+            }
+            // <-- end:: Sub Category -->
         }
-        // <-- end:: Sub Category -->
-
     }
 }

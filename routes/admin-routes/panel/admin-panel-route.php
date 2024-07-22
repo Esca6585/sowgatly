@@ -20,14 +20,13 @@ Route::group([
         Route::resources([
             '/{categoryType}/category' => App\Http\Controllers\AdminControllers\Category\CategoryController::class,
             '/attribute' => App\Http\Controllers\AdminControllers\Attribute\AttributeController::class,
-            '/seller' => App\Http\Controllers\AdminControllers\Seller\SellerController::class,
+            '/user' => App\Http\Controllers\AdminControllers\User\UserController::class,
             '/shop' => App\Http\Controllers\AdminControllers\Shop\ShopController::class,
             '/product' => App\Http\Controllers\AdminControllers\Product\ProductController::class,
             '/message' => App\Http\Controllers\AdminControllers\Message\MessageController::class,
             '/admin' => App\Http\Controllers\AdminControllers\Admin\AdminController::class,
             '/role' => App\Http\Controllers\AdminControllers\Role\RoleController::class,
             '/permission' => App\Http\Controllers\AdminControllers\Permission\PermissionController::class,
-            '/user' => App\Http\Controllers\AdminControllers\User\UserController::class,
             '/cart' => App\Http\Controllers\AdminControllers\Cart\CartController::class,
         ]);
     });

@@ -28,8 +28,8 @@ return new class extends Migration
             
             $table->string('image');
 
-            $table->unsignedBigInteger('seller_id')->unsigned()->nullable();
-            $table->foreign('seller_id')->references('id')->on('sellers')->onDelete('cascade')->unsigned();
+            $table->unsignedBigInteger('user_id')->unsigned()->nullable();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->unsigned();
 
             $table->timestamps();
         });

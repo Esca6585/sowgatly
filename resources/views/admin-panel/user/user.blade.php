@@ -1,7 +1,7 @@
 @extends('layouts.admin-template-app')
 
 @section('title')
-{{ __('Sellers') }}
+    {{ __('Users') }}
 @endsection
 
 @section('style')
@@ -58,7 +58,7 @@
             <!--begin::Topbar Mobile Toggle-->
             <button class="btn btn-hover-text-primary p-0 ml-2" id="kt_header_mobile_topbar_toggle">
                 <span class="svg-icon svg-icon-xl">
-                    <!--begin::Svg Icon | path:assets/media/svg/icons/General/User.svg-->
+                    <!--begin::Svg Icon | path:assets/media/svg/icons/General/user.svg-->
                     <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px"
                         height="24px" viewBox="0 0 24 24" version="1.1">
                         <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -142,8 +142,7 @@
                                     <ul
                                         class="breadcrumb breadcrumb-transparent breadcrumb-dot font-weight-bold p-0 my-2 font-size-sm">
                                         <li class="breadcrumb-item text-muted">
-                                            <a href="{{ route('seller.index', [ app()->getlocale() ]) }}"
-                                                class="text-muted">{{ __('Sellers') }}</a>
+                                            <a href="{{ route('user.index', [ app()->getlocale() ]) }}" class="text-muted">{{ __('Users') }}</a>
                                         </li>
                                     </ul>
                                     <!--end::Breadcrumb-->
@@ -162,7 +161,7 @@
                             <div class="card card-custom">
                                 <div class="card-header flex-wrap py-5">
                                     <div class="card-title">
-                                        <h3 class="card-label">{{ __('Sellers') }}</h3>
+                                        <h3 class="card-label">{{ __('Users') }}</h3>
                                     </div>
                                     <div class="card-toolbar">
                                         <!--begin::Button-->
@@ -198,13 +197,10 @@
                                             <label>
                                                 <select id="datatable_length" name="datatable_length2"
                                                     aria-controls="kt_datatable"
-                                                    class="form-control form-control-sm font-weight-bold mr-4 border-0 bg-light"
-                                                    style="width: 65px;">
-
+                                                    class="form-control form-control-sm font-weight-bold mr-4 border-0 bg-light" style="width: 65px;">
+                                                    
                                                     @foreach([5,10,15,20,25,50,100] as $number)
-                                                    <option value="{{ $number }}"
-                                                        {{ $pagination == $number ? 'selected=selected' : ''}}>
-                                                        {{ $number }}</option>
+                                                    <option value="{{ $number }}" {{ $pagination == $number ? 'selected=selected' : ''}} >{{ $number }}</option>
                                                     @endforeach
 
                                                 </select>
@@ -242,7 +238,7 @@
                                                         placeholder="{{ __('Search') }}..."
                                                         aria-controls="kt_datatable">
 
-                                                    <div class="input-group-append">
+                                                        <div class="input-group-append">
                                                         <span class="input-group-text" id="search_clear">
                                                             <!--begin::Svg Icon | public/metronic-template/v8/assets/media/icons/duotone/Navigation/Close.svg-->
                                                             <span class="svg-icon svg-icon-lg">
@@ -362,7 +358,7 @@
         };
 
     </script>
-
+    
     <script src="{{ asset('metronic-template/v7/assets/plugins/global/plugins.bundle.js') }}"></script>
     <script src="{{ asset('metronic-template/v7/assets/plugins/custom/prismjs/prismjs.bundle.js') }}"></script>
     <script src="{{ asset('metronic-template/v7/assets/js/scripts.bundle.js') }}"></script>

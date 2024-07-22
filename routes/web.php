@@ -27,7 +27,7 @@ Route::group([
     'where' => ['locale' => '[a-z]{2}'],
 ], function () {
 
-    Route::get('/flowwow', [App\Http\Controllers\UserControllers\UserController::class, 'mainPage'])->name('main-page');
+    Route::get('/sowgatly', [App\Http\Controllers\UserControllers\UserController::class, 'mainPage'])->name('main-page');
 
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'profile'])->name('home');
     Route::get('/email', [App\Http\Controllers\HomeController::class, 'email']);

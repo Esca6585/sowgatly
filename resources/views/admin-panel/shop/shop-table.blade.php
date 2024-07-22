@@ -18,18 +18,18 @@
             @foreach ($shops as $shop)
             <tr id="datatable">
                 <td>{{ $loop->iteration }}</td>
-                <td>{{ $shop->seller->name }}</td>
+                <td>{{ $shop->user->name }}</td>
                 <td>{{ $shop->name }}</td>
                 <td>{{ $shop->email }}</td>
                 <td>
-                    <a href="tel:+993{{ $shop->seller->phone_number }}">
-                        <span>+993</span> {{ $shop->seller->phone_number }}
+                    <a href="tel:+993{{ $shop->user->phone_number }}">
+                        <span>+993</span> {{ $shop->user->phone_number }}
                     </a>
                 </td>
                 <td>{{ $shop->address }}</td>
                 <td><img src="{{ asset($shop->image) }}" alt="{{ asset($shop->image) }}" class="logo-circle"></td>
                 <td>
-                    @if($shop->seller->status)
+                    @if($shop->user->status)
                     <span class="badge badge-success">{{ __('Active') }}</span>
                     @else
                     <span class="badge badge-danger">{{ __('Inactive') }}</span>

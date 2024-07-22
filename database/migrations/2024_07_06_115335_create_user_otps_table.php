@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('seller_otps', function (Blueprint $table) {
+        Schema::create('user_otps', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('seller_id');
+            $table->bigInteger('user_id');
             $table->string('otp');
             $table->timestamp('expire_at')->nullable();
             $table->timestamps();
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('seller_otps');
+        Schema::dropIfExists('user_otps');
     }
 };

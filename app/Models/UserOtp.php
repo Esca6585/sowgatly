@@ -7,20 +7,20 @@ use Illuminate\Database\Eloquent\Model;
 use Exception;
 use Twilio\Rest\Client;
 
-class SellerOtp extends Model
+class UserOtp extends Model
 {
     use HasFactory;
 
-    protected $table = 'seller_otps';
+    protected $table = 'user_otps';
 
     protected $casts = [
-        'discount' => 'string',
-        'seller_id' => 'integer',
+        'user_id' => 'integer',
+        'otp' => 'integer',
         'expire_at' => 'string',
     ];
 
     protected $fillable = [
-        'seller_id',
+        'user_id',
         'otp',
         'expire_at',
     ];

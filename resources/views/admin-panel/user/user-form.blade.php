@@ -147,7 +147,8 @@
 
                                         <li class="breadcrumb-item text-muted">
                                             <a href="{{ route('user.index', [ app()->getlocale() ]) }}"
-                                                class="text-muted"> {{ __( ucfirst(request()->segment(count(request()->segments())))) }}
+                                                class="text-muted">
+                                                {{ __( ucfirst(request()->segment(count(request()->segments())))) }}
                                             </a>
                                         </li>
                                     </ul>
@@ -183,8 +184,7 @@
                                     @csrf
                                     @method('PUT')
                                     @else
-                                    <form
-                                        action="{{ route(Request::segment(3) . '.store', [ app()->getlocale() ] ) }}"
+                                    <form action="{{ route(Request::segment(3) . '.store', [ app()->getlocale() ] ) }}"
                                         method="post" enctype="multipart/form-data">
                                         @csrf
                                         @endif
@@ -192,20 +192,19 @@
                                         <div class="card-body">
                                             <div class="container">
                                                 <div class="row">
-                                                    
-                                                    <div class="col-6">
+
+                                                    <div class="col-4">
                                                         <div class="form-group">
-                                                            <label>{{ __('First Name') }}</label>
+                                                            <label>{{ __('Name') }}</label>
 
                                                             <input type="text"
-                                                                class="form-control @error('first_name') is-invalid @enderror"
-                                                                name="first_name"
-                                                                placeholder="{{ __('First Name') }}"
-                                                                value="{{ $user->first_name ?? '' }}{{ request()->segment(count(request()->segments())) == 'create' ? old('first_name') : '' }}" />
+                                                                class="form-control @error('name') is-invalid @enderror"
+                                                                name="name" placeholder="{{ __('Name') }}"
+                                                                value="{{ $user->name ?? '' }}{{ request()->segment(count(request()->segments())) == 'create' ? old('name') : '' }}" />
 
-                                                            @error('first_name')
+                                                            @error('name')
                                                             <div class="fv-plugins-message-container invalid-feedback">
-                                                                <div data-field="first_name" data-validator="notEmpty">
+                                                                <div data-field="name" data-validator="notEmpty">
                                                                     {{ $message }}
                                                                 </div>
                                                             </div>
@@ -213,47 +212,7 @@
                                                         </div>
                                                     </div>
 
-                                                    <div class="col-6">
-                                                        <div class="form-group">
-                                                            <label>{{ __('Last Name') }}</label>
-
-                                                            <input type="text"
-                                                                class="form-control @error('last_name') is-invalid @enderror"
-                                                                name="last_name"
-                                                                placeholder="{{ __('Last Name') }}"
-                                                                value="{{ $user->last_name ?? '' }}{{ request()->segment(count(request()->segments())) == 'create' ? old('last_name') : '' }}" />
-
-                                                            @error('last_name')
-                                                            <div class="fv-plugins-message-container invalid-feedback">
-                                                                <div data-field="last_name" data-validator="notEmpty">
-                                                                    {{ $message }}
-                                                                </div>
-                                                            </div>
-                                                            @enderror
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="col-6">
-                                                        <div class="form-group">
-                                                            <label>{{ __('Email Address') }}</label>
-
-                                                            <input type="text"
-                                                                class="form-control @error('email') is-invalid @enderror"
-                                                                name="email"
-                                                                placeholder="{{ __('Email Address') }}"
-                                                                value="{{ $user->email ?? '' }}{{ request()->segment(count(request()->segments())) == 'create' ? old('email') : '' }}" />
-
-                                                            @error('email')
-                                                            <div class="fv-plugins-message-container invalid-feedback">
-                                                                <div data-field="email" data-validator="notEmpty">
-                                                                    {{ $message }}
-                                                                </div>
-                                                            </div>
-                                                            @enderror
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="col-6">
+                                                    <div class="col-4">
                                                         <div class="form-group">
                                                             <label>{{ __('Phone number') }}</label>
 
@@ -265,7 +224,8 @@
 
                                                             @error('phone_number')
                                                             <div class="fv-plugins-message-container invalid-feedback">
-                                                                <div data-field="phone_number" data-validator="notEmpty">
+                                                                <div data-field="phone_number"
+                                                                    data-validator="notEmpty">
                                                                     {{ $message }}
                                                                 </div>
                                                             </div>
@@ -273,59 +233,19 @@
                                                         </div>
                                                     </div>
 
-                                                    <div class="col-6">
+                                                    <div class="col-4">
                                                         <div class="form-group">
-                                                            <label>{{ __('Address') }}</label>
+                                                            <label>{{ __('Image') }} {{ __('or') }}
+                                                                {{ __('Logo') }}</label>
 
-                                                            <input type="text"
-                                                                class="form-control @error('address') is-invalid @enderror"
-                                                                name="address"
-                                                                placeholder="{{ __('Address') }}"
-                                                                value="{{ $user->address ?? '' }}{{ request()->segment(count(request()->segments())) == 'create' ? old('address') : '' }}" />
+                                                            <input type="file"
+                                                                class="form-control @error('image') is-invalid @enderror"
+                                                                accept="image/gif, image/jpeg, image/png"
+                                                                onchange="loadImages(event)" name="image" />
 
-                                                            @error('address')
+                                                            @error('image')
                                                             <div class="fv-plugins-message-container invalid-feedback">
-                                                                <div data-field="address" data-validator="notEmpty">
-                                                                    {{ $message }}
-                                                                </div>
-                                                            </div>
-                                                            @enderror
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="col-3">
-                                                        <div class="form-group">
-                                                            <label>{{ __('Roles') }}</label>
-
-                                                            <select name="roles" id="" class="form-control @error('roles') is-invalid @enderror">
-                                                                @foreach ($roles as $role)
-                                                                    <option value="{{ $role }}" {{ $user->roles->pluck('name')->first() == $role ? 'selected=selected' : '' }} >{{ $role }}</option>
-                                                                @endforeach
-                                                            </select>
-
-                                                            @error('roles')
-                                                            <div class="fv-plugins-message-container invalid-feedback">
-                                                                <div data-field="roles" data-validator="notEmpty">
-                                                                    {{ $message }}
-                                                                </div>
-                                                            </div>
-                                                            @enderror
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="col-3">
-                                                        <div class="form-group">
-                                                            <label>{{ __('Company name') }}</label>
-
-                                                            <input type="text"
-                                                                class="form-control @error('company_name') is-invalid @enderror"
-                                                                name="company_name"
-                                                                placeholder="{{ __('Company name') }}"
-                                                                value="{{ $user->company_name ?? '' }}{{ request()->segment(count(request()->segments())) == 'create' ? old('address') : '' }}" />
-
-                                                            @error('company_name')
-                                                            <div class="fv-plugins-message-container invalid-feedback">
-                                                                <div data-field="company_name" data-validator="notEmpty">
+                                                                <div data-field="image" data-validator="notEmpty">
                                                                     {{ $message }}
                                                                 </div>
                                                             </div>
@@ -339,8 +259,7 @@
 
                                                             <input type="password"
                                                                 class="form-control @error('password') is-invalid @enderror"
-                                                                name="password"
-                                                                placeholder="{{ __('Password') }}"
+                                                                name="password" placeholder="{{ __('Password') }}"
                                                                 value="{{ request()->segment(count(request()->segments())) == 'create' ? old('password') : '' }}" />
 
                                                             @error('password')
@@ -373,18 +292,31 @@
                                                         </div>
                                                     </div>
 
-                                                    
                                                     <div class="col-4">
                                                         <div class="form-group">
-                                                            <label>{{ __('Emblem') }} {{ __('or') }} {{ __('Logo') }}</label>
+                                                            <label>{{ __('Status') }}</label>
 
-                                                            <input type="file"
-                                                                class="form-control @error('image') is-invalid @enderror"
-                                                                name="image" />
+                                                            <select
+                                                                class="form-control @error('status') is-invalid @enderror"
+                                                                name="status">
+                                                                @if($user->id)
+                                                                <option value="1"
+                                                                    {{ $user->status == 1 ? 'selected' : '' }}>
+                                                                    {{ __('Active') }}</option>
+                                                                <option value="0"
+                                                                    {{ $user->status == 0 ? 'selected' : '' }}>
+                                                                    {{ __('Inactive') }}</option>
+                                                                @else
+                                                                <option value="1">
+                                                                    {{ __('Active') }}</option>
+                                                                <option value="0">
+                                                                    {{ __('Inactive') }}</option>
+                                                                @endif
+                                                            </select>
 
-                                                            @error('image')
+                                                            @error('status')
                                                             <div class="fv-plugins-message-container invalid-feedback">
-                                                                <div data-field="image" data-validator="notEmpty">
+                                                                <div data-field="status" data-validator="notEmpty">
                                                                     {{ $message }}
                                                                 </div>
                                                             </div>
@@ -392,13 +324,47 @@
                                                         </div>
                                                     </div>
 
-                                                    <div class="section__container__body mx-4 mb-10">
-                                                        <div class="section__container__word">
+                                                    <div class="col-12" id="outputDiv">
+                                                    </div>
 
-                                                            <div class="section__sample">
-                                                                <x-user.blank.company :id="$user->id" />
+                                                    <div class="row mb-6">
+                                                        <!--begin::Image-->
+                                                        @if($user->image)
+                                                        <div class="col m-5">
+                                                            <div class="image-input image-input-outline" id="kt_image_1"
+                                                                data-image-count="" style="background-image: url();">
+                                                                <div class="image-input-wrapper"
+                                                                    style="background-image: url({{ asset($user->image) }})">
+                                                                </div>
+
+                                                                <label
+                                                                    class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                                                                    data-action="change" data-toggle="tooltip" title=""
+                                                                    data-original-title="Change avatar">
+                                                                    <i class="fa fa-pen icon-sm text-muted"></i>
+                                                                    <input type="file" name="profile_avatar"
+                                                                        accept=".png, .jpg, .jpeg" />
+
+                                                                    <input type="hidden" name="profile_avatar_remove" />
+                                                                </label>
+
+                                                                <span
+                                                                    class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                                                                    data-action="cancel" data-toggle="tooltip"
+                                                                    title="Cancel avatar">
+                                                                    <i class="ki ki-bold-close icon-xs text-muted"></i>
+                                                                </span>
+
+                                                                <span
+                                                                    class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                                                                    data-action="remove" data-toggle="tooltip"
+                                                                    title="Remove avatar">
+                                                                    <i class="ki ki-bold-close icon-xs text-muted"></i>
+                                                                </span>
                                                             </div>
                                                         </div>
+                                                        @endif
+                                                        <!--end::Image-->
                                                     </div>
 
                                                 </div>
@@ -421,8 +387,7 @@
                                                 </span>
                                             </a>
 
-                                            <button type="submit"
-                                                title="{{ $user->id ? __('Edit') : __('Create') }}"
+                                            <button type="submit" title="{{ $user->id ? __('Edit') : __('Create') }}"
                                                 class="btn {{ $user->id ? 'btn-warning' : 'btn-primary' }} font-weight-bolder">
                                                 <span class="svg-icon svg-icon-md">
                                                     @if($user->id)
