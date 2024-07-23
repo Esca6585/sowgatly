@@ -21,12 +21,14 @@ class CategoryResource extends JsonResource
                 'en' => $this->name_en,
                 'ru' => $this->name_ru,
             ],
-            'image' => $this->image ? asset('storage/' . $this->image) : null,
-            'parent_id' => $this->category_id,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'image' => $this->image ? asset($this->image) : null,
+            'category_id' => $this->category_id,
+            'created_at' => $this->created_at->toDateTimeString(),
+            'updated_at' => $this->updated_at->toDateTimeString(),
             'parent' => new CategoryResource($this->whenLoaded('parent')),
-            'children' => CategoryResource::collection($this->whenLoaded('children')),
+            'categories' => CategoryResource::collection($this->whenLoaded('categories')),
+            'children_categories' => CategoryResource::collection($this->whenLoaded('childrenCategories')),
+            'top_parent' => $this->getTopParent(),
         ];
     }
 }

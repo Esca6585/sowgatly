@@ -17,14 +17,19 @@ class Category extends Model
         'category_id',
     ];
 
+    public function scopeParentCategory($query)
+    {
+        return $query->whereNull('category_id');
+    }
+    
     public static function parentCategory()
     {
-        return Category::where('category_id', null)->get();
+        return static::whereNull('category_id')->get();
     }
 
     public function parent()
     {
-        return $this->belongsTo(Category::class,'category_id', 'id');
+        return $this->belongsTo(Category::class, 'category_id', 'id');
     }
 
     public function getTopParent()
@@ -34,7 +39,7 @@ class Category extends Model
 
     public function categories()
     {
-        return $this->hasMany(Category::class,'category_id', 'id');
+        return $this->hasMany(Category::class, 'category_id', 'id');
     }
 
     public function childrenCategories()

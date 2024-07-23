@@ -25,7 +25,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('product/category/{category_id}', [App\Http\Controllers\API\ProductController::class , 'getByCategory']);
     
     Route::apiResource('categories', App\Http\Controllers\API\CategoryController::class);
-    Route::get('/categories/parents', [App\Http\Controllers\API\CategoryController::class, 'getParentCategories']);
     Route::get('/categories/{id}/subcategories', [App\Http\Controllers\API\CategoryController::class, 'getSubcategories']);
 
     Route::get('/user', [App\Http\Controllers\Admin\Api\AdminController::class, 'user']);

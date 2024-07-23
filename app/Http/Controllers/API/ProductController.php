@@ -1,8 +1,6 @@
 <?php
 namespace App\Http\Controllers\API;
 
-use OpenApi\Annotations as OA;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Controller;
@@ -50,7 +48,7 @@ class ProductController extends Controller
      *     )
      * )
      */
-    public function index(): AnonymousResourceCollection
+    public function index()
     {
         try {
             $products = Product::with('images')->paginate(15);
@@ -165,7 +163,7 @@ class ProductController extends Controller
     }
 
     /**
-     * @OA\Put(
+     * @OA\Post(
      *     path="/api/products/{id}",
      *     summary="Update an existing product",
      *     security={{"sanctum":{}}},
@@ -203,6 +201,7 @@ class ProductController extends Controller
      * @OA\Schema(
      *     schema="ProductRequest",
      *     required={"name", "price", "description", "discount", "attributes", "status", "category_id"},
+     *     @OA\Property(property="_method", type="string", example="PUT"),
      *     @OA\Property(property="name", type="string", example="Updated Product Name"),
      *     @OA\Property(property="description", type="string", example="Updated Product Description"),
      *     @OA\Property(property="price", type="number", format="float", example=129.99),
@@ -277,7 +276,7 @@ class ProductController extends Controller
         // ]);
     }
 
-    public function uploadImages($product, $validatedData)
+    protected function uploadImages($product, $validatedData)
     {
         if($validatedData['images']){
             $images = $validatedData['images'];

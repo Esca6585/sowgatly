@@ -11,7 +11,7 @@
             "description": "Local server"
         },
         {
-            "url": "http://93.171.223.29",
+            "url": "https://sowgatly.app",
             "description": "Remote server"
         }
     ],
@@ -124,16 +124,82 @@
                 }
             }
         },
-        "/api/categories/parents": {
+        "/api/categories": {
             "get": {
                 "tags": [
                     "Categories"
                 ],
-                "summary": "Get all parent categories",
-                "operationId": "fec113e743d9235f247f8ba80b2e06fc",
+                "summary": "Get list of categories",
+                "operationId": "8e17a9627dbed245cf032f867569cf11",
+                "parameters": [
+                    {
+                        "name": "parent",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "List of parent categories"
+                        "description": "List of categories"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Create a new category",
+                "operationId": "2140f330d926c3e118cab9391dc4ff42",
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "name_tm": {
+                                        "type": "string",
+                                        "example": "test_tm"
+                                    },
+                                    "name_en": {
+                                        "type": "string",
+                                        "example": "test_en"
+                                    },
+                                    "name_ru": {
+                                        "type": "string",
+                                        "example": "test_ru"
+                                    },
+                                    "image": {
+                                        "description": "Image file",
+                                        "type": "string",
+                                        "format": "binary"
+                                    },
+                                    "category_id": {
+                                        "type": "integer",
+                                        "example": "1"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Category created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CategoryResource"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -172,72 +238,6 @@
                 ]
             }
         },
-        "/api/categories": {
-            "get": {
-                "tags": [
-                    "Categories"
-                ],
-                "summary": "Get all categories",
-                "operationId": "8e17a9627dbed245cf032f867569cf11",
-                "responses": {
-                    "200": {
-                        "description": "List of categories"
-                    }
-                },
-                "security": [
-                    {
-                        "sanctum": []
-                    }
-                ]
-            },
-            "post": {
-                "tags": [
-                    "Categories"
-                ],
-                "summary": "Create a new category",
-                "operationId": "2140f330d926c3e118cab9391dc4ff42",
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "properties": {
-                                    "name_tm": {
-                                        "type": "string",
-                                        "example": "test_tm"
-                                    },
-                                    "name_en": {
-                                        "type": "string",
-                                        "example": "test_en"
-                                    },
-                                    "name_ru": {
-                                        "type": "string",
-                                        "example": "test_ru"
-                                    },
-                                    "image": {
-                                        "type": "string"
-                                    },
-                                    "category_id": {
-                                        "type": "integer",
-                                        "nullable": true
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "201": {
-                        "description": "Category created"
-                    }
-                },
-                "security": [
-                    {
-                        "sanctum": []
-                    }
-                ]
-            }
-        },
         "/api/categories/{id}": {
             "get": {
                 "tags": [
@@ -266,12 +266,12 @@
                     }
                 ]
             },
-            "put": {
+            "post": {
                 "tags": [
                     "Categories"
                 ],
                 "summary": "Update a category",
-                "operationId": "e4e7aaba2eee4d7e813dea85bf3cf3ed",
+                "operationId": "c801ba2dc7ddfc8237ad4be7928f7bf6",
                 "parameters": [
                     {
                         "name": "id",
@@ -284,27 +284,33 @@
                 ],
                 "requestBody": {
                     "content": {
-                        "application/json": {
+                        "multipart/form-data": {
                             "schema": {
                                 "properties": {
                                     "name_tm": {
                                         "type": "string",
-                                        "example": "test_tm"
+                                        "example": "test_tm_updated"
                                     },
                                     "name_en": {
                                         "type": "string",
-                                        "example": "test_en"
+                                        "example": "test_en_updated"
                                     },
                                     "name_ru": {
                                         "type": "string",
-                                        "example": "test_ru"
+                                        "example": "test_ru_updated"
+                                    },
+                                    "_method": {
+                                        "type": "string",
+                                        "example": "PUT"
                                     },
                                     "image": {
-                                        "type": "string"
+                                        "description": "Image file",
+                                        "type": "string",
+                                        "format": "binary"
                                     },
                                     "category_id": {
                                         "type": "integer",
-                                        "nullable": true
+                                        "example": "2"
                                     }
                                 },
                                 "type": "object"
@@ -314,7 +320,17 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Category updated"
+                        "description": "Category updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CategoryResource"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Category not found"
                     }
                 },
                 "security": [
@@ -578,6 +594,35 @@
     },
     "components": {
         "schemas": {
+            "CategoryResource": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name_tm": {
+                        "type": "string",
+                        "example": "Category Name TM"
+                    },
+                    "name_en": {
+                        "type": "string",
+                        "example": "Category Name EN"
+                    },
+                    "name_ru": {
+                        "type": "string",
+                        "example": "Category Name RU"
+                    },
+                    "category_id": {
+                        "type": "integer",
+                        "example": null
+                    },
+                    "image_url": {
+                        "type": "string",
+                        "example": "http://localhost:8000/category/category-seeder/other_fancy_flowers.png"
+                    }
+                },
+                "type": "object"
+            },
             "Product": {
                 "properties": {
                     "name": {
@@ -624,6 +669,10 @@
                     "category_id"
                 ],
                 "properties": {
+                    "_method": {
+                        "type": "string",
+                        "example": "PUT"
+                    },
                     "name": {
                         "type": "string",
                         "example": "Updated Product Name"
@@ -669,12 +718,12 @@
             "description": "API Endpoints for user Authentication"
         },
         {
-            "name": "Categories",
-            "description": "API Endpoints of Categories"
-        },
-        {
             "name": "Products",
             "description": "API Endpoints of Products"
+        },
+        {
+            "name": "Categories",
+            "description": "Categories"
         },
         {
             "name": "User",
