@@ -82,13 +82,9 @@
                                     "otp"
                                 ],
                                 "properties": {
-                                    "user_id": {
-                                        "type": "integer",
-                                        "example": 1
-                                    },
                                     "otp": {
                                         "type": "integer",
-                                        "example": 123456
+                                        "example": 1234
                                     }
                                 },
                                 "type": "object"

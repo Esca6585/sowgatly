@@ -5,7 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\user;
+use App\Models\User;
 use App\Models\Device;
 use App\Models\UserOtp;
 use Twilio\Rest\Client;
@@ -55,8 +55,8 @@ class AuthOtpController extends Controller
         $userOtp->sendSMS($request->phone_number);
 
         return response()->json([
-            'userOtp' => $userOtp,
-            'success' => 'OTP has been sent on Your Mobile Number.',
+            'status' => true,
+            'message' => 'OTP has been sent on Your Mobile Number.',
         ]);
     }
   
@@ -65,7 +65,7 @@ class AuthOtpController extends Controller
      *
      * @return response()
      */
-    public function generateOtp($phone_number)
+    protected function generateOtp($phone_number)
     {
         $user = User::where('phone_number', $phone_number)->first();
   
@@ -81,7 +81,7 @@ class AuthOtpController extends Controller
         /* Create a New OTP */
         return UserOtp::create([
             'user_id' => $user->id,
-            'otp' => rand(123456, 999999),
+            'otp' => '0000',
             'expire_at' => $now->addMinutes(10)
         ]);
     }
@@ -94,8 +94,7 @@ class AuthOtpController extends Controller
      *     @OA\RequestBody(
      *         @OA\JsonContent(
      *             required={"user_id", "otp"},
-     *             @OA\Property(property="user_id", type="integer", example=1),
-     *             @OA\Property(property="otp", type="integer", example=123456),
+     *             @OA\Property(property="otp", type="integer", example="0000"),
      *         )
      *     ),
      *     @OA\Response(
@@ -120,12 +119,11 @@ class AuthOtpController extends Controller
     {
         /* Validation */
         $request->validate([
-            'user_id' => 'required|exists:users,id',
             'otp' => 'required'
         ]);  
   
         /* Validation Logic */
-        $userOtp = UserOtp::where('user_id', $request->user_id)->where('otp', $request->otp)->first();
+        $userOtp = UserOtp::where('otp', $request->otp)->first();
   
         $now = now();
         if (!$userOtp) {
