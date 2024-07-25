@@ -15,7 +15,7 @@ class UserOtp extends Model
 
     protected $casts = [
         'user_id' => 'integer',
-        'otp' => 'integer',
+        'otp' => 'string',
         'expire_at' => 'string',
     ];
 

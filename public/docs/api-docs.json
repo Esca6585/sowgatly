@@ -84,7 +84,7 @@
                                 "properties": {
                                     "otp": {
                                         "type": "integer",
-                                        "example": 1234
+                                        "example": "0000"
                                     }
                                 },
                                 "type": "object"

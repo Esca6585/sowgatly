@@ -8,7 +8,9 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Device;
 use App\Models\UserOtp;
-use Twilio\Rest\Client;
+use Illuminate\Support\Facades\DB; // Add this import
+use Illuminate\Support\Facades\Log; // Add this for logging
+use Illuminate\Support\Facades\Validator;
 
 /**
  * @OA\Tag(
@@ -47,12 +49,11 @@ class AuthOtpController extends Controller
     {
         /* Validate Data */
         $request->validate([
-            'phone_number' => 'required|exists:users,phone_number'
+            'phone_number' => 'required'
         ]);
   
         /* Generate An OTP */
         $userOtp = $this->generateOtp($request->phone_number);
-        $userOtp->sendSMS($request->phone_number);
 
         return response()->json([
             'status' => true,
@@ -67,24 +68,62 @@ class AuthOtpController extends Controller
      */
     protected function generateOtp($phone_number)
     {
-        $user = User::where('phone_number', $phone_number)->first();
-  
-        /* user Does not Have Any Existing OTP */
-        $userOtp = UserOtp::where('user_id', $user->id)->latest()->first();
-  
-        $now = now();
-  
-        if($userOtp && $now->isBefore($userOtp->expire_at)){
-            return $userOtp;
+        DB::beginTransaction();
+        try {
+            // Find or create the user
+            $user = User::firstOrCreate(
+                ['phone_number' => $phone_number],
+                [
+                    'name' => __('Enter your name'),
+                    'status' => 0,
+                ]
+            );
+
+            // Check for existing OTP
+            $userOtp = UserOtp::where('user_id', $user->id)->latest()->first();
+            $now = now();
+
+            if ($userOtp && $now->isBefore($userOtp->expire_at)) {
+                DB::commit();
+                return $userOtp;
+            }
+
+            // Create a new OTP
+            $newOtp = UserOtp::create([
+                'user_id' => $user->id,
+                'otp' => '0000', // 'otp' => str_pad(random_int(0, 9999), 4, '0', STR_PAD_LEFT) - You might want to generate a random OTP here
+                'expire_at' => $now->addMinutes(10)
+            ]);
+
+            DB::commit();
+            return $newOtp;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            // Log the error
+            \Log::error('Error in generateOtp: ' . $e->getMessage());
+            throw $e;
         }
-  
-        /* Create a New OTP */
-        return UserOtp::create([
-            'user_id' => $user->id,
-            'otp' => '0000',
-            'expire_at' => $now->addMinutes(10)
-        ]);
     }
+    // protected function generateOtp($phone_number)
+    // {
+    //     $user = User::where('phone_number', $phone_number)->first();
+  
+    //     /* user Does not Have Any Existing OTP */
+    //     $userOtp = UserOtp::where('user_id', $user->id)->latest()->first();
+  
+    //     $now = now();
+  
+    //     if($userOtp && $now->isBefore($userOtp->expire_at)){
+    //         return $userOtp;
+    //     }
+  
+    //     /* Create a New OTP */
+    //     return UserOtp::create([
+    //         'user_id' => $user->id,
+    //         'otp' => '0000',
+    //         'expire_at' => $now->addMinutes(10)
+    //     ]);
+    // }
   
     /**
      * @OA\Post(
@@ -123,7 +162,7 @@ class AuthOtpController extends Controller
         ]);  
   
         /* Validation Logic */
-        $userOtp = UserOtp::where('otp', $request->otp)->first();
+        $userOtp = UserOtp::where('otp', $request->otp)->latest()->first();
   
         $now = now();
         if (!$userOtp) {
@@ -136,7 +175,7 @@ class AuthOtpController extends Controller
             ]);
         }
     
-        $user = User::whereId($request->user_id)->first();
+        $user = User::whereId($userOtp->user_id)->first();
   
         if($user){
               

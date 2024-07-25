@@ -21,7 +21,13 @@
                         <span>+993</span> {{ $user->phone_number }}
                     </a>
                 </td>
-                <td><img src="{{ asset($user->image) }}" alt="{{ asset($user->image) }}" class="logo-circle"></td>
+                <td>
+                    @if($user->image)
+                    <img src="{{ asset($user->image) }}" alt="{{ asset($user->image) }}" class="logo-circle">
+                    @else
+                    <img src="{{ asset('img/logo/no-avatar-profile.avif') }}" alt="{{ asset('img/logo/no-avatar-profile.avif') }}" class="logo-circle">
+                    @endif
+                </td>
                 <td>
                     @if($user->status)
                     <span class="badge badge-success">{{ __('Active') }}</span>

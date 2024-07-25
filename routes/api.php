@@ -15,8 +15,8 @@ use Illuminate\Support\Facades\Route;
 */
  
 Route::controller(App\Http\Controllers\API\AuthOtpController::class)->group(function(){
-    Route::post('otp/generate', 'generate')->name('otp.generate');
-    Route::post('otp/login', 'loginWithOtp')->name('otp.getlogin');
+    Route::post('otp/generate', 'generate');
+    Route::post('otp/login', 'loginWithOtp');
 });
 
 Route::middleware('auth:sanctum')->group(function () {
