@@ -104,26 +104,6 @@ class AuthOtpController extends Controller
             throw $e;
         }
     }
-    // protected function generateOtp($phone_number)
-    // {
-    //     $user = User::where('phone_number', $phone_number)->first();
-  
-    //     /* user Does not Have Any Existing OTP */
-    //     $userOtp = UserOtp::where('user_id', $user->id)->latest()->first();
-  
-    //     $now = now();
-  
-    //     if($userOtp && $now->isBefore($userOtp->expire_at)){
-    //         return $userOtp;
-    //     }
-  
-    //     /* Create a New OTP */
-    //     return UserOtp::create([
-    //         'user_id' => $user->id,
-    //         'otp' => '0000',
-    //         'expire_at' => $now->addMinutes(10)
-    //     ]);
-    // }
   
     /**
      * @OA\Post(
@@ -133,6 +113,7 @@ class AuthOtpController extends Controller
      *     @OA\RequestBody(
      *         @OA\JsonContent(
      *             required={"user_id", "otp"},
+     *             @OA\Property(property="phone_number", type="integer", example="65656585"),
      *             @OA\Property(property="otp", type="integer", example="0000"),
      *         )
      *     ),
@@ -158,11 +139,12 @@ class AuthOtpController extends Controller
     {
         /* Validation */
         $request->validate([
+            'phone_number' => 'required',
             'otp' => 'required'
         ]);  
   
         /* Validation Logic */
-        $userOtp = UserOtp::where('otp', $request->otp)->latest()->first();
+        $userOtp = UserOtp::where('otp', $request->otp)->where('phone_number', $request->phone_number)->latest()->first();
   
         $now = now();
         if (!$userOtp) {

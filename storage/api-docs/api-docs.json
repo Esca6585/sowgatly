@@ -82,6 +82,10 @@
                                     "otp"
                                 ],
                                 "properties": {
+                                    "phone_number": {
+                                        "type": "integer",
+                                        "example": "65656585"
+                                    },
                                     "otp": {
                                         "type": "integer",
                                         "example": "0000"
