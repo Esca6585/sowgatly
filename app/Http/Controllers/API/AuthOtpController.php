@@ -144,7 +144,9 @@ class AuthOtpController extends Controller
         ]);  
   
         /* Validation Logic */
-        $userOtp = UserOtp::where('otp', $request->otp)->where('phone_number', $request->phone_number)->latest()->first();
+        $user = User::where('phone_number', $request->phone_number)->first();
+
+        $userOtp = UserOtp::where('otp', $request->otp)->where('user_id', $user->id)->latest()->first();
   
         $now = now();
         if (!$userOtp) {
