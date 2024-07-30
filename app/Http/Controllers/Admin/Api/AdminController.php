@@ -16,21 +16,6 @@ use DB;
 
 class AdminController extends Controller
 {
-    /**
-     * @OA\Get(
-     *     path="/api/user",
-     *     summary="Get authenticated user",
-     *     tags={"User"},
-     *     security={{"sanctum":{}}},
-     *     @OA\Response(response="200", description="Successful operation"),
-     *     @OA\Response(response="401", description="Unauthenticated")
-     * )
-     */
-    public function user(Request $request)
-    {
-        return $request->user();
-    }
-    
     public function categories()
     {
         $categories = Travel::with(['user', 'tarif'])->orderBy('id', 'desc')->get();

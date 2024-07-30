@@ -34,6 +34,13 @@ class CategoryController extends Controller
      *     security={{"sanctum":{}}},
      *     summary="Get list of categories",
      *     @OA\Parameter(
+     *         name="page",
+     *         in="query",
+     *         description="Page number",
+     *         required=false,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Parameter(
      *         name="parent",
      *         in="query",
      *         required=false,
@@ -50,7 +57,7 @@ class CategoryController extends Controller
             $query->parentCategory();
         }
 
-        $categories = $query->get();
+        $categories = $query->paginate(15);
 
         return CategoryResource::collection($categories);
     }
@@ -121,7 +128,9 @@ class CategoryController extends Controller
 
         $this->uploadImage($category, $request->file('image'));
 
-        return new CategoryResource($category);
+        return response()->json([
+            'success' => true,
+        ]);
     }
 
     /**
@@ -202,7 +211,9 @@ class CategoryController extends Controller
             $this->uploadImage($category, $request->file('image'));
         }
 
-        return new CategoryResource($category);
+        return response()->json([
+            'success' => true,
+        ]);
     }
 
     /**
@@ -252,9 +263,25 @@ class CategoryController extends Controller
      *     @OA\Response(response="204", description="Category deleted")
      * )
      */
-    public function destroy(Category $category)
+    public function destroy($lang, Category $category)
     {
+        $this->deleteFolder($category);
+
         $category->delete();
-        return response()->json(null, 204);
+
+        return response()->json([
+            'success' => true,
+        ]);
+    }
+
+    public function deleteFolder($category)
+    {
+        if ($category->image) {
+            $folder = explode('/', $category->image);
+
+            if ($folder[2] != 'category-seeder') {
+                \File::deleteDirectory($folder[0] . '/' . $folder[1] . '/' . $folder[2]);
+            }
+        }
     }
 }

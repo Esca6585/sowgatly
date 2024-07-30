@@ -179,7 +179,9 @@ class ProductController extends Controller
             $this->uploadImages($product, $request->file('image'));
         }
 
-        return new ProductResource($product);
+        return response()->json([
+            'success' => true,
+        ]);
     }
 
     protected function uploadImages($product, $validatedData)
@@ -238,7 +240,9 @@ class ProductController extends Controller
 
         $product->delete();
 
-        return redirect()->route('product.index', [ app()->getlocale() ])->with('success-delete', 'The resource was deleted!');
+        return response()->json([
+            'success' => true,
+        ]);
     }
 
     public function deleteFolder($product_id)

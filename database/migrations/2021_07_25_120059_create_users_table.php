@@ -24,8 +24,6 @@ return new class extends Migration
 
             $table->boolean('status')->default(0);
 
-            $table->string('otp')->nullable();
-
             $table->rememberToken();
             $table->timestamps();
         });

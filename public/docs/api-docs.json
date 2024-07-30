@@ -133,6 +133,15 @@
                 "operationId": "8e17a9627dbed245cf032f867569cf11",
                 "parameters": [
                     {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
                         "name": "parent",
                         "in": "query",
                         "required": false,
@@ -647,19 +656,181 @@
                 ]
             }
         },
-        "/api/user": {
+        "/api/users": {
             "get": {
                 "tags": [
-                    "User"
+                    "Users"
                 ],
-                "summary": "Get authenticated user",
-                "operationId": "bd8db2c6e54c820a53c9655e82e5d05a",
+                "summary": "Get list of users",
+                "operationId": "d7a57f4d7de18fb0f92501172472c9b6",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "Successful operation"
+                        "description": "List of users"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Create a new user",
+                "operationId": "9fea6f2adcb69614c521a7733358382d",
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Esen Meredow"
+                                    },
+                                    "phone_number": {
+                                        "type": "integer",
+                                        "example": "65656585"
+                                    },
+                                    "image": {
+                                        "description": "Image file",
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "User created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserResource"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/users/{id}": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get a user",
+                "operationId": "40a5104e23b52137e78c3d3ac48b88a8",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User details"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Update a user",
+                "operationId": "aa81151559ac4eeb9606336b205bfa3f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Esca Meredoff"
+                                    },
+                                    "image": {
+                                        "description": "Image file",
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "User updated"
                     },
-                    "401": {
-                        "description": "Unauthenticated"
+                    "404": {
+                        "description": "User not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Delete a user",
+                "operationId": "ce06860a51ab016ef66e753544fe4563",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "User deleted"
                     }
                 },
                 "security": [
@@ -700,6 +871,28 @@
                     }
                 },
                 "type": "object"
+            },
+            "UserResource": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Esen Meredow"
+                    },
+                    "phone_number": {
+                        "type": "integer",
+                        "example": "65656585"
+                    },
+                    "image": {
+                        "description": "Image file",
+                        "type": "string",
+                        "format": "binary"
+                    }
+                },
+                "type": "object"
             }
         },
         "securitySchemes": {
@@ -725,8 +918,8 @@
             "description": "Categories"
         },
         {
-            "name": "User",
-            "description": "User"
+            "name": "Users",
+            "description": "Users"
         }
     ]
 }
