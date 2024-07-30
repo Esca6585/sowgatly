@@ -177,7 +177,6 @@ class CategoryController extends Controller
      *     @OA\Response(
      *         response="200", 
      *         description="Category updated",
-     *         @OA\JsonContent(ref="#/components/schemas/CategoryResource")
      *     ),
      *     @OA\Response(
      *         response="404",

@@ -32,20 +32,7 @@ class ProductController extends Controller
      *         required=false,
      *         @OA\Schema(type="integer")
      *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="Successful operation",
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(property="data", type="array", @OA\Items(ref="#/components/schemas/Product")),
-     *             @OA\Property(property="links", type="object"),
-     *             @OA\Property(property="meta", type="object")
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=500,
-     *         description="Server error"
-     *     )
+     *     @OA\Response(response="200", description="List of products")
      * )
      */
     public function index()
@@ -61,53 +48,29 @@ class ProductController extends Controller
      /**
      * @OA\Post(
      *     path="/api/products",
-     *     summary="Create a new product",
      *     tags={"Products"},
      *     security={{"sanctum":{}}},
+     *     summary="Create a new product]",
      *     @OA\RequestBody(
-     *         required=true,
-     *         @OA\JsonContent(ref="#/components/schemas/ProductRequest")
-     *     ),
-     *     @OA\Response(
-     *         response=201,
-     *         description="Product created successfully",
-     *         @OA\JsonContent(ref="#/components/schemas/Product")
-     *     ),
-     *     @OA\Response(
-     *         response=422,
-     *         description="Validation error",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="The given data was invalid."),
-     *             @OA\Property(property="errors", type="object")
+     *         @OA\MediaType(
+     *             mediaType="multipart/form-data",
+     *             @OA\Schema(
+     *                 @OA\Property(property="name", type="string", example="Roza Gül"),
+     *                 @OA\Property(property="description", type="string", example="Lorem ipsum, dolor sit amet consectetur adipisicing elit. Officiis pariatur ea laudantium molestias vero porro odio, repellat ullam. Itaque quam temporibus maxime error sunt dolorum sed perspiciatis. Reprehenderit, molestias mollitia?"),
+     *                 @OA\Property(property="price", type="double", example="57"),
+     *                 @OA\Property(property="discount", type="double", example="10"),
+     *                 @OA\Property(property="attributes", type="double", example="12345"),
+     *                 @OA\Property(property="category_id", type="integer", example="1"),
+     *                 @OA\Property(
+     *                     property="images[]",
+     *                     type="array",
+     *                     @OA\Items(type="string", format="binary"),
+     *                     description="Image file"
+     *                 ),
+     *             )
      *         )
-     *     )
-     * )
-     */
-
-     /**
-     * @OA\Schema(
-     *     schema="ProductRequest",
-     *     required={"name", "price", "description", "discount", "attributes", "status", "category_id"},
-     *     @OA\Property(property="name", type="string", example="Product Name"),
-     *     @OA\Property(property="description", type="string", example="Product Description"),
-     *     @OA\Property(property="price", type="number", format="float", example=99.99),
-     *     @OA\Property(property="discount", type="number", format="float", example=10.00),
-     *     @OA\Property(property="attributes", type="string", example="{'color': 'red', 'size': 'large'}"),
-     *     @OA\Property(property="status", type="boolean", example=true),
-     *     @OA\Property(property="category_id", type="integer", example=1),
-     *     @OA\Property(property="images", type="array", @OA\Items(type="string", format="binary"))
-     * )
-     */
-    /**
-     * @OA\Schema(
-     *     schema="Product",
-     *     @OA\Property(property="name", type="string", example="Product Name"),
-     *     @OA\Property(property="description", type="string", example="Product Description"),
-     *     @OA\Property(property="price", type="number", format="float", example=99.99),
-     *     @OA\Property(property="discount", type="number", format="float", example=10.00),
-     *     @OA\Property(property="attributes", type="string", example="{'color': 'red', 'size': 'large'}"),
-     *     @OA\Property(property="images", type="string", example="{'color': 'red', 'size': 'large'}"),
-     *     @OA\Property(property="category_id", type="integer", example=1),
+     *     ),
+     *     @OA\Response(response="200", description="List of products")
      * )
      */
     public function store(Request $request)
@@ -148,26 +111,21 @@ class ProductController extends Controller
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="Successful operation",
-     *         @OA\JsonContent(ref="#/components/schemas/Product")
-     *     ),
-     *     @OA\Response(
-     *         response=404,
-     *         description="Product not found"
+     *         description="Product details"
      *     )
      * )
      */
     public function show(Product $product)
     {
-        return ProductResource::collection([$product]);
+        return new ProductResource($category);
     }
 
-    /**
+     /**
      * @OA\Post(
      *     path="/api/products/{id}",
-     *     summary="Update an existing product",
-     *     security={{"sanctum":{}}},
      *     tags={"Products"},
+     *     security={{"sanctum":{}}},
+     *     summary="Update a product",
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -175,49 +133,33 @@ class ProductController extends Controller
      *         @OA\Schema(type="integer")
      *     ),
      *     @OA\RequestBody(
-     *         required=true,
-     *         @OA\JsonContent(ref="#/components/schemas/ProductRequest")
-     *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="Product updated successfully",
-     *         @OA\JsonContent(ref="#/components/schemas/Product")
-     *     ),
-     *     @OA\Response(
-     *         response=400,
-     *         description="Validation error",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="The given data was invalid."),
-     *             @OA\Property(property="errors", type="object")
+     *         @OA\MediaType(
+     *             mediaType="multipart/form-data",
+     *             @OA\Schema(
+     *                 @OA\Property(property="name", type="string", example="Updated Product Name"),
+     *                 @OA\Property(property="description", type="string", example="Updated Product Description"),
+     *                 @OA\Property(property="price", type="number", format="float", example=129.99),
+     *                 @OA\Property(property="discount", type="number", format="float", example=15.00),
+     *                 @OA\Property(property="attributes", type="string", example="{'color': 'blue', 'size': 'medium'}"),
+     *                 @OA\Property(property="category_id", type="integer", example=2),
+     *                 @OA\Property(property="_method", type="string", example="PUT"),
+     *                 @OA\Property(
+     *                     property="images[]",
+     *                     type="array",
+     *                     @OA\Items(type="string", format="binary"),
+     *                     description="Image file"
+     *                 ),
+     *             )
      *         )
      *     ),
      *     @OA\Response(
-     *         response=404,
-     *         description="Product not found"
-     *     )
-     * )
-     */
-    /**
-     * @OA\Schema(
-     *     schema="ProductRequest",
-     *     required={"name", "price", "description", "discount", "attributes", "status", "category_id"},
-     *     @OA\Property(property="_method", type="string", example="PUT"),
-     *     @OA\Property(property="name", type="string", example="Updated Product Name"),
-     *     @OA\Property(property="description", type="string", example="Updated Product Description"),
-     *     @OA\Property(property="price", type="number", format="float", example=129.99),
-     *     @OA\Property(property="discount", type="number", format="float", example=15.00),
-     *     @OA\Property(property="attributes", type="string", example="{'color': 'blue', 'size': 'medium'}"),
-     *     @OA\Property(property="category_id", type="integer", example=2),
+     *         response="200", 
+     *         description="Product updated",
+     *     ),
      * )
      */
     public function update(Request $request, Product $product)
     {
-        return response()->json([
-            'message' => 'Product updated successfully',
-            'product' => $product,
-            'request' => $request
-        ], 200);
-
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string',
@@ -229,51 +171,15 @@ class ProductController extends Controller
             'images.*' => 'sometimes|required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        return response()->json([
-            'message' => 'Product updated successfully',
-            'product' => $product
-        ], 200);
-
+        // Update product data
         $product->update($validatedData);
 
-        return response()->json([
-            'message' => 'Product updated successfully',
-            'product' => $product
-        ], 200);
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            $this->uploadImages($product, $request->file('image'));
+        }
 
-        // return response()->json([
-        //     'request' => $request,
-        //     'product' => $product,
-        // ]);
-
-        // $validatedData = $request->validate([
-        //     'name' => 'required|string|max:255',
-        //     'description' => 'required|string',
-        //     'price' => 'required',
-        //     'discount' => 'required',
-        //     'attributes' => 'required|string',
-        //     'category_id' => 'required|exists:categories,id',
-        //     'images' => 'required|array',
-        //     'images.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-        // ]);
-        
-
-        // $product->name = $validatedData['name'];
-        // $product->description = $validatedData['description'];
-        // $product->price = $validatedData['price'];
-        // $product->discount = $validatedData['discount'];
-        // $product->attributes = $validatedData['attributes'];
-        // $product->code = $validatedData['code'];
-        // $product->status = $validatedData['status'];
-        // $product->category_id = $validatedData['category_id'];
-
-        // $product->update();
-
-        // $this->uploadImages($product, $validatedData);
-
-        // return response()->json([
-        //     'success' => true,
-        // ]);
+        return new ProductResource($product);
     }
 
     protected function uploadImages($product, $validatedData)
@@ -367,10 +273,6 @@ class ProductController extends Controller
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
-     *         @OA\JsonContent(
-     *             type="array",
-     *             @OA\Items(ref="#/components/schemas/Product")
-     *         )
      *     )
      * )
      */
@@ -397,14 +299,7 @@ class ProductController extends Controller
      *         required=true,
      *         @OA\Schema(type="integer")
      *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="Successful operation",
-     *         @OA\JsonContent(
-     *             type="array",
-     *             @OA\Items(ref="#/components/schemas/Product")
-     *         )
-     *     )
+     *     @OA\Response(response="200", description="Category get by Category")
      * )
      */
     public function getByCategory($category_id)

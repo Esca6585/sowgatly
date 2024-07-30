@@ -320,14 +320,7 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Category updated",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/CategoryResource"
-                                }
-                            }
-                        }
+                        "description": "Category updated"
                     },
                     "404": {
                         "description": "Category not found"
@@ -387,31 +380,70 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Successful operation",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "data": {
-                                            "type": "array",
-                                            "items": {
-                                                "$ref": "#/components/schemas/Product"
-                                            }
-                                        },
-                                        "links": {
-                                            "type": "object"
-                                        },
-                                        "meta": {
-                                            "type": "object"
-                                        }
+                        "description": "List of products"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Create a new product]",
+                "operationId": "7ff81b1681ff3180e5b73a2e15f2c67b",
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Roza Gül"
                                     },
-                                    "type": "object"
-                                }
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Officiis pariatur ea laudantium molestias vero porro odio, repellat ullam. Itaque quam temporibus maxime error sunt dolorum sed perspiciatis. Reprehenderit, molestias mollitia?"
+                                    },
+                                    "price": {
+                                        "type": "number",
+                                        "format": "double",
+                                        "example": "57"
+                                    },
+                                    "discount": {
+                                        "type": "number",
+                                        "format": "double",
+                                        "example": "10"
+                                    },
+                                    "attributes": {
+                                        "type": "number",
+                                        "format": "double",
+                                        "example": "12345"
+                                    },
+                                    "category_id": {
+                                        "type": "integer",
+                                        "example": "1"
+                                    },
+                                    "images[]": {
+                                        "description": "Image file",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "binary"
+                                        }
+                                    }
+                                },
+                                "type": "object"
                             }
                         }
-                    },
-                    "500": {
-                        "description": "Server error"
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "List of products"
                     }
                 },
                 "security": [
@@ -440,17 +472,83 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Successful operation",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Product"
-                                }
+                        "description": "Product details"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Update a product",
+                "operationId": "914fbddeaed4fc2e831b9f5fb0b05b40",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Updated Product Name"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Updated Product Description"
+                                    },
+                                    "price": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 129.99
+                                    },
+                                    "discount": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 15
+                                    },
+                                    "attributes": {
+                                        "type": "string",
+                                        "example": "{'color': 'blue', 'size': 'medium'}"
+                                    },
+                                    "category_id": {
+                                        "type": "integer",
+                                        "example": 2
+                                    },
+                                    "_method": {
+                                        "type": "string",
+                                        "example": "PUT"
+                                    },
+                                    "images[]": {
+                                        "description": "Image file",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "binary"
+                                        }
+                                    }
+                                },
+                                "type": "object"
                             }
                         }
-                    },
-                    "404": {
-                        "description": "Product not found"
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Product updated"
                     }
                 },
                 "security": [
@@ -510,17 +608,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Successful operation",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/components/schemas/Product"
-                                    }
-                                }
-                            }
-                        }
+                        "description": "Successful operation"
                     }
                 },
                 "security": [
@@ -549,17 +637,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Successful operation",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/components/schemas/Product"
-                                    }
-                                }
-                            }
-                        }
+                        "description": "Category get by Category"
                     }
                 },
                 "security": [
@@ -619,85 +697,6 @@
                     "image_url": {
                         "type": "string",
                         "example": "http://localhost:8000/category/category-seeder/other_fancy_flowers.png"
-                    }
-                },
-                "type": "object"
-            },
-            "Product": {
-                "properties": {
-                    "name": {
-                        "type": "string",
-                        "example": "Product Name"
-                    },
-                    "description": {
-                        "type": "string",
-                        "example": "Product Description"
-                    },
-                    "price": {
-                        "type": "number",
-                        "format": "float",
-                        "example": 99.99
-                    },
-                    "discount": {
-                        "type": "number",
-                        "format": "float",
-                        "example": 10
-                    },
-                    "attributes": {
-                        "type": "string",
-                        "example": "{'color': 'red', 'size': 'large'}"
-                    },
-                    "images": {
-                        "type": "string",
-                        "example": "{'color': 'red', 'size': 'large'}"
-                    },
-                    "category_id": {
-                        "type": "integer",
-                        "example": 1
-                    }
-                },
-                "type": "object"
-            },
-            "ProductRequest": {
-                "required": [
-                    "name",
-                    "price",
-                    "description",
-                    "discount",
-                    "attributes",
-                    "status",
-                    "category_id"
-                ],
-                "properties": {
-                    "_method": {
-                        "type": "string",
-                        "example": "PUT"
-                    },
-                    "name": {
-                        "type": "string",
-                        "example": "Updated Product Name"
-                    },
-                    "description": {
-                        "type": "string",
-                        "example": "Updated Product Description"
-                    },
-                    "price": {
-                        "type": "number",
-                        "format": "float",
-                        "example": 129.99
-                    },
-                    "discount": {
-                        "type": "number",
-                        "format": "float",
-                        "example": 15
-                    },
-                    "attributes": {
-                        "type": "string",
-                        "example": "{'color': 'blue', 'size': 'medium'}"
-                    },
-                    "category_id": {
-                        "type": "integer",
-                        "example": 2
                     }
                 },
                 "type": "object"
