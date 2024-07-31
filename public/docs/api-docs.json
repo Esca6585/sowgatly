@@ -656,6 +656,250 @@
                 ]
             }
         },
+        "/api/shops": {
+            "get": {
+                "tags": [
+                    "Shops"
+                ],
+                "summary": "Get list of shops",
+                "operationId": "95ded005a7ee4576abe647d63831a77a",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of shops"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Shops"
+                ],
+                "summary": "Create a new shop",
+                "operationId": "1146fe689655fef1df0da68f7642c3ba",
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Modahouse"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "esca6585@gmail.com"
+                                    },
+                                    "image": {
+                                        "description": "Image file",
+                                        "type": "string",
+                                        "format": "binary"
+                                    },
+                                    "address": {
+                                        "type": "integer",
+                                        "example": "Oguzhan 123"
+                                    },
+                                    "mon_fri_open": {
+                                        "type": "integer",
+                                        "example": "09:00"
+                                    },
+                                    "mon_fri_close": {
+                                        "type": "integer",
+                                        "example": "18:00"
+                                    },
+                                    "sat_sun_open": {
+                                        "type": "integer",
+                                        "example": "09:00"
+                                    },
+                                    "sat_sun_close": {
+                                        "type": "integer",
+                                        "example": "13:00"
+                                    },
+                                    "user_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Shop created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ShopResource"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/shops/{id}": {
+            "get": {
+                "tags": [
+                    "Shops"
+                ],
+                "summary": "Get a shop",
+                "operationId": "333920b5aebb487eae92b7d37ffbd24e",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Shop details"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Shops"
+                ],
+                "summary": "Update a shop",
+                "operationId": "4f2c2cea8b2d1957185379fb08df9ca6",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Modahouse"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "esca6585@gmail.com"
+                                    },
+                                    "image": {
+                                        "description": "Image file",
+                                        "type": "string",
+                                        "format": "binary"
+                                    },
+                                    "address": {
+                                        "type": "integer",
+                                        "example": "Oguzhan 123"
+                                    },
+                                    "mon_fri_open": {
+                                        "type": "integer",
+                                        "example": "09:00"
+                                    },
+                                    "mon_fri_close": {
+                                        "type": "integer",
+                                        "example": "18:00"
+                                    },
+                                    "sat_sun_open": {
+                                        "type": "integer",
+                                        "example": "09:00"
+                                    },
+                                    "sat_sun_close": {
+                                        "type": "integer",
+                                        "example": "13:00"
+                                    },
+                                    "user_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "_method": {
+                                        "type": "string",
+                                        "example": "PUT"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Shop updated"
+                    },
+                    "404": {
+                        "description": "Shop not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Shops"
+                ],
+                "summary": "Delete a shop",
+                "operationId": "5332e0d6fc1567d7758065a4d525bd42",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Shop deleted"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
         "/api/users": {
             "get": {
                 "tags": [
@@ -791,6 +1035,10 @@
                                         "description": "Image file",
                                         "type": "string",
                                         "format": "binary"
+                                    },
+                                    "_method": {
+                                        "type": "string",
+                                        "example": "PUT"
                                     }
                                 },
                                 "type": "object"
@@ -872,6 +1120,52 @@
                 },
                 "type": "object"
             },
+            "ShopResource": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Modahouse"
+                    },
+                    "email": {
+                        "type": "string",
+                        "example": "esca6585@gmail.com"
+                    },
+                    "image": {
+                        "description": "Image file",
+                        "type": "string",
+                        "format": "binary"
+                    },
+                    "address": {
+                        "type": "integer",
+                        "example": "Oguzhan 123"
+                    },
+                    "mon_fri_open": {
+                        "type": "integer",
+                        "example": "09:00"
+                    },
+                    "mon_fri_close": {
+                        "type": "integer",
+                        "example": "18:00"
+                    },
+                    "sat_sun_open": {
+                        "type": "integer",
+                        "example": "09:00"
+                    },
+                    "sat_sun_close": {
+                        "type": "integer",
+                        "example": "13:00"
+                    },
+                    "user_id": {
+                        "type": "integer",
+                        "example": 1
+                    }
+                },
+                "type": "object"
+            },
             "UserResource": {
                 "properties": {
                     "id": {
@@ -916,6 +1210,10 @@
         {
             "name": "Categories",
             "description": "Categories"
+        },
+        {
+            "name": "Shops",
+            "description": "Shops"
         },
         {
             "name": "Users",

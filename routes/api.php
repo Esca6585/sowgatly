@@ -28,6 +28,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/categories/{id}/subcategories', [App\Http\Controllers\API\CategoryController::class, 'getSubcategories']);
 
     Route::apiResource('users', App\Http\Controllers\API\UserController::class);
+
+    Route::apiResource('shops', App\Http\Controllers\API\ShopController::class);
 });
 
 Route::post('/register', [App\Http\Controllers\User\Auth\AuthController::class, 'register']);

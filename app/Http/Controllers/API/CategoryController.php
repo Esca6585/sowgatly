@@ -130,6 +130,7 @@ class CategoryController extends Controller
 
         return response()->json([
             'success' => true,
+            'message' => 'Category created successfully',
         ]);
     }
 
@@ -213,6 +214,7 @@ class CategoryController extends Controller
 
         return response()->json([
             'success' => true,
+            'message' => 'Category updated successfully',
         ]);
     }
 
@@ -271,16 +273,16 @@ class CategoryController extends Controller
 
         return response()->json([
             'success' => true,
+            'message' => 'Category deleted successfully',
         ]);
     }
 
-    public function deleteFolder($category)
+    public function deleteImage($user)
     {
-        if ($category->image) {
-            $folder = explode('/', $category->image);
-
-            if ($folder[2] != 'category-seeder') {
-                \File::deleteDirectory($folder[0] . '/' . $folder[1] . '/' . $folder[2]);
+        if ($user->image) {
+            $imagePath = public_path($user->image);
+            if (File::exists($imagePath)) {
+                File::delete($imagePath);
             }
         }
     }

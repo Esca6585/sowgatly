@@ -94,6 +94,7 @@ class ProductController extends Controller
 
         return response()->json([
             'success' => true,
+            'message' => 'Product created successfully',
         ]);
     }
 
@@ -181,6 +182,7 @@ class ProductController extends Controller
 
         return response()->json([
             'success' => true,
+            'message' => 'Product updated successfully',
         ]);
     }
 
@@ -236,25 +238,43 @@ class ProductController extends Controller
      */
     public function destroy($lang, Product $product)
     {
-        $this->deleteFolder($product->id);
+        try {
+            DB::beginTransaction();
 
-        $product->delete();
+            $this->deleteProductImages($product);
 
-        return response()->json([
-            'success' => true,
-        ]);
+            $product->delete();
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Product deleted successfully',
+            ], 204);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            \Log::error('Error deleting product: ' . $e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to delete product',
+            ], 500);
+        }
     }
 
-    public function deleteFolder($product_id)
+    protected function deleteProductImages(Product $product)
     {
-        $image = Image::where('product_id', $product_id)->first();
-        $images = Image::where('product_id', $product_id)->get();
-        
-        if($image){
-            $folder = explode('/', $image->image);
+        $images = $product->images; // Assuming you have an images relationship
+
+        if ($images->isNotEmpty()) {
+            $firstImage = $images->first();
+            $folder = explode('/', $firstImage->image);
             
-            if($folder[1] != 'product-seeder'){
-                \File::deleteDirectory($folder[0] . '/' . $folder[1]);
+            if (isset($folder[1]) && $folder[1] != 'product-seeder') {
+                $path = public_path($folder[0] . '/' . $folder[1]);
+                if (File::isDirectory($path)) {
+                    File::deleteDirectory($path);
+                }
             }
 
             $images->each->delete();

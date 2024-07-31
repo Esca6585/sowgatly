@@ -24,7 +24,7 @@ class ShopResource extends JsonResource
             'sat_sun_open' => $this->sat_sun_open,
             'sat_sun_close' => $this->sat_sun_close,
             'image' => $this->image ? asset($this->image) : null,
-            'user' => UserResource::collection($this->whenLoaded('user')),
+            'user' => new UserResource($this->whenLoaded('user')),
             'created_at' => $this->created_at->toDateTimeString(),
             'updated_at' => $this->updated_at->toDateTimeString(),
         ];

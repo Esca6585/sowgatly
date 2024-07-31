@@ -49,9 +49,13 @@ class UserController extends Controller
     public function index(Request $request)
     {
         try {
-            $users = User::with('images')->paginate(15);
+            $users = User::paginate(15);
+
             return UserResource::collection($users);
         } catch (\Exception $e) {
+            // It's generally a good practice to log the error
+            \Log::error('Error fetching users: ' . $e->getMessage());
+            
             return response()->json(['error' => 'An error occurred while fetching users'], 500);
         }
     }
@@ -98,6 +102,7 @@ class UserController extends Controller
 
         return response()->json([
             'success' => true,
+            'message' => 'User created successfully',
         ]);
     }
 
@@ -144,6 +149,7 @@ class UserController extends Controller
      *                     format="binary",
      *                     description="Image file"
      *                 ),
+     *                 @OA\Property(property="_method", type="string", example="PUT"),
      *             )
      *         )
      *     ),
@@ -174,6 +180,7 @@ class UserController extends Controller
 
         return response()->json([
             'success' => true,
+            'message' => 'User updated successfully',
         ]);
     }
 
@@ -232,16 +239,16 @@ class UserController extends Controller
 
         return response()->json([
             'success' => true,
+            'message' => 'User deleted successfully',
         ]);
     }
 
-    public function deleteFolder($user)
+    public function deleteImage($user)
     {
         if ($user->image) {
-            $folder = explode('/', $user->image);
-
-            if ($folder[2] != 'user-seeder') {
-                \File::deleteDirectory($folder[0] . '/' . $folder[1] . '/' . $folder[2]);
+            $imagePath = public_path($user->image);
+            if (File::exists($imagePath)) {
+                File::delete($imagePath);
             }
         }
     }
