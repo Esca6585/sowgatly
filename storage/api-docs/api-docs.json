@@ -402,7 +402,7 @@
                 "tags": [
                     "Products"
                 ],
-                "summary": "Create a new product]",
+                "summary": "Create a new product",
                 "operationId": "7ff81b1681ff3180e5b73a2e15f2c67b",
                 "requestBody": {
                     "content": {
@@ -433,6 +433,10 @@
                                         "example": "12345"
                                     },
                                     "category_id": {
+                                        "type": "integer",
+                                        "example": "1"
+                                    },
+                                    "shop_id": {
                                         "type": "integer",
                                         "example": "1"
                                     },
@@ -536,6 +540,10 @@
                                     "category_id": {
                                         "type": "integer",
                                         "example": 2
+                                    },
+                                    "shop_id": {
+                                        "type": "integer",
+                                        "example": "1"
                                     },
                                     "_method": {
                                         "type": "string",

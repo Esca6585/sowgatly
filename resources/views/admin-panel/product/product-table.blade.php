@@ -8,7 +8,7 @@
                 <th>{{ __('Price') }}</th>
                 <th>{{ __('Discount') }}</th>
                 <th>{{ __('Discount') }} {{ __('Price') }}</th>
-                <th>{{ __('Attributes') }}</th>
+                <th>{{ __('Shop name') }}</th>
                 <th>{{ __('Category') }}</th>
                 <th>{{ __('Code') }}</th>
                 <th>{{ __('Status') }}</th>
@@ -25,11 +25,7 @@
                 <td>{{ $product->price }} TMT</td>
                 <td>{{ $product->discount }}%</td>
                 <td>{{ $product->getDiscountPrice() }} TMT</td>
-                <td>
-                    @if($product->attributes)
-                    
-                    @endif
-                </td>
+                <td><a href="{{ route('product.show', [app()->getlocale(), $product->shop->id]) }}">{{ $product->shop->name }}</a></td>
                 <td>
                     <span
                         class="badge badge-primary">{{ $product->category->{ 'name_' . app()->getlocale() } }}</span>

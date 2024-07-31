@@ -6,6 +6,7 @@ use Illuminate\Database\Seeder;
 use App\Models\Product;
 use App\Models\Image;
 use App\Models\Category;
+use App\Models\Shop;
 use Illuminate\Support\Str;
 use Faker\Factory as Faker;
 
@@ -22,10 +23,19 @@ class ProductSeeder extends Seeder
 
         // Ensure we have some categories
         $categoryIds = Category::pluck('id')->toArray();
+        $shopIds = Shop::pluck('id')->toArray();
+
         if (empty($categoryIds)) {
             // Create some categories if none exist
             for ($i = 0; $i < 5; $i++) {
                 $categoryIds[] = Category::create(['name' => $faker->word])->id;
+            }
+        }
+
+        if (empty($shopIds)) {
+            // Create some categories if none exist
+            for ($i = 0; $i < 5; $i++) {
+                $shopIds[] = Shop::create(['name' => $faker->word])->id;
             }
         }
 
@@ -44,6 +54,7 @@ class ProductSeeder extends Seeder
                 'code' => Str::random(10),
                 'status' => $faker->boolean,
                 'category_id' => $faker->randomElement($categoryIds),
+                'shop_id' => $faker->randomElement($shopIds),
             ]);
 
             // Create 1-5 images for each product

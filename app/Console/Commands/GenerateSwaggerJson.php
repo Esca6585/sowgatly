@@ -12,6 +12,9 @@ class GenerateSwaggerJson extends Command
 
     public function handle(Generator $generator)
     {
+        $this->info('Clear cache');
+        $this->call('optimize:clear');
+
         $this->info('Generating Swagger JSON...');
         $generator->generateDocs();
         $this->info('Swagger JSON generated successfully.');

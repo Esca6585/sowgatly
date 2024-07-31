@@ -28,6 +28,11 @@ class Shop extends Model
         return $this->fillable;
     }
 
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class,'user_id', 'id');

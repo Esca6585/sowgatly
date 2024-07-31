@@ -4,6 +4,8 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Resources\ImageResource;
+use App\Http\Resources\CategoryResource;
+use App\Http\Resources\ShopResource;
 
 class ProductResource extends JsonResource
 {
@@ -28,6 +30,7 @@ class ProductResource extends JsonResource
             'status' => $this->status,
             'images' => ImageResource::collection($this->whenLoaded('images')),
             'category' => new CategoryResource($this->whenLoaded('category')),
+            'shop' => new ShopResource($this->whenLoaded('shop')),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

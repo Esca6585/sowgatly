@@ -38,7 +38,7 @@ class ProductController extends Controller
     public function index()
     {
         try {
-            $products = Product::with('images')->paginate(15);
+            $products = Product::with('images')->with('shop')->paginate(15);
             return ProductResource::collection($products);
         } catch (\Exception $e) {
             return response()->json(['error' => 'An error occurred while fetching products'], 500);
@@ -50,7 +50,7 @@ class ProductController extends Controller
      *     path="/api/products",
      *     tags={"Products"},
      *     security={{"sanctum":{}}},
-     *     summary="Create a new product]",
+     *     summary="Create a new product",
      *     @OA\RequestBody(
      *         @OA\MediaType(
      *             mediaType="multipart/form-data",
@@ -61,6 +61,7 @@ class ProductController extends Controller
      *                 @OA\Property(property="discount", type="double", example="10"),
      *                 @OA\Property(property="attributes", type="double", example="12345"),
      *                 @OA\Property(property="category_id", type="integer", example="1"),
+     *                 @OA\Property(property="shop_id", type="integer", example="1"),
      *                 @OA\Property(
      *                     property="images[]",
      *                     type="array",
@@ -82,6 +83,7 @@ class ProductController extends Controller
             'discount' => 'required',
             'attributes' => 'required|string',
             'category_id' => 'required|exists:categories,id',
+            'shop_id' => 'required|exists:shops,id',
             'images' => 'required|array',
             'images.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
@@ -143,6 +145,7 @@ class ProductController extends Controller
      *                 @OA\Property(property="discount", type="number", format="float", example=15.00),
      *                 @OA\Property(property="attributes", type="string", example="{'color': 'blue', 'size': 'medium'}"),
      *                 @OA\Property(property="category_id", type="integer", example=2),
+     *                 @OA\Property(property="shop_id", type="integer", example="1"),
      *                 @OA\Property(property="_method", type="string", example="PUT"),
      *                 @OA\Property(
      *                     property="images[]",
@@ -168,6 +171,7 @@ class ProductController extends Controller
             'discount' => 'required',
             'attributes' => 'required|string',
             'category_id' => 'required|exists:categories,id',
+            'shop_id' => 'required|exists:shops,id',
             'images' => 'sometimes|required|array',
             'images.*' => 'sometimes|required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
@@ -306,6 +310,7 @@ class ProductController extends Controller
         $products = Product::where('name', 'like', "%{$query}%")
                            ->orWhere('description', 'like', "%{$query}%")
                            ->with('images')
+                           ->with('shop')
                            ->get();
 
         return ProductResource::collection($products);
@@ -330,6 +335,7 @@ class ProductController extends Controller
     {
         $products = Product::where('category_id', $category_id)
                            ->with('images')
+                           ->with('shop')
                            ->get();
 
         return ProductResource::collection($products);

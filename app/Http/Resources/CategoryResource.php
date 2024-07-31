@@ -22,13 +22,19 @@ class CategoryResource extends JsonResource
                 'ru' => $this->name_ru,
             ],
             'image' => $this->image ? asset($this->image) : null,
-            'category_id' => $this->category_id,
+            'category' => $this->when($this->parent, function () {
+                return [
+                    'name' => [
+                        'tm' => $this->parent->name_tm,
+                        'en' => $this->parent->name_en,
+                        'ru' => $this->parent->name_ru,
+                    ],
+                    'created_at' => $this->parent->created_at->toDateTimeString(),
+                    'updated_at' => $this->parent->updated_at->toDateTimeString(),
+                ];
+            }),
             'created_at' => $this->created_at->toDateTimeString(),
             'updated_at' => $this->updated_at->toDateTimeString(),
-            'parent' => new CategoryResource($this->whenLoaded('parent')),
-            'categories' => CategoryResource::collection($this->whenLoaded('categories')),
-            'children_categories' => CategoryResource::collection($this->whenLoaded('childrenCategories')),
-            'top_parent' => $this->getTopParent(),
         ];
     }
 }
