@@ -101,7 +101,7 @@ class ShopController extends Controller
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:shops,email',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:64000',
             'address' => 'required|string|max:255',
             'mon_fri_open' => 'required|date_format:H:i',
             'mon_fri_close' => 'required|date_format:H:i|after:mon_fri_open',
@@ -190,7 +190,7 @@ class ShopController extends Controller
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:shops,email',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:64000',
             'address' => 'required|string|max:255',
             'mon_fri_open' => 'required|date_format:H:i',
             'mon_fri_close' => 'required|date_format:H:i|after:mon_fri_open',

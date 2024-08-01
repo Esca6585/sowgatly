@@ -120,7 +120,7 @@ class CategoryController extends Controller
             'name_tm' => 'required|string|max:255',
             'name_en' => 'required|string|max:255',
             'name_ru' => 'required|string|max:255',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:64000',
             'category_id' => 'nullable|exists:categories,id'
         ]);
 
@@ -200,7 +200,7 @@ class CategoryController extends Controller
             'name_tm' => 'required|string|max:255',
             'name_en' => 'required|string|max:255',
             'name_ru' => 'required|string|max:255',
-            'image' => 'sometimes|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'sometimes|image|mimes:jpeg,png,jpg,gif|max:64000',
             'category_id' => 'nullable|exists:categories,id'
         ]);
 
@@ -222,7 +222,7 @@ class CategoryController extends Controller
      * Upload and save the category image.
      *
      * @param Category $category
-     * @param \Illuminate\Http\UploadedFile|null $image
+     * @param \Illuminate\Http\Uploadednull $image
      * @return void
      */
     protected function uploadImage(Category $category, $image)
