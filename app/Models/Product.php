@@ -19,6 +19,7 @@ class Product extends Model
         'attributes',
         'code',
         'category_id',
+        'shop_id',
         'status',
     ];
     
@@ -29,6 +30,7 @@ class Product extends Model
         'discount' => 'float',
         'attributes' => 'array',
         'category_id' => 'integer',
+        'shop_id' => 'integer',
         'status' => 'boolean',
     ];
 
