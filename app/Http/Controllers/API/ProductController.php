@@ -85,7 +85,7 @@ class ProductController extends Controller
             'category_id' => 'required|exists:categories,id',
             'shop_id' => 'required|exists:shops,id',
             'images' => 'required|array',
-            'images.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:64000',
+            'images.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:10240',
         ]);
 
         $validatedData['code'] = Str::random(6);
@@ -173,7 +173,7 @@ class ProductController extends Controller
             'category_id' => 'required|exists:categories,id',
             'shop_id' => 'required|exists:shops,id',
             'images' => 'sometimes|required|array',
-            'images.*' => 'sometimes|required|image|mimes:jpeg,png,jpg,gif|max:64000',
+            'images.*' => 'sometimes|required|image|mimes:jpeg,png,jpg,gif|max:10240',
         ]);
 
         // Update product data

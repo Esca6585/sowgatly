@@ -120,7 +120,7 @@ class CategoryController extends Controller
             'name_tm' => 'required|string|max:255',
             'name_en' => 'required|string|max:255',
             'name_ru' => 'required|string|max:255',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:64000',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:10240',
             'category_id' => 'nullable|exists:categories,id'
         ]);
 
@@ -200,7 +200,7 @@ class CategoryController extends Controller
             'name_tm' => 'required|string|max:255',
             'name_en' => 'required|string|max:255',
             'name_ru' => 'required|string|max:255',
-            'image' => 'sometimes|image|mimes:jpeg,png,jpg,gif|max:64000',
+            'image' => 'sometimes|image|mimes:jpeg,png,jpg,gif|max:10240',
             'category_id' => 'nullable|exists:categories,id'
         ]);
 
