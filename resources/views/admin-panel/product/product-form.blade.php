@@ -364,6 +364,30 @@
 
                                                         <div class="col-2">
                                                             <div class="form-group">
+                                                                <label>{{ __('Shops') }}</label>
+
+                                                                <select class="form-control" name="shop_id">
+                                                                    @foreach($shops as $shop)
+                                                                    <option value="{{ $shop->id }}" {{ $product->shop_id == $shop->id ? 'selected' : '' }}>
+                                                                        {{ $shop->name }}
+                                                                    </option>
+                                                                    @endforeach
+                                                                </select>
+
+                                                                @error('shop_id')
+                                                                <div
+                                                                    class="fv-plugins-message-container invalid-feedback">
+                                                                    <div data-field="shop_id"
+                                                                        data-validator="notEmpty">
+                                                                        {{ $message }}
+                                                                    </div>
+                                                                </div>
+                                                                @enderror
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-2">
+                                                            <div class="form-group">
                                                                 <label>{{ __('Price') }}</label>
 
                                                                 <input type="text"

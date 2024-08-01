@@ -23,15 +23,21 @@ class ProductRequest extends FormRequest
      */
     public function rules()
     {
-        return [
+        $rules = [
             'name' => 'required|string|max:255',
             'description' => 'required|string',
-            'price' => 'required',
-            'discount' => 'required',
-            'attributes' => 'required|string',
+            'price' => 'required|numeric|min:0',
+            'discount' => 'required|numeric|min:0|max:100',
             'category_id' => 'required|exists:categories,id',
-            'images' => 'required|array',
-            'images.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'shop_id' => 'required|exists:shops,id',
         ];
+
+        // Make images optional
+        $rules['images'] = 'sometimes|nullable|array';
+        
+        // If images are provided, validate each image
+        $rules['images.*'] = 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048';
+
+        return $rules;
     }
 }

@@ -8,6 +8,7 @@ use App\Http\Requests\ProductRequest;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\Image;
+use App\Models\Shop;
 use Str;
 
 class ProductController extends Controller
@@ -55,8 +56,9 @@ class ProductController extends Controller
     public function create($lang, Product $product)
     {
         $parentCategories = Category::parentCategory();
+        $shops = Shop::all();
 
-        return view('admin-panel.product.product-form', compact('product','parentCategories'));
+        return view('admin-panel.product.product-form', compact('product','parentCategories', 'shops'));
     }
 
     /**
@@ -100,8 +102,9 @@ class ProductController extends Controller
     public function show($lang, Product $product)
     {
         $parentCategories = Category::parentCategory();
+        $shops = Shop::all();
 
-        return view('admin-panel.product.product-show', compact('product', 'parentCategories'));
+        return view('admin-panel.product.product-show', compact('product', 'parentCategories', 'shops'));
     }
 
     /**
@@ -113,8 +116,9 @@ class ProductController extends Controller
     public function edit($lang, Product $product)
     {
         $parentCategories = Category::parentCategory();
+        $shops = Shop::all();
 
-        return view('admin-panel.product.product-form', compact('product','parentCategories'));
+        return view('admin-panel.product.product-form', compact('product','parentCategories', 'shops'));
     }
 
     /**
