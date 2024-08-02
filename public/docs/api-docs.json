@@ -153,6 +153,9 @@
                 "responses": {
                     "200": {
                         "description": "List of categories"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
                     }
                 },
                 "security": [
@@ -209,6 +212,9 @@
                                 }
                             }
                         }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
                     }
                 },
                 "security": [
@@ -238,6 +244,9 @@
                 "responses": {
                     "200": {
                         "description": "List of subcategories"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
                     }
                 },
                 "security": [
@@ -267,6 +276,9 @@
                 "responses": {
                     "200": {
                         "description": "Category details"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
                     }
                 },
                 "security": [
@@ -333,6 +345,9 @@
                     },
                     "404": {
                         "description": "Category not found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
                     }
                 },
                 "security": [
@@ -360,6 +375,9 @@
                 "responses": {
                     "204": {
                         "description": "Category deleted"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
                     }
                 },
                 "security": [
@@ -390,6 +408,9 @@
                 "responses": {
                     "200": {
                         "description": "List of products"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
                     }
                 },
                 "security": [
@@ -457,6 +478,9 @@
                 "responses": {
                     "200": {
                         "description": "List of products"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
                     }
                 },
                 "security": [
@@ -486,6 +510,9 @@
                 "responses": {
                     "200": {
                         "description": "Product details"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
                     }
                 },
                 "security": [
@@ -566,6 +593,9 @@
                 "responses": {
                     "200": {
                         "description": "Product updated"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
                     }
                 },
                 "security": [
@@ -596,6 +626,9 @@
                     },
                     "404": {
                         "description": "Product not found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
                     }
                 },
                 "security": [
@@ -626,6 +659,9 @@
                 "responses": {
                     "200": {
                         "description": "Successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
                     }
                 },
                 "security": [
@@ -655,6 +691,9 @@
                 "responses": {
                     "200": {
                         "description": "Category get by Category"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
                     }
                 },
                 "security": [
@@ -685,6 +724,9 @@
                 "responses": {
                     "200": {
                         "description": "List of shops"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
                     }
                 },
                 "security": [
@@ -757,6 +799,9 @@
                                 }
                             }
                         }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
                     }
                 },
                 "security": [
@@ -786,6 +831,9 @@
                 "responses": {
                     "200": {
                         "description": "Shop details"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
                     }
                 },
                 "security": [
@@ -872,6 +920,9 @@
                     },
                     "404": {
                         "description": "Shop not found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
                     }
                 },
                 "security": [
@@ -899,6 +950,9 @@
                 "responses": {
                     "204": {
                         "description": "Shop deleted"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
                     }
                 },
                 "security": [
@@ -929,6 +983,9 @@
                 "responses": {
                     "200": {
                         "description": "List of users"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
                     }
                 },
                 "security": [
@@ -977,6 +1034,9 @@
                                 }
                             }
                         }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
                     }
                 },
                 "security": [
@@ -1006,6 +1066,9 @@
                 "responses": {
                     "200": {
                         "description": "User details"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
                     }
                 },
                 "security": [
@@ -1060,6 +1123,9 @@
                     },
                     "404": {
                         "description": "User not found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
                     }
                 },
                 "security": [
@@ -1087,6 +1153,9 @@
                 "responses": {
                     "204": {
                         "description": "User deleted"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
                     }
                 },
                 "security": [

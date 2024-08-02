@@ -49,7 +49,11 @@ class ShopController extends Controller
      *         @OA\Schema(type="integer")
      *     ),
      *     summary="Get list of shops",
-     *     @OA\Response(response="200", description="List of shops")
+     *     @OA\Response(response="200", description="List of shops"),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated",
+     *     )
      * )
      */
     public function index(Request $request)
@@ -93,6 +97,10 @@ class ShopController extends Controller
      *         response="201", 
      *         description="Shop created",
      *         @OA\JsonContent(ref="#/components/schemas/ShopResource")
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated",
      *     )
      * )
      */
@@ -132,7 +140,11 @@ class ShopController extends Controller
      *         required=true,
      *         @OA\Schema(type="integer")
      *     ),
-     *     @OA\Response(response="200", description="Shop details")
+     *     @OA\Response(response="200", description="Shop details"),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated",
+     *     )
      * )
      */
     public function show(Shop $shop)
@@ -182,6 +194,10 @@ class ShopController extends Controller
      *     @OA\Response(
      *         response="404",
      *         description="Shop not found"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated",
      *     )
      * )
      */
@@ -254,7 +270,11 @@ class ShopController extends Controller
      *         required=true,
      *         @OA\Schema(type="integer")
      *     ),
-     *     @OA\Response(response="204", description="Shop deleted")
+     *     @OA\Response(response="204", description="Shop deleted"),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated",
+     *     )
      * )
      */
     public function destroy(Shop $shop, $lang = null)

@@ -35,6 +35,7 @@ class UserController extends Controller
      *     path="/api/users",
      *     tags={"Users"},
      *     security={{"sanctum":{}}},
+     *     summary="Get list of users",
      *     @OA\Parameter(
      *         name="page",
      *         in="query",
@@ -42,8 +43,14 @@ class UserController extends Controller
      *         required=false,
      *         @OA\Schema(type="integer")
      *     ),
-     *     summary="Get list of users",
-     *     @OA\Response(response="200", description="List of users")
+     *     @OA\Response(
+     *         response="200", 
+     *         description="List of users"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated"
+     *     )
      * )
      */
     public function index(Request $request)
@@ -84,7 +91,11 @@ class UserController extends Controller
      *     @OA\Response(
      *         response="201", 
      *         description="User created",
-     *         @OA\JsonContent(ref="#/components/schemas/UserResource")
+     *         @OA\JsonContent(ref="#/components/schemas/UserResource"),
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated",
      *     )
      * )
      */
@@ -118,7 +129,11 @@ class UserController extends Controller
      *         required=true,
      *         @OA\Schema(type="integer")
      *     ),
-     *     @OA\Response(response="200", description="User details")
+     *     @OA\Response(response="200", description="User details"),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated",
+     *     )
      * )
      */
     public function show(User $user)
@@ -160,6 +175,10 @@ class UserController extends Controller
      *     @OA\Response(
      *         response="404",
      *         description="User not found"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated",
      *     )
      * )
      */
@@ -228,7 +247,11 @@ class UserController extends Controller
      *         required=true,
      *         @OA\Schema(type="integer")
      *     ),
-     *     @OA\Response(response="204", description="User deleted")
+     *     @OA\Response(response="204", description="User deleted"),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated",
+     *     )
      * )
      */
     public function destroy($lang, User $user)

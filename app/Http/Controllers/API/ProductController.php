@@ -32,7 +32,11 @@ class ProductController extends Controller
      *         required=false,
      *         @OA\Schema(type="integer")
      *     ),
-     *     @OA\Response(response="200", description="List of products")
+     *     @OA\Response(response="200", description="List of products"),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated",
+     *     )
      * )
      */
     public function index()
@@ -71,7 +75,11 @@ class ProductController extends Controller
      *             )
      *         )
      *     ),
-     *     @OA\Response(response="200", description="List of products")
+     *     @OA\Response(response="200", description="List of products"),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated",
+     *     )
      * )
      */
     public function store(Request $request)
@@ -115,6 +123,10 @@ class ProductController extends Controller
      *     @OA\Response(
      *         response=200,
      *         description="Product details"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated",
      *     )
      * )
      */
@@ -160,6 +172,10 @@ class ProductController extends Controller
      *         response="200", 
      *         description="Product updated",
      *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated",
+     *     )
      * )
      */
     public function update(Request $request, Product $product)
@@ -237,6 +253,10 @@ class ProductController extends Controller
      *     @OA\Response(
      *         response=404,
      *         description="Product not found"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated",
      *     )
      * )
      */
@@ -301,6 +321,10 @@ class ProductController extends Controller
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated",
      *     )
      * )
      */
@@ -328,7 +352,11 @@ class ProductController extends Controller
      *         required=true,
      *         @OA\Schema(type="integer")
      *     ),
-     *     @OA\Response(response="200", description="Category get by Category")
+     *     @OA\Response(response="200", description="Category get by Category"),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated",
+     *     )
      * )
      */
     public function getByCategory($category_id)
