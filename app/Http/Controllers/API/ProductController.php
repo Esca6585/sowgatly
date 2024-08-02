@@ -16,6 +16,21 @@ use Str;
  *     description="API Endpoints of Products"
  * )
  */
+/**
+ * @OA\Schema(
+ *     schema="ProductResource",
+ *     @OA\Property(property="id", type="integer", example=1),
+ *     @OA\Property(property="name", type="string", example="Roza Gül"),
+ *     @OA\Property(property="description", type="string", example="Owadan güller"),
+ *     @OA\Property(property="price", type="integer", example="85"),
+ *     @OA\Property(property="discount", type="integer", example="10"),
+ *     @OA\Property(property="attributes", type="integer", example="color: red, size: 40"),
+ *     @OA\Property(property="code", type="integer", example="PRD123"),
+ *     @OA\Property(property="category_id", type="integer", example=1),
+ *     @OA\Property(property="shop_id", type="integer", example=1),
+ *     @OA\Property(property="status", type="boolean", example=1),
+ * )
+ */
 class ProductController extends Controller
 {
 

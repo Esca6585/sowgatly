@@ -1197,6 +1197,51 @@
                 },
                 "type": "object"
             },
+            "ProductResource": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Roza Gül"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Owadan güller"
+                    },
+                    "price": {
+                        "type": "integer",
+                        "example": "85"
+                    },
+                    "discount": {
+                        "type": "integer",
+                        "example": "10"
+                    },
+                    "attributes": {
+                        "type": "integer",
+                        "example": "color: red, size: 40"
+                    },
+                    "code": {
+                        "type": "integer",
+                        "example": "PRD123"
+                    },
+                    "category_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "shop_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "status": {
+                        "type": "boolean",
+                        "example": 1
+                    }
+                },
+                "type": "object"
+            },
             "ShopResource": {
                 "properties": {
                     "id": {
@@ -1281,12 +1326,12 @@
             "description": "API Endpoints for user Authentication"
         },
         {
-            "name": "Products",
-            "description": "API Endpoints of Products"
-        },
-        {
             "name": "Categories",
             "description": "Categories"
+        },
+        {
+            "name": "Products",
+            "description": "Products"
         },
         {
             "name": "Shops",

@@ -19,7 +19,7 @@ Route::controller(App\Http\Controllers\API\AuthOtpController::class)->group(func
     Route::post('otp/login', 'loginWithOtp');
 });
 
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware(['sanctum.errors', 'auth:sanctum'])->group(function () {
     Route::apiResource('products', App\Http\Controllers\API\ProductController::class);
     Route::get('product/search', [App\Http\Controllers\API\ProductController::class , 'search']);
     Route::get('product/category/{category_id}', [App\Http\Controllers\API\ProductController::class , 'getByCategory']);
