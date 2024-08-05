@@ -26,7 +26,7 @@ return new class extends Migration
             $table->string('sat_sun_open');
             $table->string('sat_sun_close');
             
-            $table->string('image');
+            $table->string('image')->nullable();
 
             $table->unsignedBigInteger('user_id')->unsigned()->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->unsigned();

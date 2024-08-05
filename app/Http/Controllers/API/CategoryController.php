@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\File;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Http\Resources\CategoryResource;
@@ -132,7 +133,7 @@ class CategoryController extends Controller
             'name_tm' => 'required|string|max:255',
             'name_en' => 'required|string|max:255',
             'name_ru' => 'required|string|max:255',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:10240',
+            'image' => 'sometimes|nullable|image|mimes:jpeg,png,jpg,gif|max:10240',
             'category_id' => 'nullable|exists:categories,id'
         ]);
 
@@ -286,25 +287,32 @@ class CategoryController extends Controller
      *     @OA\Response(
      *         response=401,
      *         description="Unauthenticated",
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Category not found",
      *     )
      * )
      */
-    public function destroy($lang, Category $category)
+    public function destroy(Category $category, $lang = null)
     {
         $this->deleteFolder($category);
 
         $category->delete();
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Category deleted successfully',
-        ]);
+        return response(null, 204);
     }
 
-    public function deleteImage($user)
+    /**
+     * Delete the image associated with the shop.
+     *
+     * @param Category $category
+     * @return void
+     */
+    public function deleteImage(Category $category)
     {
-        if ($user->image) {
-            $imagePath = public_path($user->image);
+        if ($category->image) {
+            $imagePath = public_path($category->image);
             if (File::exists($imagePath)) {
                 File::delete($imagePath);
             }

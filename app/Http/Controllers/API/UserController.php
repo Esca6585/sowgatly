@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\File;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Resources\UserResource;
@@ -251,22 +252,29 @@ class UserController extends Controller
      *     @OA\Response(
      *         response=401,
      *         description="Unauthenticated",
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="User not found",
      *     )
      * )
      */
-    public function destroy($lang, User $user)
+    public function destroy(User $user, $lang = null)
     {
-        $this->deleteFolder($user);
+        $this->deleteImage($user);
 
         $user->delete();
 
-        return response()->json([
-            'success' => true,
-            'message' => 'User deleted successfully',
-        ]);
+        return response(null, 204);
     }
 
-    public function deleteImage($user)
+    /**
+     * Delete the image associated with the user.
+     *
+     * @param User $user
+     * @return void
+     */
+    public function deleteImage(User $user)
     {
         if ($user->image) {
             $imagePath = public_path($user->image);

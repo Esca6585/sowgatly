@@ -2,6 +2,9 @@
 namespace App\Http\Controllers\API;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
@@ -107,8 +110,8 @@ class ProductController extends Controller
             'attributes' => 'required|string',
             'category_id' => 'required|exists:categories,id',
             'shop_id' => 'required|exists:shops,id',
-            'images' => 'required|array',
-            'images.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:10240',
+            'images' => 'sometimes|nullable|array',
+            'images.*' => 'sometimes|nullable|image|mimes:jpeg,png,jpg,gif|max:10240',
         ]);
 
         $validatedData['code'] = Str::random(6);
@@ -203,8 +206,8 @@ class ProductController extends Controller
             'attributes' => 'required|string',
             'category_id' => 'required|exists:categories,id',
             'shop_id' => 'required|exists:shops,id',
-            'images' => 'sometimes|required|array',
-            'images.*' => 'sometimes|required|image|mimes:jpeg,png,jpg,gif|max:10240',
+            'images' => 'sometimes|nullable|array',
+            'images.*' => 'sometimes|nullable|image|mimes:jpeg,png,jpg,gif|max:10240',
         ]);
 
         // Update product data
@@ -262,7 +265,7 @@ class ProductController extends Controller
      *         @OA\Schema(type="integer")
      *     ),
      *     @OA\Response(
-     *         response=204,
+     *         response=200,
      *         description="Product deleted successfully"
      *     ),
      *     @OA\Response(
@@ -275,7 +278,7 @@ class ProductController extends Controller
      *     )
      * )
      */
-    public function destroy($lang, Product $product)
+    public function destroy(Product $product, $lang = null)
     {
         try {
             DB::beginTransaction();
@@ -286,10 +289,7 @@ class ProductController extends Controller
 
             DB::commit();
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Product deleted successfully',
-            ], 204);
+            return response(null, 204);
         } catch (\Exception $e) {
             DB::rollBack();
             \Log::error('Error deleting product: ' . $e->getMessage());
@@ -301,6 +301,12 @@ class ProductController extends Controller
         }
     }
 
+    /**
+     * Delete the images associated with the product.
+     *
+     * @param Product $product
+     * @return void
+     */
     protected function deleteProductImages(Product $product)
     {
         $images = $product->images; // Assuming you have an images relationship
@@ -319,6 +325,7 @@ class ProductController extends Controller
             $images->each->delete();
         }
     }
+
 
     /**
      * @OA\Get(

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\File;
 use App\Models\Shop;
 use Illuminate\Http\Request;
 use App\Http\Resources\ShopResource;
@@ -109,7 +110,7 @@ class ShopController extends Controller
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:shops,email',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:10240',
+            'image' => 'sometimes|nullable|image|mimes:jpeg,png,jpg,gif|max:10240',
             'address' => 'required|string|max:255',
             'mon_fri_open' => 'required|date_format:H:i',
             'mon_fri_close' => 'required|date_format:H:i|after:mon_fri_open',
@@ -206,7 +207,7 @@ class ShopController extends Controller
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:shops,email',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:10240',
+            'image' => 'sometimes|nullable|image|mimes:jpeg,png,jpg,gif|max:10240',
             'address' => 'required|string|max:255',
             'mon_fri_open' => 'required|date_format:H:i',
             'mon_fri_close' => 'required|date_format:H:i|after:mon_fri_open',
@@ -274,22 +275,29 @@ class ShopController extends Controller
      *     @OA\Response(
      *         response=401,
      *         description="Unauthenticated",
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Shop not found",
      *     )
      * )
      */
     public function destroy(Shop $shop, $lang = null)
     {
-        $this->deleteFolder($shop);
+        $this->deleteImage($shop);
 
         $shop->delete();
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Shop deleted successfully',
-        ], 204);
+        return response(null, 204);
     }
 
-    public function deleteImage($shop)
+    /**
+     * Delete the image associated with the shop.
+     *
+     * @param Shop $shop
+     * @return void
+     */
+    public function deleteImage(Shop $shop)
     {
         if ($shop->image) {
             $imagePath = public_path($shop->image);
