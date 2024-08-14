@@ -297,4 +297,33 @@ class AuthOtpController extends Controller
             ], 500);
         }
     }
+
+    /**
+     * @OA\Post(
+     *     path="/api/otp/logout",
+     *     summary="Logout the user",
+     *     tags={"Authentication"},
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Logout successful",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Logged out successfully")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated"
+     *     )
+     * )
+     */
+    public function logout(Request $request)
+    {
+        // Revoke the token that was used to authenticate the current request
+        $request->user()->currentAccessToken()->delete();
+
+        return response()->json([
+            'message' => 'Logged out successfully',
+        ], 200);
+    }
 }
