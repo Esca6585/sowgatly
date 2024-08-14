@@ -142,7 +142,7 @@
                                 "properties": {
                                     "phone_number": {
                                         "type": "string",
-                                        "example": "65656585"
+                                        "example": "65656565"
                                     },
                                     "otp": {
                                         "type": "string",
@@ -154,7 +154,7 @@
                                     },
                                     "email": {
                                         "type": "string",
-                                        "example": "esca656585@gmail.com"
+                                        "example": "tds@sanly.tm"
                                     },
                                     "device_token": {
                                         "type": "string",
