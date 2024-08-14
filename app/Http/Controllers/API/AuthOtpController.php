@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\DB; // Add this import
 use Illuminate\Support\Facades\Log; // Add this for logging
 use Illuminate\Support\Facades\Validator;
 use App\Rules\TurkmenistanPhoneNumber;
+use App\Http\Resources\UserResource;
+use App\Http\Resources\ShopResource;
 
 /**
  * @OA\Tag(
