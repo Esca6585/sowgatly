@@ -38,7 +38,7 @@ class User extends Authenticatable
         return $this->fillable;
     }
 
-    public function shop()
+    public function shops()
     {
         return $this->hasMany(Shop::class);
     }

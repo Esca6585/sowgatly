@@ -20,7 +20,7 @@ class UserResource extends JsonResource
             'phone_number' => $this->phone_number,
             'image' => $this->image ? asset($this->image) : null,
             'status' => $this->status,
-            'shop' => UserResource::collection($this->whenLoaded('shop')),
+            'shops' => ShopResource::collection($this->whenLoaded('shops')),
             'created_at' => $this->created_at->toDateTimeString(),
             'updated_at' => $this->updated_at->toDateTimeString(),
         ];
