@@ -209,13 +209,12 @@ class AuthOtpController extends Controller
     /**
      * @OA\Post(
      *     path="/api/otp/register",
-     *     summary="Register user with OTP",
+     *     summary="Register user and return OTP code",
      *     tags={"Authentication"},
      *     @OA\RequestBody(
      *         @OA\JsonContent(
-     *             required={"phone_number", "otp"},
+     *             required={"phone_number"},
      *             @OA\Property(property="phone_number", type="string", example="65656565"),
-     *             @OA\Property(property="otp", type="string", example="0000"),
      *             @OA\Property(property="name", type="string", example="Esen Meredow"),
      *             @OA\Property(property="email", type="string", example="tds@sanly.tm"),
      *             @OA\Property(property="device_token", type="string", example="device_token_here")
@@ -223,44 +222,33 @@ class AuthOtpController extends Controller
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="Registration successful",
+     *         description="Registration successful, OTP sent",
      *         @OA\JsonContent(
      *             @OA\Property(property="access_token", type="string"),
-     *             @OA\Property(property="token_type", type="string")
+     *             @OA\Property(property="token_type", type="string"),
+     *             @OA\Property(property="otp", type="string", description="Generated OTP code"),
+     *             @OA\Property(property="shops", type="array", @OA\Items(ref="#/components/schemas/ShopResource"))
      *         )
-     *     ),
-     *     @OA\Response(
-     *         response=400,
-     *         description="Invalid OTP or expired OTP"
      *     ),
      *     @OA\Response(
      *         response=422,
      *         description="Validation error"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error"
      *     )
      * )
      */
     public function registerWithOtp(Request $request)
     {
-        /* Validation */
+        // Validate request
         $request->validate([
             'phone_number' => ['required', new TurkmenistanPhoneNumber],
-            'otp' => 'required|min:4',
             'name' => 'required|string|max:255',
             'email' => 'nullable|string|email|max:255|unique:users',
             'device_token' => 'nullable|string'
         ]);
-
-        /* OTP Validation Logic */
-        $userOtp = UserOtp::where('otp', $request->otp)
-                          ->whereHas('user', function ($query) use ($request) {
-                              $query->where('phone_number', $request->phone_number);
-                          })->latest()->first();
-
-        if (!$userOtp) {
-            return response()->json([
-                'error' => 'Invalid OTP or expired OTP!',
-            ], 400);
-        }
 
         DB::beginTransaction();
         try {
@@ -271,10 +259,18 @@ class AuthOtpController extends Controller
                 'email' => $request->email, // Nullable email field
             ]);
 
-            // Update OTP as used
-            $userOtp->update([
-                'expire_at' => now(),
+            // Generate OTP code
+            $otpCode = random_int(1000, 9999); // Generate a 4-digit random OTP code
+
+            // Save OTP in database
+            UserOtp::create([
+                'user_id' => $user->id,
+                'otp' => $otpCode,
+                'expire_at' => now()->addMinutes(10), // OTP expiration time
             ]);
+
+            // Send OTP code to user (implementation depends on your SMS service)
+            // Example: $this->sendOtpSms($user->phone_number, $otpCode);
 
             // Save device token if provided
             if ($request->device_token) {
@@ -292,8 +288,8 @@ class AuthOtpController extends Controller
             return response()->json([
                 'access_token' => $token,
                 'token_type' => 'Bearer',
-                        'shops' => ShopResource::collection($user->shops),
-                        'shops' => ShopResource::collection($user->shops),
+                'otp' => $otpCode, // Return the OTP code
+                'shops' => ShopResource::collection($user->shops),
             ], 200);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -303,6 +299,7 @@ class AuthOtpController extends Controller
             ], 500);
         }
     }
+
 
     /**
      * @OA\Post(
