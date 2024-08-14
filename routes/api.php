@@ -19,7 +19,7 @@ Route::controller(App\Http\Controllers\API\AuthOtpController::class)->group(func
     Route::post('otp/login', 'loginWithOtp');
 });
 
-Route::middleware(['sanctum.errors', 'auth:sanctum'])->group(function () {
+Route::middleware(['auth:sanctum', 'check.token'])->group(function () {
     Route::apiResource('products', App\Http\Controllers\API\ProductController::class);
     Route::get('product/search', [App\Http\Controllers\API\ProductController::class , 'search']);
     Route::get('product/category/{category_id}', [App\Http\Controllers\API\ProductController::class , 'getByCategory']);
@@ -36,29 +36,29 @@ Route::post('/register', [App\Http\Controllers\User\Auth\AuthController::class, 
 
 Route::post('/login', [App\Http\Controllers\User\Auth\AuthController::class, 'login']);
 
-Route::post('/logout', [App\Http\Controllers\User\Auth\AuthController::class, 'logout'])->middleware('auth:sanctum');
+Route::post('/logout', [App\Http\Controllers\User\Auth\AuthController::class, 'logout'])->middleware(['auth:sanctum', 'check.token']);
 
-Route::post('/me', [App\Http\Controllers\User\Auth\AuthController::class, 'me'])->middleware('auth:sanctum');
+Route::post('/me', [App\Http\Controllers\User\Auth\AuthController::class, 'me'])->middleware(['auth:sanctum', 'check.token']);
 
 // Admin Login API
 
 Route::post('/admin/login', [App\Http\Controllers\Admin\Auth\AuthController::class, 'login']);
-Route::post('/admin/logout', [App\Http\Controllers\Admin\Auth\AuthController::class, 'logout'])->middleware('auth:sanctum');
+Route::post('/admin/logout', [App\Http\Controllers\Admin\Auth\AuthController::class, 'logout'])->middleware(['auth:sanctum', 'check.token']);
 
 // Admin App API
-Route::get('/users/{search?}', [App\Http\Controllers\Admin\Api\AdminController::class, 'users'])->middleware('auth:sanctum');
-Route::get('/user/statistic', [App\Http\Controllers\Admin\Api\AdminController::class, 'userStatistic'])->middleware('auth:sanctum');
+Route::get('/users/{search?}', [App\Http\Controllers\Admin\Api\AdminController::class, 'users'])->middleware(['auth:sanctum', 'check.token']);
+Route::get('/user/statistic', [App\Http\Controllers\Admin\Api\AdminController::class, 'userStatistic'])->middleware(['auth:sanctum', 'check.token']);
 
-Route::get('/user/{id}',[App\Http\Controllers\Admin\Api\AdminController::class, 'user'])->middleware('auth:sanctum');
-Route::get('/user/delete/{id}', [App\Http\Controllers\Admin\Api\AdminController::class, 'userDelete'])->middleware('auth:sanctum');
-Route::post('/user/create', [App\Http\Controllers\Admin\Api\AdminController::class, 'userCreate'])->middleware('auth:sanctum');
-Route::get('/user-block-unblock/{id}', [App\Http\Controllers\Admin\Api\AdminController::class, 'userBlockUnblock'])->middleware('auth:sanctum');
-Route::post('/user-update', [App\Http\Controllers\Admin\Api\AdminController::class, 'userUpdate'])->middleware('auth:sanctum');
+Route::get('/user/{id}',[App\Http\Controllers\Admin\Api\AdminController::class, 'user'])->middleware(['auth:sanctum', 'check.token']);
+Route::get('/user/delete/{id}', [App\Http\Controllers\Admin\Api\AdminController::class, 'userDelete'])->middleware(['auth:sanctum', 'check.token']);
+Route::post('/user/create', [App\Http\Controllers\Admin\Api\AdminController::class, 'userCreate'])->middleware(['auth:sanctum', 'check.token']);
+Route::get('/user-block-unblock/{id}', [App\Http\Controllers\Admin\Api\AdminController::class, 'userBlockUnblock'])->middleware(['auth:sanctum', 'check.token']);
+Route::post('/user-update', [App\Http\Controllers\Admin\Api\AdminController::class, 'userUpdate'])->middleware(['auth:sanctum', 'check.token']);
 
-Route::get('/category', [App\Http\Controllers\Admin\Api\AdminController::class, 'categories'])->middleware('auth:sanctum');
-Route::get('/category/{id}',[App\Http\Controllers\Admin\Api\AdminController::class, 'category'])->middleware('auth:sanctum');
-Route::get('/category/delete/{id}', [App\Http\Controllers\Admin\Api\AdminController::class, 'categoryDelete'])->middleware('auth:sanctum');
-Route::post('/category/create', [App\Http\Controllers\Admin\Api\AdminController::class, 'categoryCreate'])->middleware('auth:sanctum');
-Route::post('/category-update', [App\Http\Controllers\Admin\Api\AdminController::class, 'categoryUpdate'])->middleware('auth:sanctum');
+Route::get('/category', [App\Http\Controllers\Admin\Api\AdminController::class, 'categories'])->middleware(['auth:sanctum', 'check.token']);
+Route::get('/category/{id}',[App\Http\Controllers\Admin\Api\AdminController::class, 'category'])->middleware(['auth:sanctum', 'check.token']);
+Route::get('/category/delete/{id}', [App\Http\Controllers\Admin\Api\AdminController::class, 'categoryDelete'])->middleware(['auth:sanctum', 'check.token']);
+Route::post('/category/create', [App\Http\Controllers\Admin\Api\AdminController::class, 'categoryCreate'])->middleware(['auth:sanctum', 'check.token']);
+Route::post('/category-update', [App\Http\Controllers\Admin\Api\AdminController::class, 'categoryUpdate'])->middleware(['auth:sanctum', 'check.token']);
 
-Route::post('/send-notification', [App\Http\Controllers\Admin\Api\AdminController::class, 'sendNotification'])->middleware('auth:sanctum');
+Route::post('/send-notification', [App\Http\Controllers\Admin\Api\AdminController::class, 'sendNotification'])->middleware(['auth:sanctum', 'check.token']);

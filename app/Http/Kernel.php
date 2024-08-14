@@ -43,6 +43,8 @@ class Kernel extends HttpKernel
             \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             'throttle:api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            'auth:sanctum',
+            'check.token',
         ],
     ];
 
@@ -65,6 +67,6 @@ class Kernel extends HttpKernel
         'signed' => \App\Http\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-        'sanctum.errors' => \App\Http\Middleware\HandleSanctumErrors::class,
+        'check.token' => \App\Http\Middleware\CheckForValidToken::class,
     ];
 }
