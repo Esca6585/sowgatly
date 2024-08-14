@@ -4,6 +4,7 @@
             <tr>
                 <th>ID</th>
                 <th>{{ __('Name') }}</th>
+                <th>{{ __('Email') }}</th>
                 <th>{{ __('Phone number') }}</th>
                 <th>{{ __('Image') }}</th>
                 <th>{{ __('Status') }}</th>
@@ -16,6 +17,7 @@
             <tr id="datatable">
                 <td>{{ $loop->iteration }}</td>
                 <td>{{ $user->name }}</td>
+                <td>{{ $shop->email }}</td>
                 <td>
                     <a href="tel:+993{{ $user->phone_number }}">
                         <span>+993</span> {{ $user->phone_number }}
