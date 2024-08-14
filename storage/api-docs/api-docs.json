@@ -841,95 +841,6 @@
                     }
                 ]
             },
-            "post": {
-                "tags": [
-                    "Shops"
-                ],
-                "summary": "Update a shop",
-                "operationId": "4f2c2cea8b2d1957185379fb08df9ca6",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "content": {
-                        "multipart/form-data": {
-                            "schema": {
-                                "properties": {
-                                    "id": {
-                                        "type": "integer",
-                                        "example": 1
-                                    },
-                                    "name": {
-                                        "type": "string",
-                                        "example": "Modahouse"
-                                    },
-                                    "email": {
-                                        "type": "string",
-                                        "example": "esca6585@gmail.com"
-                                    },
-                                    "image": {
-                                        "description": "Image file",
-                                        "type": "string",
-                                        "format": "binary"
-                                    },
-                                    "address": {
-                                        "type": "integer",
-                                        "example": "Oguzhan 123"
-                                    },
-                                    "mon_fri_open": {
-                                        "type": "integer",
-                                        "example": "09:00"
-                                    },
-                                    "mon_fri_close": {
-                                        "type": "integer",
-                                        "example": "18:00"
-                                    },
-                                    "sat_sun_open": {
-                                        "type": "integer",
-                                        "example": "09:00"
-                                    },
-                                    "sat_sun_close": {
-                                        "type": "integer",
-                                        "example": "13:00"
-                                    },
-                                    "user_id": {
-                                        "type": "integer",
-                                        "example": 1
-                                    },
-                                    "_method": {
-                                        "type": "string",
-                                        "example": "PUT"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Shop updated"
-                    },
-                    "404": {
-                        "description": "Shop not found"
-                    },
-                    "401": {
-                        "description": "Unauthenticated"
-                    }
-                },
-                "security": [
-                    {
-                        "sanctum": []
-                    }
-                ]
-            },
             "delete": {
                 "tags": [
                     "Shops"
@@ -955,6 +866,95 @@
                     },
                     "404": {
                         "description": "Shop not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/shops/{shop}": {
+            "put": {
+                "tags": [
+                    "Shops"
+                ],
+                "summary": "Update a shop",
+                "operationId": "1ce7b5a099d7ff66be5153dd121f2d44",
+                "parameters": [
+                    {
+                        "name": "shop",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Modahouse"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "esca6585@gmail.com"
+                                    },
+                                    "image": {
+                                        "description": "Image file",
+                                        "type": "string",
+                                        "format": "binary"
+                                    },
+                                    "address": {
+                                        "type": "string",
+                                        "example": "Oguzhan 123"
+                                    },
+                                    "mon_fri_open": {
+                                        "type": "string",
+                                        "example": "09:00"
+                                    },
+                                    "mon_fri_close": {
+                                        "type": "string",
+                                        "example": "18:00"
+                                    },
+                                    "sat_sun_open": {
+                                        "type": "string",
+                                        "example": "09:00"
+                                    },
+                                    "sat_sun_close": {
+                                        "type": "string",
+                                        "example": "13:00"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Shop updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ShopResource"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Shop not found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
                     }
                 },
                 "security": [
