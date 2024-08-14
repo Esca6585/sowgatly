@@ -33,7 +33,7 @@ class ShopSeeder extends Seeder
         Shop::firstOrCreate(
             [
                 'name' => 'Sowgatly',
-                'email' => 'esca656585@gmail.com',
+                'email' => 'esca6585@gmail.com',
                 'address' => 'G.Kulyýew Köçe, Begler ýoly',
                 'mon_fri_open' => '10:00',
                 'mon_fri_close' => '19:00',
