@@ -124,6 +124,76 @@
                 }
             }
         },
+        "/api/otp/register": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Register user with OTP",
+                "operationId": "1a5805e5724689f0e29d9068fb0b9ce8",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "phone_number",
+                                    "otp"
+                                ],
+                                "properties": {
+                                    "phone_number": {
+                                        "type": "string",
+                                        "example": "65656585"
+                                    },
+                                    "otp": {
+                                        "type": "string",
+                                        "example": "0000"
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Esen Meredow"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "esca656585@gmail.com"
+                                    },
+                                    "device_token": {
+                                        "type": "string",
+                                        "example": "device_token_here"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Registration successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "access_token": {
+                                            "type": "string"
+                                        },
+                                        "token_type": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid OTP or expired OTP"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
         "/api/categories": {
             "get": {
                 "tags": [

@@ -201,4 +201,100 @@ class AuthOtpController extends Controller
             'error' => 'Your Otp is not correct!',
         ]);
     }
+
+    /**
+     * @OA\Post(
+     *     path="/api/otp/register",
+     *     summary="Register user with OTP",
+     *     tags={"Authentication"},
+     *     @OA\RequestBody(
+     *         @OA\JsonContent(
+     *             required={"phone_number", "otp"},
+     *             @OA\Property(property="phone_number", type="string", example="65656585"),
+     *             @OA\Property(property="otp", type="string", example="0000"),
+     *             @OA\Property(property="name", type="string", example="Esen Meredow"),
+     *             @OA\Property(property="email", type="string", example="esca656585@gmail.com"),
+     *             @OA\Property(property="device_token", type="string", example="device_token_here")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Registration successful",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="access_token", type="string"),
+     *             @OA\Property(property="token_type", type="string")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid OTP or expired OTP"
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error"
+     *     )
+     * )
+     */
+    public function registerWithOtp(Request $request)
+    {
+        /* Validation */
+        $request->validate([
+            'phone_number' => ['required', new TurkmenistanPhoneNumber],
+            'otp' => 'required|min:4',
+            'name' => 'required|string|max:255',
+            'email' => 'nullable|string|email|max:255|unique:users',
+            'device_token' => 'nullable|string'
+        ]);
+
+        /* OTP Validation Logic */
+        $userOtp = UserOtp::where('otp', $request->otp)
+                          ->whereHas('user', function ($query) use ($request) {
+                              $query->where('phone_number', $request->phone_number);
+                          })->latest()->first();
+
+        if (!$userOtp) {
+            return response()->json([
+                'error' => 'Invalid OTP or expired OTP!',
+            ], 400);
+        }
+
+        DB::beginTransaction();
+        try {
+            // Register new user
+            $user = User::create([
+                'phone_number' => $request->phone_number,
+                'name' => $request->name,
+                'email' => $request->email, // Nullable email field
+            ]);
+
+            // Update OTP as used
+            $userOtp->update([
+                'expire_at' => now(),
+            ]);
+
+            // Save device token if provided
+            if ($request->device_token) {
+                Device::updateOrCreate(
+                    ['user_id' => $user->id],
+                    ['token' => $request->device_token]
+                );
+            }
+
+            // Generate token for the user
+            $token = $user->createToken('api-token')->plainTextToken;
+
+            DB::commit();
+
+            return response()->json([
+                'access_token' => $token,
+                'token_type' => 'Bearer',
+            ], 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Error in registerWithOtp: ' . $e->getMessage());
+            return response()->json([
+                'error' => 'Registration failed!',
+            ], 500);
+        }
+    }
 }
