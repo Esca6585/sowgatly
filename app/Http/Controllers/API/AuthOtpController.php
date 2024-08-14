@@ -11,6 +11,7 @@ use App\Models\UserOtp;
 use Illuminate\Support\Facades\DB; // Add this import
 use Illuminate\Support\Facades\Log; // Add this for logging
 use Illuminate\Support\Facades\Validator;
+use App\Rules\TurkmenistanPhoneNumber;
 
 /**
  * @OA\Tag(
@@ -49,7 +50,7 @@ class AuthOtpController extends Controller
     {
         /* Validate Data */
         $request->validate([
-            'phone_number' => 'required|min:8'
+            'phone_number' => ['required', new TurkmenistanPhoneNumber],
         ]);
 
         try {
@@ -147,7 +148,7 @@ class AuthOtpController extends Controller
     {
         /* Validation */
         $request->validate([
-            'phone_number' => 'required|min:8',
+            'phone_number' => ['required', new TurkmenistanPhoneNumber],
             'otp' => 'required|min:4'
         ]);  
   
