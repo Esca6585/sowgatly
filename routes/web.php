@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/Esca6585', [App\Http\Controllers\UserControllers\UserController::class, 'resume'])->name('resume');
+
 Route::get('/',[App\Http\Controllers\UserControllers\UserController::class, 'goToMainPage'])->name('goToMainPage');
 
 Route::get('/login', function(){

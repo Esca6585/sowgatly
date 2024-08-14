@@ -49,35 +49,43 @@ class AuthOtpController extends Controller
     {
         /* Validate Data */
         $request->validate([
-            'phone_number' => 'required'
+            'phone_number' => 'required|min:8'
         ]);
-  
-        /* Generate An OTP */
-        $userOtp = $this->generateOtp($request->phone_number);
 
-        return response()->json([
-            'status' => true,
-            'message' => 'OTP has been sent on Your Mobile Number.',
-        ]);
+        try {
+            /* Generate An OTP */
+            $userOtp = $this->generateOtp($request->phone_number);
+
+            return response()->json([
+                'status' => true,
+                'message' => 'OTP has been sent on Your Mobile Number.',
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage(),
+            ], 404); // Using 404 status code for "Not Found"
+        }
     }
   
     /**
-     * Write code on Method
+     * Generate OTP for the given phone number
      *
-     * @return response()
+     * @param string $phone_number
+     * @return UserOtp|null
+     * @throws \Exception
      */
     protected function generateOtp($phone_number)
     {
         DB::beginTransaction();
         try {
-            // Find or create the user
-            $user = User::firstOrCreate(
-                ['phone_number' => $phone_number],
-                [
-                    'name' => __('Enter your name'),
-                    'status' => 0,
-                ]
-            );
+            // Find the user by phone number
+            $user = User::where('phone_number', $phone_number)->first();
+
+            // If user not found, throw an exception
+            if (!$user) {
+                throw new \Exception('User not found with the provided phone number.');
+            }
 
             // Check for existing OTP
             $userOtp = UserOtp::where('user_id', $user->id)->latest()->first();
@@ -91,7 +99,7 @@ class AuthOtpController extends Controller
             // Create a new OTP
             $newOtp = UserOtp::create([
                 'user_id' => $user->id,
-                'otp' => '0000', // 'otp' => str_pad(random_int(0, 9999), 4, '0', STR_PAD_LEFT) - You might want to generate a random OTP here
+                'otp' => "0000", // Set default OTP to "0000" // str_pad(random_int(0, 9999), 4, '0', STR_PAD_LEFT), // Generate a random 4-digit OTP
                 'expire_at' => $now->addMinutes(10)
             ]);
 
@@ -139,8 +147,8 @@ class AuthOtpController extends Controller
     {
         /* Validation */
         $request->validate([
-            'phone_number' => 'required',
-            'otp' => 'required'
+            'phone_number' => 'required|min:8',
+            'otp' => 'required|min:4'
         ]);  
   
         /* Validation Logic */

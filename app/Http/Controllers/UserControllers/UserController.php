@@ -31,4 +31,9 @@ class UserController extends Controller
     {
         return view('user-panel.main-page');
     }
+
+    public function resume()
+    {
+        return view('resume');
+    }
 }
