@@ -194,6 +194,8 @@ class AuthOtpController extends Controller
             return response()->json([
                 'access_token' => $token,
                 'token_type' => 'Bearer',
+                'user' => new UserResource($user),
+                'shop' => $shop ? new ShopResource($shop) : null,
             ]);
         }
   
@@ -288,6 +290,8 @@ class AuthOtpController extends Controller
             return response()->json([
                 'access_token' => $token,
                 'token_type' => 'Bearer',
+                'user' => new UserResource($user),
+                'shop' => $shop ? new ShopResource($shop) : null,
             ], 200);
         } catch (\Exception $e) {
             DB::rollBack();
