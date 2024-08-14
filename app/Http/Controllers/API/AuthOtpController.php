@@ -149,7 +149,7 @@ class AuthOtpController extends Controller
         /* Validation */
         $request->validate([
             'phone_number' => ['required', new TurkmenistanPhoneNumber],
-            'otp' => 'required|min:4'
+            'otp' => 'required|digits:4'
         ]);  
   
         /* Validation Logic */
