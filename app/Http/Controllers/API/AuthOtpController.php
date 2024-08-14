@@ -217,7 +217,6 @@ class AuthOtpController extends Controller
      *             @OA\Property(property="phone_number", type="string", example="65656565"),
      *             @OA\Property(property="name", type="string", example="Esen Meredow"),
      *             @OA\Property(property="email", type="string", example="tds@sanly.tm"),
-     *             @OA\Property(property="device_token", type="string", example="device_token_here")
      *         )
      *     ),
      *     @OA\Response(
@@ -247,7 +246,6 @@ class AuthOtpController extends Controller
             'phone_number' => ['required', new TurkmenistanPhoneNumber],
             'name' => 'required|string|max:255',
             'email' => 'nullable|string|email|max:255|unique:users',
-            'device_token' => 'nullable|string'
         ]);
 
         DB::beginTransaction();

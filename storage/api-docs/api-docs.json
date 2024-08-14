@@ -129,24 +129,19 @@
                 "tags": [
                     "Authentication"
                 ],
-                "summary": "Register user with OTP",
+                "summary": "Register user and return OTP code",
                 "operationId": "1a5805e5724689f0e29d9068fb0b9ce8",
                 "requestBody": {
                     "content": {
                         "application/json": {
                             "schema": {
                                 "required": [
-                                    "phone_number",
-                                    "otp"
+                                    "phone_number"
                                 ],
                                 "properties": {
                                     "phone_number": {
                                         "type": "string",
                                         "example": "65656565"
-                                    },
-                                    "otp": {
-                                        "type": "string",
-                                        "example": "0000"
                                     },
                                     "name": {
                                         "type": "string",
@@ -168,7 +163,7 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Registration successful",
+                        "description": "Registration successful, OTP sent",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -178,6 +173,16 @@
                                         },
                                         "token_type": {
                                             "type": "string"
+                                        },
+                                        "otp": {
+                                            "description": "Generated OTP code",
+                                            "type": "string"
+                                        },
+                                        "shops": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/ShopResource"
+                                            }
                                         }
                                     },
                                     "type": "object"
@@ -185,11 +190,11 @@
                             }
                         }
                     },
-                    "400": {
-                        "description": "Invalid OTP or expired OTP"
-                    },
                     "422": {
                         "description": "Validation error"
+                    },
+                    "500": {
+                        "description": "Server error"
                     }
                 }
             }
