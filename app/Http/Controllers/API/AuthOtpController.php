@@ -286,7 +286,7 @@ class AuthOtpController extends Controller
             return response()->json([
                 'access_token' => $token,
                 'token_type' => 'Bearer',
-                'otp' => $otpCode, // Return the OTP code
+                'otp' => '0000',// $otpCode, // Return the OTP code
                 'shops' => ShopResource::collection($user->shops),
             ], 200);
         } catch (\Exception $e) {

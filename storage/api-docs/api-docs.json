@@ -150,10 +150,6 @@
                                     "email": {
                                         "type": "string",
                                         "example": "tds@sanly.tm"
-                                    },
-                                    "device_token": {
-                                        "type": "string",
-                                        "example": "device_token_here"
                                     }
                                 },
                                 "type": "object"
