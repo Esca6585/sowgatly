@@ -272,7 +272,7 @@
                                     <!--end::Alert-->
 
                                     <!--begin: Datatable-->
-                                    @include('admin-panel.Region.Region-table')
+                                    @include('admin-panel.region.region-table')
                                     <!--end: Datatable-->
                                 </div>
                             </div>
