@@ -17,6 +17,27 @@ use App\Http\Resources\ShopResource;
 
 class AuthOtpController extends Controller
 {
+    /**
+     * @OA\Post(
+     *     path="/api/otp/generate",
+     *     summary="Generate OTP",
+     *     tags={"Authentication"},
+     *     @OA\RequestBody(
+     *         @OA\JsonContent(
+     *             required={"phone_number"},
+     *             @OA\Property(property="phone_number", type="string", example="+99365123456")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="OTP generated successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean"),
+     *             @OA\Property(property="message", type="string")
+     *         )
+     *     )
+     * )
+     */
     public function generate(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -97,6 +118,31 @@ class AuthOtpController extends Controller
         }
     }
 
+    /**
+     * @OA\Post(
+     *     path="/api/otp/login",
+     *     summary="Login with OTP",
+     *     tags={"Authentication"},
+     *     @OA\RequestBody(
+     *         @OA\JsonContent(
+     *             required={"phone_number", "otp"},
+     *             @OA\Property(property="phone_number", type="string", example="+99365123456"),
+     *             @OA\Property(property="otp", type="string", example="0000")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Login successful",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean"),
+     *             @OA\Property(property="access_token", type="string"),
+     *             @OA\Property(property="token_type", type="string"),
+     *             @OA\Property(property="user", type="object"),
+     *             @OA\Property(property="shops", type="array", @OA\Items())
+     *         )
+     *     )
+     * )
+     */
     public function loginWithOtp(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -156,7 +202,34 @@ class AuthOtpController extends Controller
             'shops' => ShopResource::collection($user->shops),
         ], 200);
     }
-
+    /**
+     * @OA\Post(
+     *     path="/api/otp/register",
+     *     summary="Register with OTP",
+     *     tags={"Authentication"},
+     *     @OA\RequestBody(
+     *         @OA\JsonContent(
+     *             required={"phone_number", "name"},
+     *             @OA\Property(property="phone_number", type="string", example="+99365123456"),
+     *             @OA\Property(property="name", type="string", example="John Doe"),
+     *             @OA\Property(property="email", type="string", example="john@example.com"),
+     *             @OA\Property(property="device_token", type="string", example="device_token_here")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Registration successful",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean"),
+     *             @OA\Property(property="access_token", type="string"),
+     *             @OA\Property(property="token_type", type="string"),
+     *             @OA\Property(property="otp", type="string"),
+     *             @OA\Property(property="user", type="object"),
+     *             @OA\Property(property="shops", type="array", @OA\Items())
+     *         )
+     *     )
+     * )
+     */
     public function registerWithOtp(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -217,6 +290,22 @@ class AuthOtpController extends Controller
         }
     }
 
+    /**
+     * @OA\Post(
+     *     path="/api/otp/logout",
+     *     summary="Logout",
+     *     tags={"Authentication"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Logout successful",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean"),
+     *             @OA\Property(property="message", type="string")
+     *         )
+     *     )
+     * )
+     */
     public function logout(Request $request)
     {
         try {
