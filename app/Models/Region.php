@@ -25,4 +25,9 @@ class Region extends Model
     {
         return $this->hasMany(Shop::class);
     }
+
+    public function address()
+    {
+        return $this->belongsTo(Address::class);
+    }
 }

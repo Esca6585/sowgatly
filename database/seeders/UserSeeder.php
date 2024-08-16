@@ -19,9 +19,10 @@ class UserSeeder extends Seeder
         User::firstOrCreate(
             [
                 'phone_number' => 65656585,
+                'email' => 'esca656585@gmail.com',
             ],
             [
-                'name' => 'Rahmanberdi Ahmedow',
+                'name' => 'Rahymberdi Ahmedow',
                 'image' => 'user/user-seeder/logo.png',
                 'password' => Hash::make('password'),
                 'status' => true,
@@ -31,10 +32,11 @@ class UserSeeder extends Seeder
         User::firstOrCreate(
             [
                 'phone_number' => 71406778,
+                'email' => 'esca6585@gmail.com',
             ],
             [
                 'name' => 'Rahymberdi Ahmedow',
-                'image' => 'user/user-seeder/logo.png',
+                'image' => 'user/user-seeder/sowgatly-logo.png',
                 'password' => Hash::make('password'),
                 'status' => true,
             ]

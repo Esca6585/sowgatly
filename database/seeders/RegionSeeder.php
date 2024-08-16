@@ -4,13 +4,20 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Region;
+use App\Models\Address;
 
-class RegionsTableSeeder extends Seeder
+class RegionSeeder extends Seeder
 {
+    private $postalCode = 744000;
+
     public function run()
     {
         // Create Turkmenistan as the root
-        $turkmenistan = Region::create(['name' => 'Turkmenistan', 'type' => 'country']);
+        $turkmenistan = Region::create([
+            'name' => 'Turkmenistan', 
+            'type' => 'country',
+            'address_id' => $this->createAddress('Turkmenistan')
+        ]);
 
         // Create provinces (velayats)
         $provinces = [
@@ -25,7 +32,8 @@ class RegionsTableSeeder extends Seeder
             $provinceModel = Region::create([
                 'name' => $province,
                 'parent_id' => $turkmenistan->id,
-                'type' => 'province'
+                'type' => 'province',
+                'address_id' => $this->createAddress($province)
             ]);
 
             // Add some example cities and villages for each province
@@ -36,7 +44,8 @@ class RegionsTableSeeder extends Seeder
         Region::create([
             'name' => 'Ashgabat',
             'parent_id' => $turkmenistan->id,
-            'type' => 'city'
+            'type' => 'city',
+            'address_id' => $this->createAddress('Ashgabat')
         ]);
     }
 
@@ -47,7 +56,8 @@ class RegionsTableSeeder extends Seeder
             $city = Region::create([
                 'name' => $province->name . " City {$i}",
                 'parent_id' => $province->id,
-                'type' => 'city'
+                'type' => 'city',
+                'address_id' => $this->createAddress($province->name . " City {$i}")
             ]);
 
             // Add some example villages for each city
@@ -55,9 +65,26 @@ class RegionsTableSeeder extends Seeder
                 Region::create([
                     'name' => $city->name . " Village {$j}",
                     'parent_id' => $city->id,
-                    'type' => 'village'
+                    'type' => 'village',
+                    'address_id' => $this->createAddress($city->name . " Village {$j}")
                 ]);
             }
         }
+    }
+
+    private function createAddress($regionName)
+    {
+        return Address::create([
+            'street' => 'Main Street',
+            'city' => $regionName,
+            'state' => $regionName,
+            'country' => 'Turkmenistan',
+            'postal_code' => $this->getNextPostalCode()
+        ])->id;
+    }
+
+    private function getNextPostalCode()
+    {
+        return strval($this->postalCode++);
     }
 }

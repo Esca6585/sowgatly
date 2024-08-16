@@ -17,7 +17,7 @@
             <tr id="datatable">
                 <td>{{ $loop->iteration }}</td>
                 <td>{{ $user->name }}</td>
-                <td>{{ $shop->email }}</td>
+                <td>{{ $user->email }}</td>
                 <td>
                     <a href="tel:+993{{ $user->phone_number }}">
                         <span>+993</span> {{ $user->phone_number }}

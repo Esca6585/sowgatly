@@ -16,6 +16,152 @@
         }
     ],
     "paths": {
+        "/api/addresses": {
+            "get": {
+                "tags": [
+                    "Addresses"
+                ],
+                "summary": "Get a list of addresses",
+                "operationId": "05d45400dc99e36f78ac7453a329d22e",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Addresses"
+                ],
+                "summary": "Create a new address",
+                "operationId": "94fa3d44216521505cefc876e95c85bd",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AddressRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Address created successfully"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/addresses/{id}": {
+            "get": {
+                "tags": [
+                    "Addresses"
+                ],
+                "summary": "Get a specific address",
+                "operationId": "0bcfe687364805ac5b63f6543a939676",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Address not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Addresses"
+                ],
+                "summary": "Update an existing address",
+                "operationId": "37fd837c934a3d8d398f03edc65c5e39",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AddressRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Address updated successfully"
+                    },
+                    "404": {
+                        "description": "Address not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Addresses"
+                ],
+                "summary": "Delete an address",
+                "operationId": "fd6c07ccab4cab14b0f9d9124fc9f5bf",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Address deleted successfully"
+                    },
+                    "404": {
+                        "description": "Address not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
         "/api/otp/generate": {
             "post": {
                 "tags": [
@@ -565,7 +711,7 @@
                     "Orders"
                 ],
                 "summary": "Get user's orders",
-                "operationId": "f641842a2abf975fee5362d88c320539",
+                "operationId": "b151ab9e056a2e8d1de38f2d75d60a77",
                 "responses": {
                     "200": {
                         "description": "Successful operation"
@@ -582,7 +728,7 @@
                     "Orders"
                 ],
                 "summary": "Create a new order from cart",
-                "operationId": "b0f5daac05dcbd2f54bd761f92afcbf6",
+                "operationId": "a4cbba2106e588b6d787612d6f4f4f9e",
                 "requestBody": {
                     "content": {
                         "application/json": {
@@ -621,7 +767,7 @@
                     "Orders"
                 ],
                 "summary": "Get a specific order",
-                "operationId": "ca5d23a81020b17dad07d341668d73d2",
+                "operationId": "93110812e9f34e8dd0d67bd0f13a2def",
                 "parameters": [
                     {
                         "name": "id",
@@ -954,6 +1100,154 @@
                     },
                     "401": {
                         "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/regions": {
+            "get": {
+                "tags": [
+                    "Regions"
+                ],
+                "summary": "Get all regions",
+                "operationId": "ccee2a99d885d0f59e09b4354487ab05",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Regions"
+                ],
+                "summary": "Create a new region",
+                "operationId": "1e48c64261ef945edb506c1a5d112a3d",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RegionRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Region created successfully"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/regions/{id}": {
+            "get": {
+                "tags": [
+                    "Regions"
+                ],
+                "summary": "Get a specific region",
+                "operationId": "6a2fa52c868de9118a7d732562004117",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Region not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Regions"
+                ],
+                "summary": "Update a region",
+                "operationId": "3087a020e76a9ce879696fc807030b40",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RegionRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Region updated successfully"
+                    },
+                    "404": {
+                        "description": "Region not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Regions"
+                ],
+                "summary": "Delete a region",
+                "operationId": "277b879c8d2c7f4d43258cc4cfefd866",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Region deleted successfully"
+                    },
+                    "404": {
+                        "description": "Region not found"
                     }
                 },
                 "security": [
@@ -1504,6 +1798,61 @@
                 },
                 "type": "object"
             },
+            "RegionRequest": {
+                "required": [
+                    "name",
+                    "type"
+                ],
+                "properties": {
+                    "name": {
+                        "description": "The name of the region",
+                        "type": "string"
+                    },
+                    "type": {
+                        "description": "The type of the region",
+                        "type": "string",
+                        "enum": [
+                            "country",
+                            "province",
+                            "city",
+                            "village"
+                        ]
+                    },
+                    "parent_id": {
+                        "description": "The ID of the parent region (if any)",
+                        "type": "integer",
+                        "nullable": true
+                    },
+                    "address": {
+                        "description": "The address details of the region",
+                        "properties": {
+                            "street": {
+                                "type": "string",
+                                "nullable": true
+                            },
+                            "city": {
+                                "type": "string",
+                                "nullable": true
+                            },
+                            "state": {
+                                "type": "string",
+                                "nullable": true
+                            },
+                            "country": {
+                                "type": "string",
+                                "nullable": true
+                            },
+                            "postal_code": {
+                                "type": "string",
+                                "nullable": true
+                            }
+                        },
+                        "type": "object",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
             "ShopResource": {
                 "properties": {
                     "id": {
@@ -1571,6 +1920,26 @@
                     }
                 },
                 "type": "object"
+            },
+            "AddressRequest": {
+                "properties": {
+                    "street": {
+                        "type": "string"
+                    },
+                    "city": {
+                        "type": "string"
+                    },
+                    "state": {
+                        "type": "string"
+                    },
+                    "country": {
+                        "type": "string"
+                    },
+                    "postal_code": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
             }
         },
         "securitySchemes": {
@@ -1583,6 +1952,10 @@
         }
     },
     "tags": [
+        {
+            "name": "Addresses",
+            "description": "API Endpoints of Addresses"
+        },
         {
             "name": "Cart",
             "description": "API Endpoints for Cart operations"
@@ -1602,6 +1975,10 @@
         {
             "name": "Products",
             "description": "Products"
+        },
+        {
+            "name": "Regions",
+            "description": "Regions"
         },
         {
             "name": "Shops",

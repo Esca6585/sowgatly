@@ -41,4 +41,10 @@ Route::middleware(['auth:sanctum', 'check.token'])->group(function () {
     // Order routes
     Route::apiResource('orders', App\Http\Controllers\API\OrderController::class);
     Route::get('user/orders', [App\Http\Controllers\API\OrderController::class, 'getUserOrders']);
+
+    // Address routes
+    Route::apiResource('addresses', App\Http\Controllers\API\AddressController::class);
+
+    // Regions routes
+    Route::apiResource('regions', App\Http\Controllers\API\RegionController::class);
 });

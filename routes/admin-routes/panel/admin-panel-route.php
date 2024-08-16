@@ -21,6 +21,7 @@ Route::group([
             '/{categoryType}/category' => App\Http\Controllers\AdminControllers\Category\CategoryController::class,
             '/attribute' => App\Http\Controllers\AdminControllers\Attribute\AttributeController::class,
             '/user' => App\Http\Controllers\AdminControllers\User\UserController::class,
+            '/region' => App\Http\Controllers\AdminControllers\Region\RegionController::class,
             '/shop' => App\Http\Controllers\AdminControllers\Shop\ShopController::class,
             '/product' => App\Http\Controllers\AdminControllers\Product\ProductController::class,
             '/message' => App\Http\Controllers\AdminControllers\Message\MessageController::class,
