@@ -202,7 +202,7 @@ class AuthOtpController extends Controller
         }
   
         return response()->json([
-            'error' => 'Your Otp is not correct!',
+            'success' => false,
         ]);
     }
 
@@ -287,6 +287,7 @@ class AuthOtpController extends Controller
                 'access_token' => $token,
                 'token_type' => 'Bearer',
                 'otp' => '0000',// $otpCode, // Return the OTP code
+                'user' => new UserResource($user),
                 'shops' => ShopResource::collection($user->shops),
             ], 200);
         } catch (\Exception $e) {
