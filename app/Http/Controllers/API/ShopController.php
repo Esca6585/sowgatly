@@ -189,7 +189,7 @@ class ShopController extends Controller
      *                  property="image",
      *                  type="string",
      *                  format="binary",
-     *                  description="Image file"
+     *                  description="Image file (optional)"
      *               ),
      *               @OA\Property(property="address", type="string", example="Oguzhan 123"),
      *               @OA\Property(property="mon_fri_open", type="string", example="09:00"),
@@ -232,7 +232,7 @@ class ShopController extends Controller
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:shops,email,' . $shop->id,
-            'image' => 'sometimes|nullable|image|mimes:jpeg,png,jpg,gif|max:10240',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240',
             'address' => 'required|string|max:255',
             'mon_fri_open' => 'required|date_format:H:i',
             'mon_fri_close' => 'required|date_format:H:i|after:mon_fri_open',
@@ -240,10 +240,15 @@ class ShopController extends Controller
             'sat_sun_close' => 'required|date_format:H:i|after:sat_sun_open',
         ]);
 
+        // Remove image from validatedData if it's null
+        if (!$request->hasFile('image')) {
+            unset($validatedData['image']);
+        }
+
         // Update shop data
         $shop->update($validatedData);
 
-        // Handle image upload
+        // Handle image upload only if a new image is provided
         if ($request->hasFile('image')) {
             $this->uploadImage($shop, $request->file('image'));
         }

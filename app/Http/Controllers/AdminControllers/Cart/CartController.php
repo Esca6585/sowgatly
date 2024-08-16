@@ -24,7 +24,7 @@ class CartController extends Controller
             $pagination = (int)$request->pagination;
         }
 
-        $carts = Cart::orderByDesc('id')->withTrashed()->paginate($pagination);
+        $carts = Cart::orderByDesc('id')->paginate($pagination);
 
         if(request()->ajax()){
             if($request->search) {
@@ -35,7 +35,7 @@ class CartController extends Controller
                 $carts = Cart::where(function($q) use($requestData, $searchQuery) {
                                         foreach ($requestData as $field)
                                         $q->orWhere($field, 'like', "%{$searchQuery}%");
-                                })->withTrashed()->paginate($pagination);
+                                })->paginate($pagination);
             }
             
             return view('admin-panel.cart.cart-table', compact('carts', 'pagination'))->render();
