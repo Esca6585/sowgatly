@@ -24,8 +24,8 @@ class CartController extends Controller
      *     tags={"Cart"},
      *     @OA\RequestBody(
      *         @OA\JsonContent(
-     *             @OA\Property(property="product_id", type="integer"),
-     *             @OA\Property(property="quantity", type="integer")
+     *             @OA\Property(property="product_id", type="integer", example=1),
+     *             @OA\Property(property="quantity", type="integer", example=1)
      *         )
      *     ),
      *     @OA\Response(response="200", description="Product added to cart"),
