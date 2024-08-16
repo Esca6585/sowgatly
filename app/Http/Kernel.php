@@ -68,4 +68,8 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'check.token' => \App\Http\Middleware\CheckForValidToken::class,
     ];
+
+    protected $commands = [
+        \App\Console\Commands\GenerateRandomUser::class,
+    ];
 }

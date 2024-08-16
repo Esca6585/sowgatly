@@ -1,76 +1,57 @@
 <?php
 
 namespace App\Http\Controllers\API;
-  
+
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Device;
 use App\Models\UserOtp;
-use Illuminate\Support\Facades\DB; // Add this import
-use Illuminate\Support\Facades\Log; // Add this for logging
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use App\Rules\TurkmenistanPhoneNumber;
 use App\Http\Resources\UserResource;
 use App\Http\Resources\ShopResource;
 
-/**
- * @OA\Tag(
- *     name="Authentication",
- *     description="API Endpoints for user Authentication"
- * )
- */
 class AuthOtpController extends Controller
 {
-    /**
-     * @OA\Post(
-     *     path="/api/otp/generate",
-     *     summary="Generate OTP for user",
-     *     tags={"Authentication"},
-     *     @OA\RequestBody(
-     *         @OA\JsonContent(
-     *             required={"phone_number"},
-     *             @OA\Property(property="phone_number", type="string", example="65656585")
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="OTP generated successfully",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="userOtp", type="object"),
-     *             @OA\Property(property="success", type="string")
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=422,
-     *         description="Validation error"
-     *     )
-     * )
-     */
     public function generate(Request $request)
     {
-        /* Validate Data */
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'phone_number' => ['required', new TurkmenistanPhoneNumber],
         ]);
 
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()->first(),
+            ], 200);
+        }
+
         try {
-            /* Generate An OTP */
             $userOtp = $this->generateOtp($request->phone_number);
 
-            return response()->json([
-                'status' => true,
-                'message' => 'OTP has been sent on Your Mobile Number.',
-            ]);
+            if ($userOtp) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'OTP has been sent on Your Mobile Number.',
+                ], 200);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'User not found.',
+                ], 200);
+            }
         } catch (\Exception $e) {
             return response()->json([
-                'status' => false,
+                'success' => false,
                 'message' => $e->getMessage(),
-            ], 404); // Using 404 status code for "Not Found"
+            ], 200);
         }
     }
-  
+
     /**
      * Generate OTP for the given phone number
      *
@@ -115,162 +96,98 @@ class AuthOtpController extends Controller
             throw $e;
         }
     }
-  
-    /**
-     * @OA\Post(
-     *     path="/api/otp/login",
-     *     summary="Login with OTP",
-     *     tags={"Authentication"},
-     *     @OA\RequestBody(
-     *         @OA\JsonContent(
-     *             required={"user_id", "otp"},
-     *             @OA\Property(property="phone_number", type="integer", example="65656585"),
-     *             @OA\Property(property="otp", type="integer", example="0000"),
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="Login successful",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="access_token", type="string"),
-     *             @OA\Property(property="token_type", type="string")
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=422,
-     *         description="Validation error"
-     *     ),
-     *     @OA\Response(
-     *         response=400,
-     *         description="Invalid OTP or expired OTP"
-     *     )
-     * )
-     */
+
     public function loginWithOtp(Request $request)
     {
-        /* Validation */
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'phone_number' => ['required', new TurkmenistanPhoneNumber],
             'otp' => 'required|digits:4'
-        ]);  
-  
-        /* Validation Logic */
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()->first(),
+            ], 200);
+        }
+
         $user = User::where('phone_number', $request->phone_number)->first();
 
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'User not found.',
+            ], 200);
+        }
+
         $userOtp = UserOtp::where('otp', $request->otp)->where('user_id', $user->id)->latest()->first();
-  
+
         $now = now();
         if (!$userOtp) {
             return response()->json([
-                'error' => 'Your OTP is not correct!',
-            ]);
-        } else if($userOtp && $now->isAfter($userOtp->expire_at)){
+                'success' => false,
+                'message' => 'Your OTP is not correct!',
+            ], 200);
+        } else if ($userOtp && $now->isAfter($userOtp->expire_at)) {
             return response()->json([
-                'error' => 'Your OTP has been expired!',
-            ]);
+                'success' => false,
+                'message' => 'Your OTP has been expired!',
+            ], 200);
         }
-    
-        $user = User::whereId($userOtp->user_id)->first();
-  
-        if($user){
-              
-            $userOtp->update([
-                'expire_at' => now()
-            ]);
-  
-            if($request->header('Device') == 'Mobile') {
-                $device = Device::where('user_id', $user->id)->first();
-                if($device == null) {
-                    $add = new Device();
-                    $add->user_id = $user->id;
-                    $add->token = $request->device_token;
-                    $add->save();
-                } else {
-                    $device->token = $request->device_token;
-                    $device->update();
-                }
-            }
-    
-            $token = $user->createToken('api-token')->plainTextToken;
-    
-            return response()->json([
-                'access_token' => $token,
-                'token_type' => 'Bearer',
-                'user' => new UserResource($user),
-                'shops' => ShopResource::collection($user->shops),
-            ]);
-        }
-  
-        return response()->json([
-            'success' => false,
+
+        $userOtp->update([
+            'expire_at' => now()
         ]);
+
+        if ($request->header('Device') == 'Mobile') {
+            Device::updateOrCreate(
+                ['user_id' => $user->id],
+                ['token' => $request->device_token]
+            );
+        }
+
+        $token = $user->createToken('api-token')->plainTextToken;
+
+        return response()->json([
+            'success' => true,
+            'access_token' => $token,
+            'token_type' => 'Bearer',
+            'user' => new UserResource($user),
+            'shops' => ShopResource::collection($user->shops),
+        ], 200);
     }
 
-    /**
-     * @OA\Post(
-     *     path="/api/otp/register",
-     *     summary="Register user and return OTP code",
-     *     tags={"Authentication"},
-     *     @OA\RequestBody(
-     *         @OA\JsonContent(
-     *             required={"phone_number"},
-     *             @OA\Property(property="phone_number", type="string", example="65656565"),
-     *             @OA\Property(property="name", type="string", example="Esen Meredow"),
-     *             @OA\Property(property="email", type="string", example="tds@sanly.tm"),
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="Registration successful, OTP sent",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="access_token", type="string"),
-     *             @OA\Property(property="token_type", type="string"),
-     *             @OA\Property(property="otp", type="string", description="Generated OTP code"),
-     *             @OA\Property(property="shops", type="array", @OA\Items(ref="#/components/schemas/ShopResource"))
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=422,
-     *         description="Validation error"
-     *     ),
-     *     @OA\Response(
-     *         response=500,
-     *         description="Server error"
-     *     )
-     * )
-     */
     public function registerWithOtp(Request $request)
     {
-        // Validate request
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'phone_number' => ['required', new TurkmenistanPhoneNumber],
             'name' => 'required|string|max:255',
             'email' => 'nullable|string|email|max:255|unique:users',
         ]);
 
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()->first(),
+            ], 200);
+        }
+
         DB::beginTransaction();
         try {
-            // Register new user
             $user = User::create([
                 'phone_number' => $request->phone_number,
                 'name' => $request->name,
-                'email' => $request->email, // Nullable email field
+                'email' => $request->email,
             ]);
 
-            // Generate OTP code
-            $otpCode = random_int(1000, 9999); // Generate a 4-digit random OTP code
+            $otpCode = "0000"; // For testing purposes, use a fixed OTP
 
-            // Save OTP in database
             UserOtp::create([
                 'user_id' => $user->id,
                 'otp' => $otpCode,
-                'expire_at' => now()->addMinutes(10), // OTP expiration time
+                'expire_at' => now()->addMinutes(10),
             ]);
 
-            // Send OTP code to user (implementation depends on your SMS service)
-            // Example: $this->sendOtpSms($user->phone_number, $otpCode);
-
-            // Save device token if provided
             if ($request->device_token) {
                 Device::updateOrCreate(
                     ['user_id' => $user->id],
@@ -278,15 +195,15 @@ class AuthOtpController extends Controller
                 );
             }
 
-            // Generate token for the user
             $token = $user->createToken('api-token')->plainTextToken;
 
             DB::commit();
 
             return response()->json([
+                'success' => true,
                 'access_token' => $token,
                 'token_type' => 'Bearer',
-                'otp' => '0000',// $otpCode, // Return the OTP code
+                'otp' => $otpCode,
                 'user' => new UserResource($user),
                 'shops' => ShopResource::collection($user->shops),
             ], 200);
@@ -294,38 +211,25 @@ class AuthOtpController extends Controller
             DB::rollBack();
             Log::error('Error in registerWithOtp: ' . $e->getMessage());
             return response()->json([
-                'error' => 'Registration failed!',
-            ], 500);
+                'success' => false,
+                'message' => 'Registration failed: ' . $e->getMessage(),
+            ], 200);
         }
     }
 
-
-    /**
-     * @OA\Post(
-     *     path="/api/otp/logout",
-     *     summary="Logout the user",
-     *     tags={"Authentication"},
-     *     security={{"bearerAuth": {}}},
-     *     @OA\Response(
-     *         response=200,
-     *         description="Logout successful",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="Logged out successfully")
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=401,
-     *         description="Unauthenticated"
-     *     )
-     * )
-     */
     public function logout(Request $request)
     {
-        // Revoke the token that was used to authenticate the current request
-        $request->user()->currentAccessToken()->delete();
-
-        return response()->json([
-            'message' => 'Logged out successfully',
-        ], 200);
+        try {
+            $request->user()->currentAccessToken()->delete();
+            return response()->json([
+                'success' => true,
+                'message' => 'Logged out successfully',
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Logout failed: ' . $e->getMessage(),
+            ], 200);
+        }
     }
 }
