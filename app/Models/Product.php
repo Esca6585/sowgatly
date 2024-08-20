@@ -12,15 +12,7 @@ class Product extends Model
     protected $table = 'products';
 
     protected $fillable = [
-        'name',
-        'description',
-        'price',
-        'discount',
-        'attributes',
-        'code',
-        'category_id',
-        'shop_id',
-        'status',
+        'name', 'description', 'price', 'discount', 'attributes', 'code', 'category_id', 'shop_id', 'status'
     ];
     
     protected $casts = [
@@ -39,19 +31,20 @@ class Product extends Model
         return $this->fillable;
     }
 
-    public function images()
-    {
-        return $this->hasMany(Image::class,'product_id', 'id');
-    }
-
+    // Relationships
     public function category()
     {
-        return $this->belongsTo(Category::class, 'category_id', 'id');
+        return $this->belongsTo(Category::class);
     }
 
     public function shop()
     {
         return $this->belongsTo(Shop::class);
+    }
+
+    public function images()
+    {
+        return $this->hasMany(Image::class);
     }
 
     public function getDiscountPrice()

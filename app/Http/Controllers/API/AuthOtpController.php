@@ -25,7 +25,7 @@ class AuthOtpController extends Controller
      *     @OA\RequestBody(
      *         @OA\JsonContent(
      *             required={"phone_number"},
-     *             @OA\Property(property="phone_number", type="string", example="+99365123456")
+     *             @OA\Property(property="phone_number", type="string", example="65123456")
      *         )
      *     ),
      *     @OA\Response(
@@ -126,7 +126,7 @@ class AuthOtpController extends Controller
      *     @OA\RequestBody(
      *         @OA\JsonContent(
      *             required={"phone_number", "otp"},
-     *             @OA\Property(property="phone_number", type="string", example="+99365123456"),
+     *             @OA\Property(property="phone_number", type="string", example="65123456"),
      *             @OA\Property(property="otp", type="string", example="0000")
      *         )
      *     ),
@@ -210,7 +210,7 @@ class AuthOtpController extends Controller
      *     @OA\RequestBody(
      *         @OA\JsonContent(
      *             required={"phone_number", "name"},
-     *             @OA\Property(property="phone_number", type="string", example="+99365123456"),
+     *             @OA\Property(property="phone_number", type="string", example="65123456"),
      *             @OA\Property(property="name", type="string", example="John Doe"),
      *             @OA\Property(property="email", type="string", example="john@example.com"),
      *             @OA\Property(property="device_token", type="string", example="device_token_here")

@@ -13,22 +13,16 @@ class Address extends Model
      * The attributes that are mass assignable.
      *
      * @var array
-     */
+    */
     protected $fillable = [
         'street',
-        'city',
-        'state',
+        'settlement',
+        'district',
+        'province',
+        'region',
         'country',
         'postal_code',
     ];
-
-    /**
-     * Get the region associated with the address.
-     */
-    public function region()
-    {
-        return $this->hasOne(Region::class);
-    }
 
     /**
      * Get the shop associated with the address.
@@ -47,8 +41,10 @@ class Address extends Model
     {
         $parts = array_filter([
             $this->street,
-            $this->city,
-            $this->state,
+            $this->settlement,
+            $this->district,
+            $this->province,
+            $this->region,
             $this->country,
             $this->postal_code
         ]);

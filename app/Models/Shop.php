@@ -14,14 +14,14 @@ class Shop extends Model
     protected $fillable = [
         'name',
         'email',
-        'address',
         'mon_fri_open',
         'mon_fri_close',
         'sat_sun_open',
         'sat_sun_close',
         'image',
         'user_id',
-        'region_id'
+        'region_id',
+        'address_id',
     ];
 
 
@@ -45,6 +45,11 @@ class Shop extends Model
         return $this->belongsTo(Region::class);
     }
 
+    public function address()
+    {
+        return $this->belongsTo(Address::class);
+    }
+    
     public function orders()
     {
         return $this->hasMany(Order::class);

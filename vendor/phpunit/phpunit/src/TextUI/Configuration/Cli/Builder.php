@@ -9,6 +9,7 @@
  */
 namespace PHPUnit\TextUI\CliArguments;
 
+use const DIRECTORY_SEPARATOR;
 use function array_map;
 use function basename;
 use function explode;
@@ -23,6 +24,8 @@ use SebastianBergmann\CliParser\Exception as CliParserException;
 use SebastianBergmann\CliParser\Parser as CliParser;
 
 /**
+ * @no-named-arguments Parameter names are not covered by the backward compatibility promise for PHPUnit
+ *
  * @internal This class is not covered by the backward compatibility promise for PHPUnit
  */
 final class Builder
@@ -797,6 +800,8 @@ final class Builder
                     }
 
                     $coverageFilter[] = $option[1];
+
+                    $optionAllowedMultipleTimes = true;
 
                     break;
 

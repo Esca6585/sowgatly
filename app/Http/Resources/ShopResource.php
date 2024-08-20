@@ -18,15 +18,17 @@ class ShopResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
-            'address' => $this->address,
+            'image' => $this->image,
             'mon_fri_open' => $this->mon_fri_open,
             'mon_fri_close' => $this->mon_fri_close,
             'sat_sun_open' => $this->sat_sun_open,
             'sat_sun_close' => $this->sat_sun_close,
-            'image' => $this->image ? asset($this->image) : null,
+            'user_id' => $this->user_id,
+            'region_id' => $this->region_id,
+            'address_id' => $this->address_id,
             'user' => new UserResource($this->whenLoaded('user')),
-            'created_at' => $this->created_at->toDateTimeString(),
-            'updated_at' => $this->updated_at->toDateTimeString(),
+            'address' => new AddressResource($this->whenLoaded('address')),
+            'region' => new RegionResource($this->whenLoaded('region')),
         ];
     }
 }

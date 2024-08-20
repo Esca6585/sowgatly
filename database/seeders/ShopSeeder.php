@@ -3,10 +3,11 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 use App\Models\Shop;
-use App\Models\Region; // Add this line to import the Region model
+use App\Models\Region;
+use App\Models\User;
+use App\Models\Address;
+use Illuminate\Support\Facades\DB;
 
 class ShopSeeder extends Seeder
 {
@@ -17,45 +18,115 @@ class ShopSeeder extends Seeder
      */
     public function run()
     {
-        // Assuming you have regions already seeded, get the first region as an example
-        $region = Region::first();
+        DB::transaction(function () {
+            $region = $this->getOrCreateRegion();
+            $this->createShops($region);
+        });
+    }
 
-        if (!$region) {
-            throw new \Exception('No regions found. Please seed regions first.');
-        }
+    /**
+     * Get or create a region.
+     *
+     * @return Region
+     */
+    private function getOrCreateRegion(): Region
+    {
+        return Region::firstOrCreate(['name' => 'Default Region']);
+    }
 
-        Shop::firstOrCreate(
+    /**
+     * Create shops.
+     *
+     * @param Region $region
+     */
+    private function createShops(Region $region): void
+    {
+        $shopsData = [
             [
                 'name' => 'Moda House',
                 'email' => 'esca656585@gmail.com',
-            ],
-            [
-                'address' => 'G.Kulyýew Köçe, Begler ýoly',
                 'mon_fri_open' => '09:00',
                 'mon_fri_close' => '18:00',
                 'sat_sun_open' => '09:00',
                 'sat_sun_close' => '13:00',
                 'image' => 'shop/shop-seeder/modahouse-logo.jpg',
-                'user_id' => 1,
-                'region_id' => $region->id, // Add this line
-            ]
-        );
-
-        Shop::firstOrCreate(
+                'user_id' => $this->getUserId(1),
+                'address' => [
+                    'street' => 'Oguzhan Köçe',
+                    'settlement' => 'Türkmenstandartlary',
+                    'district' => 'Ashgabat',
+                    'province' => 'Ahal',
+                    'region' => 'Central',
+                    'country' => 'Turkmenistan',
+                    'postal_code' => '744000'
+                ],
+            ],
             [
                 'name' => 'Sowgatly',
                 'email' => 'esca6585@gmail.com',
-            ],
-            [
-                'address' => 'G.Kulyýew Köçe, Begler ýoly',
                 'mon_fri_open' => '10:00',
                 'mon_fri_close' => '19:00',
                 'sat_sun_open' => 'işlänok',
                 'sat_sun_close' => 'işlänok',
                 'image' => 'shop/shop-seeder/sowgatly-logo.png',
-                'user_id' => 2,
-                'region_id' => $region->id, // Add this line
+                'user_id' => $this->getUserId(2),
+                'address' => [
+                    'street' => 'G.Kulyýew Köçe',
+                    'settlement' => 'Begler ýoly',
+                    'district' => 'Ashgabat',
+                    'province' => 'Ahal',
+                    'region' => 'Central',
+                    'country' => 'Turkmenistan',
+                    'postal_code' => '744000'
+                ],
+            ],
+        ];
+
+        foreach ($shopsData as $shopData) {
+            $address = $this->createAddress($shopData['address']);
+            unset($shopData['address']);
+
+            Shop::firstOrCreate(
+                [
+                    'name' => $shopData['name'],
+                    'email' => $shopData['email'],
+                ],
+                array_merge($shopData, [
+                    'region_id' => $region->id,
+                    'address_id' => $address->id,
+                ])
+            );
+        }
+    }
+
+    /**
+     * Get or create a user ID.
+     *
+     * @param int $userId
+     * @return int
+     */
+    private function getUserId(int $userId): int
+    {
+        $user = User::firstOrCreate(
+            ['id' => $userId],
+            [
+                'name' => 'User ' . $userId,
+                'email' => 'user' . $userId . '@example.com',
+                'password' => bcrypt('password'),
             ]
         );
+
+        return $user->id;
+    }
+
+    /**
+     * Create an address.
+     *
+     * @param array $addressData
+     * @return Address
+     */
+    private function createAddress(array $addressData): Address
+    {
+        return Address::firstOrCreate($addressData);
     }
 }

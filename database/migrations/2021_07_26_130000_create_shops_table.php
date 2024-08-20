@@ -13,28 +13,23 @@ return new class extends Migration
     {
         Schema::create('shops', function (Blueprint $table) {
             $table->id();
-
             $table->string('name');
-            
             $table->string('email')->unique()->nullable();
-            
-            $table->string('address');
-            
             $table->string('mon_fri_open');
             $table->string('mon_fri_close');
-            
             $table->string('sat_sun_open');
             $table->string('sat_sun_close');
-            
             $table->string('image')->nullable();
-
-            $table->unsignedBigInteger('user_id')->unsigned()->nullable();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->unsigned();
-
+        
+            $table->unsignedBigInteger('user_id')->nullable();
             $table->unsignedBigInteger('region_id')->nullable();
-            $table->foreign('region_id')->references('id')->on('regions')->onDelete('set null');
-
+            $table->unsignedBigInteger('address_id')->nullable();
+        
             $table->timestamps();
+        
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('region_id')->references('id')->on('regions')->onDelete('set null');
+            $table->foreign('address_id')->references('id')->on('addresses')->onDelete('set null');
         });
     }
 

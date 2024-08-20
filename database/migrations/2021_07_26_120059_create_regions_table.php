@@ -10,18 +10,12 @@ class CreateRegionsTable extends Migration
     {
         Schema::create('regions', function (Blueprint $table) {
             $table->id();
-            
             $table->string('name');
-            
             $table->enum('type', ['country', 'province', 'city', 'village']);
-
             $table->unsignedBigInteger('parent_id')->nullable();
-            $table->unsignedBigInteger('address_id')->nullable();
-            
             $table->timestamps();
-
+        
             $table->foreign('parent_id')->references('id')->on('regions')->onDelete('cascade');
-            $table->foreign('address_id')->references('id')->on('addresses')->onDelete('set null');
         });
     }
 

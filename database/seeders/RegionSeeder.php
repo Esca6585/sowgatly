@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\Region;
 use App\Models\Address;
+use Illuminate\Support\Facades\DB;
 
 class RegionSeeder extends Seeder
 {
@@ -12,79 +13,71 @@ class RegionSeeder extends Seeder
 
     public function run()
     {
-        // Create Turkmenistan as the root
-        $turkmenistan = Region::create([
-            'name' => 'Turkmenistan', 
+        DB::transaction(function () {
+            $turkmenistan = $this->createCountry();
+            $this->createProvinces($turkmenistan);
+            $this->createAshgabat($turkmenistan);
+        });
+    }
+
+    private function createCountry(): Region
+    {
+        return Region::create([
+            'name' => 'Turkmenistan',
             'type' => 'country',
-            'address_id' => $this->createAddress('Turkmenistan')
-        ]);
-
-        // Create provinces (velayats)
-        $provinces = [
-            'Ahal',
-            'Balkan',
-            'Dashoguz',
-            'Lebap',
-            'Mary'
-        ];
-
-        foreach ($provinces as $province) {
-            $provinceModel = Region::create([
-                'name' => $province,
-                'parent_id' => $turkmenistan->id,
-                'type' => 'province',
-                'address_id' => $this->createAddress($province)
-            ]);
-
-            // Add some example cities and villages for each province
-            $this->addCitiesAndVillages($provinceModel);
-        }
-
-        // Add Ashgabat as a special city-state
-        Region::create([
-            'name' => 'Ashgabat',
-            'parent_id' => $turkmenistan->id,
-            'type' => 'city',
-            'address_id' => $this->createAddress('Ashgabat')
         ]);
     }
 
-    private function addCitiesAndVillages($province)
+    private function createProvinces(Region $country): void
     {
-        // Add some example cities (you should replace these with actual cities)
-        for ($i = 1; $i <= 3; $i++) {
-            $city = Region::create([
-                'name' => $province->name . " City {$i}",
-                'parent_id' => $province->id,
-                'type' => 'city',
-                'address_id' => $this->createAddress($province->name . " City {$i}")
-            ]);
+        $provinces = ['Ahal', 'Balkan', 'Dashoguz', 'Lebap', 'Mary'];
 
-            // Add some example villages for each city
+        foreach ($provinces as $provinceName) {
+            $province = $this->createRegion($provinceName, $country->id, 'province');
+            $this->createCitiesAndVillages($province);
+        }
+    }
+
+    private function createCitiesAndVillages(Region $province): void
+    {
+        for ($i = 1; $i <= 3; $i++) {
+            $city = $this->createRegion("{$province->name} City {$i}", $province->id, 'city');
+
             for ($j = 1; $j <= 2; $j++) {
-                Region::create([
-                    'name' => $city->name . " Village {$j}",
-                    'parent_id' => $city->id,
-                    'type' => 'village',
-                    'address_id' => $this->createAddress($city->name . " Village {$j}")
-                ]);
+                $this->createRegion("{$city->name} Village {$j}", $city->id, 'village');
             }
         }
     }
 
-    private function createAddress($regionName)
+    private function createAshgabat(Region $country): void
+    {
+        $this->createRegion('Ashgabat', $country->id, 'city');
+    }
+
+    private function createRegion(string $name, int $parentId, string $type): Region
+    {
+        return Region::create([
+            'name' => $name,
+            'parent_id' => $parentId,
+            'type' => $type,
+        ]);
+    }
+
+    private function createAddress(string $regionName, string $type): int
     {
         return Address::create([
             'street' => 'Main Street',
-            'city' => $regionName,
-            'state' => $regionName,
+            'settlement' => $type === 'village' ? $regionName : null,
+            'district' => $type === 'city' ? $regionName : null,
+            'province' => $type === 'province' ? $regionName : null,
+            'region' => $type === 'country' ? $regionName : 'Turkmenistan',
             'country' => 'Turkmenistan',
             'postal_code' => $this->getNextPostalCode()
         ])->id;
     }
 
-    private function getNextPostalCode()
+    private function getNextPostalCode(): string
     {
-        return strval($this->postalCode++);
+        return (string) $this->postalCode++;
     }
 }

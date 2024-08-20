@@ -4,18 +4,22 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+class CreateAddressesTable extends Migration
 {
     /**
      * Run the migrations.
+     *
+     * @return void
      */
-    public function up(): void
+    public function up()
     {
         Schema::create('addresses', function (Blueprint $table) {
             $table->id();
             $table->string('street')->nullable();
-            $table->string('city')->nullable();
-            $table->string('state')->nullable();
+            $table->string('settlement')->nullable();
+            $table->string('district')->nullable();
+            $table->string('province')->nullable();
+            $table->string('region')->nullable();
             $table->string('country')->nullable();
             $table->string('postal_code')->nullable();
             $table->timestamps();
@@ -24,9 +28,11 @@ return new class extends Migration
 
     /**
      * Reverse the migrations.
+     *
+     * @return void
      */
-    public function down(): void
+    public function down()
     {
         Schema::dropIfExists('addresses');
     }
-};
+}

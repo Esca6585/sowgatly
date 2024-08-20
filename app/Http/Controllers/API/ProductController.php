@@ -59,12 +59,11 @@ class ProductController extends Controller
      */
     public function index()
     {
-        try {
-            $products = Product::with('images')->with('shop')->paginate(15);
-            return ProductResource::collection($products);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'An error occurred while fetching products'], 500);
-        }
+        $products = Product::with(['category', 'shop'])
+            ->select('id', 'name', 'description', 'price', 'discount', 'attributes', 'code', 'category_id', 'shop_id', 'status')
+            ->paginate(10);
+
+        return response()->json($products);
     }
 
      /**

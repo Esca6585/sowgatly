@@ -62,7 +62,7 @@ class ShopController extends Controller
     public function index(Request $request)
     {
         try {
-            $shops = Shop::with('user')->paginate(15);
+            $shops = Shop::with(['user', 'address', 'region'])->paginate(15);
             return ShopResource::collection($shops);
         } catch (\Exception $e) {
             return response()->json(['error' => 'An error occurred while fetching shops'], 500);
@@ -112,35 +112,75 @@ class ShopController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:shops,email',
             'image' => 'sometimes|nullable|image|mimes:jpeg,png,jpg,gif|max:10240',
-            'address' => 'required|string|max:255',
             'mon_fri_open' => 'required|date_format:H:i',
             'mon_fri_close' => 'required|date_format:H:i|after:mon_fri_open',
             'sat_sun_open' => 'required|date_format:H:i',
             'sat_sun_close' => 'required|date_format:H:i|after:sat_sun_open',
+            'street' => 'required|string|max:255',
+            'settlement' => 'required|string|max:255',
+            'district' => 'required|string|max:255',
+            'province' => 'required|string|max:255',
+            'region' => 'required|string|max:255',
+            'country' => 'required|string|max:255',
+            'postal_code' => 'required|string|max:20',
         ]);
 
-        // Get the authenticated user's ID from the token
         $user = Auth::user();
         
         if (!$user) {
             return response()->json([
                 'success' => false,
                 'message' => 'Unauthenticated',
-            ], 401);
+            ], 200);
         }
 
-        // Add the user_id to the validated data
-        $validatedData['user_id'] = $user->id;
+        DB::beginTransaction();
 
-        $shop = Shop::create($validatedData);
+        try {
+            // Create or get the region
+            $region = Region::firstOrCreate(['name' => $validatedData['region']]);
 
-        $this->uploadImage($shop, $request->file('image'));
+            // Create the address
+            $address = Address::create([
+                'street' => $validatedData['street'],
+                'settlement' => $validatedData['settlement'],
+                'district' => $validatedData['district'],
+                'province' => $validatedData['province'],
+                'region' => $validatedData['region'],
+                'country' => $validatedData['country'],
+                'postal_code' => $validatedData['postal_code'],
+            ]);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Shop created successfully',
-            'shop' => $shop,
-        ], 201);
+            // Create the shop
+            $shop = Shop::create([
+                'name' => $validatedData['name'],
+                'email' => $validatedData['email'],
+                'mon_fri_open' => $validatedData['mon_fri_open'],
+                'mon_fri_close' => $validatedData['mon_fri_close'],
+                'sat_sun_open' => $validatedData['sat_sun_open'],
+                'sat_sun_close' => $validatedData['sat_sun_close'],
+                'user_id' => $user->id,
+                'region_id' => $region->id,
+                'address_id' => $address->id,
+            ]);
+
+            $this->uploadImage($shop, $request->file('image'));
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Shop created successfully',
+                'shop' => new ShopResource($shop),
+            ], 201);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred while creating the shop',
+                'error' => $e->getMessage(),
+            ], 200);
+        }
     }
 
     /**
@@ -164,7 +204,7 @@ class ShopController extends Controller
      */
     public function show(Shop $shop)
     {
-        return new ShopResource($shop);
+        return new ShopResource($shop->load(['user', 'address', 'region']));
     }
 
     /**
@@ -226,34 +266,72 @@ class ShopController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'You do not have permission to update this shop',
-            ], 403);
+            ], 200);
         }
 
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:shops,email,' . $shop->id,
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240',
-            'address' => 'required|string|max:255',
             'mon_fri_open' => 'required|date_format:H:i',
             'mon_fri_close' => 'required|date_format:H:i|after:mon_fri_open',
             'sat_sun_open' => 'required|date_format:H:i',
             'sat_sun_close' => 'required|date_format:H:i|after:sat_sun_open',
+            'street' => 'required|string|max:255',
+            'settlement' => 'required|string|max:255',
+            'district' => 'required|string|max:255',
+            'province' => 'required|string|max:255',
+            'region' => 'required|string|max:255',
+            'country' => 'required|string|max:255',
+            'postal_code' => 'required|string|max:20',
         ]);
 
-        // Remove image from validatedData if it's null
-        if (!$request->hasFile('image')) {
-            unset($validatedData['image']);
+        DB::beginTransaction();
+
+        try {
+            // Update or create the region
+            $region = Region::updateOrCreate(
+                ['name' => $validatedData['region']],
+                ['name' => $validatedData['region']]
+            );
+
+            // Update the address
+            $shop->address->update([
+                'street' => $validatedData['street'],
+                'settlement' => $validatedData['settlement'],
+                'district' => $validatedData['district'],
+                'province' => $validatedData['province'],
+                'region' => $validatedData['region'],
+                'country' => $validatedData['country'],
+                'postal_code' => $validatedData['postal_code'],
+            ]);
+
+            // Update the shop
+            $shop->update([
+                'name' => $validatedData['name'],
+                'email' => $validatedData['email'],
+                'mon_fri_open' => $validatedData['mon_fri_open'],
+                'mon_fri_close' => $validatedData['mon_fri_close'],
+                'sat_sun_open' => $validatedData['sat_sun_open'],
+                'sat_sun_close' => $validatedData['sat_sun_close'],
+                'region_id' => $region->id,
+            ]);
+
+            if ($request->hasFile('image')) {
+                $this->uploadImage($shop, $request->file('image'));
+            }
+
+            DB::commit();
+
+            return new ShopResource($shop->load(['user', 'address', 'region']));
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred while updating the shop',
+                'error' => $e->getMessage(),
+            ], 200);
         }
-
-        // Update shop data
-        $shop->update($validatedData);
-
-        // Handle image upload only if a new image is provided
-        if ($request->hasFile('image')) {
-            $this->uploadImage($shop, $request->file('image'));
-        }
-
-        return new ShopResource($shop);
     }
 
     /**

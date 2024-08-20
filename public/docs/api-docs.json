@@ -179,7 +179,7 @@
                                 "properties": {
                                     "phone_number": {
                                         "type": "string",
-                                        "example": "+99365123456"
+                                        "example": "65123456"
                                     }
                                 },
                                 "type": "object"
@@ -227,7 +227,7 @@
                                 "properties": {
                                     "phone_number": {
                                         "type": "string",
-                                        "example": "+99365123456"
+                                        "example": "65123456"
                                     },
                                     "otp": {
                                         "type": "string",
@@ -289,7 +289,7 @@
                                 "properties": {
                                     "phone_number": {
                                         "type": "string",
-                                        "example": "+99365123456"
+                                        "example": "65123456"
                                     },
                                     "name": {
                                         "type": "string",
@@ -391,10 +391,12 @@
                             "schema": {
                                 "properties": {
                                     "product_id": {
-                                        "type": "integer"
+                                        "type": "integer",
+                                        "example": 1
                                     },
                                     "quantity": {
-                                        "type": "integer"
+                                        "type": "integer",
+                                        "example": 1
                                     }
                                 },
                                 "type": "object"

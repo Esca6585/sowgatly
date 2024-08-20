@@ -13,7 +13,6 @@ class RegionResource extends JsonResource
             'name' => $this->name,
             'type' => $this->type,
             'parent_id' => $this->parent_id,
-            'address' => new AddressResource($this->whenLoaded('address')),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
