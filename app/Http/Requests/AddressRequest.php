@@ -3,17 +3,42 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use OpenApi\Annotations as OA;
 
+/**
+ * @OA\Schema(
+ *     schema="AddressRequest",
+ *     type="object",
+ *     title="Address Request",
+ *     description="Address request body data"
+ * )
+ */
 class AddressRequest extends FormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
+     * @OA\Property(
+     *     property="shop_id",
+     *     type="integer",
+     *     description="ID of the shop",
+     *     example=1
+     * )
      *
-     * @return bool
+     * @OA\Property(
+     *     property="address_name",
+     *     type="string",
+     *     description="Name of the address",
+     *     example="Main Office"
+     * )
+     *
+     * @OA\Property(
+     *     property="postal_code",
+     *     type="string",
+     *     description="Postal code",
+     *     example="12345"
+     * )
      */
     public function authorize()
     {
-        // You can add authorization logic here if needed
         return true;
     }
 
