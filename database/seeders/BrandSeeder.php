@@ -18,31 +18,31 @@ class BrandSeeder extends Seeder
             [
                 'name' => 'Nike',
                 'description' => 'Just Do It',
-                'logo' => 'nike_logo.png',
+                'logo' => 'https://1000logos.net/wp-content/uploads/2021/11/Nike-Logo.png',
                 'status' => true,
             ],
             [
                 'name' => 'Adidas',
                 'description' => 'Impossible Is Nothing',
-                'logo' => 'adidas_logo.png',
+                'logo' => 'https://1000logos.net/wp-content/uploads/2019/06/Adidas-Logo.png',
                 'status' => true,
             ],
             [
                 'name' => 'Puma',
                 'description' => 'Forever Faster',
-                'logo' => 'puma_logo.png',
+                'logo' => 'https://1000logos.net/wp-content/uploads/2017/05/PUMA-logo.png',
                 'status' => true,
             ],
             [
                 'name' => 'Reebok',
                 'description' => 'Be More Human',
-                'logo' => 'reebok_logo.png',
+                'logo' => 'https://1000logos.net/wp-content/uploads/2017/05/Reebok-logo.png',
                 'status' => true,
             ],
             [
                 'name' => 'Under Armour',
                 'description' => 'I Will',
-                'logo' => 'under_armour_logo.png',
+                'logo' => 'https://1000logos.net/wp-content/uploads/2017/06/Under-Armour-Logo.png',
                 'status' => true,
             ],
         ];
