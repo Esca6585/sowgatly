@@ -20,7 +20,7 @@ use Str;
 /**
  * @OA\Tag(
  *     name="Authentication",
- *     description="API Endpoints of Authentication
+ *     description="API Endpoints of Authentication"
  * )
  */
 class AuthOtpController extends Controller
