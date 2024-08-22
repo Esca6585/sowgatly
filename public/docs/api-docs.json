@@ -1143,6 +1143,8 @@
                                             },
                                             "parent_id": {
                                                 "type": "integer",
+                                                "default": null,
+                                                "example": null,
                                                 "nullable": true
                                             },
                                             "created_at": {
@@ -1197,6 +1199,8 @@
                                     },
                                     "parent_id": {
                                         "type": "integer",
+                                        "default": null,
+                                        "example": null,
                                         "nullable": true
                                     }
                                 },
@@ -1364,6 +1368,8 @@
                                     },
                                     "parent_id": {
                                         "type": "integer",
+                                        "default": null,
+                                        "example": null,
                                         "nullable": true
                                     }
                                 },
