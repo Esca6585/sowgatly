@@ -4,6 +4,26 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @OA\Schema(
+ *     schema="ShopResource",
+ *     description="Shop resource",
+ *     @OA\Property(property="id", type="integer"),
+ *     @OA\Property(property="name", type="string"),
+ *     @OA\Property(property="email", type="string"),
+ *     @OA\Property(property="mon_fri_open", type="string"),
+ *     @OA\Property(property="mon_fri_close", type="string"),
+ *     @OA\Property(property="sat_sun_open", type="string"),
+ *     @OA\Property(property="sat_sun_close", type="string"),
+ *     @OA\Property(property="image", type="string"),
+ *     @OA\Property(property="user_id", type="integer"),
+ *     @OA\Property(property="region_id", type="integer"),
+ *     @OA\Property(property="created_at", type="string", format="date-time"),
+ *     @OA\Property(property="updated_at", type="string", format="date-time"),
+ *     @OA\Property(property="address_name", type="string"),
+ *     @OA\Property(property="postal_code", type="string")
+ * )
+ */
 class ShopResource extends JsonResource
 {
     /**
@@ -27,8 +47,8 @@ class ShopResource extends JsonResource
             'region_id' => $this->region_id,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'address' => new AddressResource($this->whenLoaded('address')),
-            'region' => new RegionResource($this->whenLoaded('region')),
+            'address_name' => $this->address->address_name,
+            'postal_code' => $this->address->postal_code,
         ];
     }
 }
