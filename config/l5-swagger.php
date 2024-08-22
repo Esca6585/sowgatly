@@ -13,6 +13,13 @@ return [
                  * Route for accessing api documentation interface
                 */
                 'api' => 'api/documentation',
+                'assets' => '/swagger-ui-assets',
+                'middleware' => [
+                    'api' => [],
+                    'asset' => [],
+                    'docs' => [],
+                    'oauth2_callback' => [],
+                ],
             ],
             'paths' => [
                 /*
@@ -95,6 +102,11 @@ return [
             */
             'swagger_ui_assets_path' => env('L5_SWAGGER_UI_ASSETS_PATH', 'vendor/swagger-api/swagger-ui/dist/'),
 
+            'custom_scripts' => [
+                'js' => [
+                    '/js/swagger-custom.js',
+                ],
+            ],
             /*
              * Absolute path to directories that should be exclude from scanning
              * @deprecated Please use `scanOptions.exclude`
