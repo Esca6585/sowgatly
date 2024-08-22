@@ -1,322 +1,353 @@
 <?php
+
 namespace App\Http\Controllers\API;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
-use App\Models\Image;
-use App\Http\Requests\ProductRequest;
+use App\Models\Composition;
 use App\Http\Resources\ProductResource;
-use Str;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
 /**
- * @OA\Tag(
- *     name="Products",
- *     description="API Endpoints of Products"
- * )
- */
-/**
- * @OA\Schema(
- *     schema="ProductResource",
- *     @OA\Property(property="id", type="integer", example=1),
- *     @OA\Property(property="name", type="string", example="Roza Gül"),
- *     @OA\Property(property="description", type="string", example="Owadan güller"),
- *     @OA\Property(property="price", type="integer", example="85"),
- *     @OA\Property(property="discount", type="integer", example="10"),
- *     @OA\Property(property="attributes", type="integer", example="color: red, size: 40"),
- *     @OA\Property(property="code", type="integer", example="PRD123"),
- *     @OA\Property(property="category_id", type="integer", example=1),
- *     @OA\Property(property="shop_id", type="integer", example=1),
- *     @OA\Property(property="brand_id", type="integer", example=1),
- *     @OA\Property(property="status", type="boolean", example=1),
+ * @OA\Info(
+ *     title="Products API",
+ *     version="1.0.0",
+ *     description="API endpoints for managing products"
  * )
  */
 class ProductController extends Controller
 {
-
     /**
      * @OA\Get(
      *     path="/api/products",
-     *     summary="Get paginated list of products",
+     *     summary="Get all products",
      *     tags={"Products"},
-     *     security={{"sanctum":{}}},
-     *     @OA\Parameter(
-     *         name="page",
-     *         in="query",
-     *         description="Page number",
-     *         required=false,
-     *         @OA\Schema(type="integer")
-     *     ),
-     *     @OA\Response(response="200", description="List of products"),
      *     @OA\Response(
-     *         response=401,
-     *         description="Unauthenticated",
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="array",
+     *                 @OA\Items(ref="#/components/schemas/ProductResource")
+     *             )
+     *         )
      *     )
      * )
      */
     public function index()
     {
-        $products = Product::with(['category', 'shop', 'brand'])
-            ->select('id', 'name', 'description', 'price', 'discount', 'attributes', 'code', 'category_id', 'shop_id', 'brand_id', 'status')
-            ->paginate(10);
-
-        return response()->json($products);
+        $products = Product::with(['images', 'brand', 'category', 'compositions'])->paginate(15);
+        return ProductResource::collection($products);
     }
 
-     /**
+    /**
+     * @OA\Get(
+     *     path="/api/products/{id}",
+     *     summary="Get a specific product",
+     *     tags={"Products"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="Product ID",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(ref="#/components/schemas/ProductResource")
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Product not found"
+     *     )
+     * )
+     */
+    public function show($id)
+    {
+        $product = Product::with(['images', 'brand', 'category', 'compositions'])->findOrFail($id);
+        return new ProductResource($product);
+    }
+
+    /**
      * @OA\Post(
      *     path="/api/products",
-     *     tags={"Products"},
-     *     security={{"sanctum":{}}},
      *     summary="Create a new product",
+     *     tags={"Products"},
      *     @OA\RequestBody(
-     *         @OA\MediaType(
-     *             mediaType="multipart/form-data",
-     *             @OA\Schema(
-     *                 @OA\Property(property="name", type="string", example="Roza Gül"),
-     *                 @OA\Property(property="description", type="string", example="Lorem ipsum, dolor sit amet consectetur adipisicing elit. Officiis pariatur ea laudantium molestias vero porro odio, repellat ullam. Itaque quam temporibus maxime error sunt dolorum sed perspiciatis. Reprehenderit, molestias mollitia?"),
-     *                 @OA\Property(property="price", type="double", example="57"),
-     *                 @OA\Property(property="discount", type="double", example="10"),
-     *                 @OA\Property(property="attributes", type="double", example="12345"),
-     *                 @OA\Property(property="category_id", type="integer", example="1"),
-     *                 @OA\Property(property="shop_id", type="integer", example="1"),
-     *                 @OA\Property(property="brand_id", type="integer", example="1"),
-     *                 @OA\Property(
-     *                     property="images[]",
-     *                     type="array",
-     *                     @OA\Items(type="string", format="binary"),
-     *                     description="Image file"
-     *                 ),
-     *             )
-     *         )
+     *         required=true,
+     *         @OA\JsonContent(ref="#/components/schemas/ProductRequest")
      *     ),
-     *     @OA\Response(response="200", description="List of products"),
      *     @OA\Response(
-     *         response=401,
-     *         description="Unauthenticated",
+     *         response=201,
+     *         description="Product created successfully",
+     *         @OA\JsonContent(ref="#/components/schemas/ProductResource")
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error"
      *     )
      * )
      */
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
+        $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
+            'price' => 'required|numeric',
+            'discount' => 'nullable|integer',
             'description' => 'required|string',
-            'price' => 'required',
-            'discount' => 'required',
-            'attributes' => 'required|string',
-            'category_id' => 'required|exists:categories,id',
+            'gender' => 'nullable|string',
+            'sizes' => 'nullable|json',
+            'separated_sizes' => 'nullable|json',
+            'color' => 'nullable|string',
+            'manufacturer' => 'nullable|string',
+            'width' => 'nullable|numeric',
+            'height' => 'nullable|numeric',
+            'weight' => 'nullable|numeric',
+            'production_time' => 'nullable|integer',
+            'min_order' => 'nullable|integer',
+            'seller_status' => 'required|boolean',
+            'status' => 'required|boolean',
             'shop_id' => 'required|exists:shops,id',
             'brand_id' => 'required|exists:brands,id',
-            'images' => 'sometimes|nullable|array',
-            'images.*' => 'sometimes|nullable|image|mimes:jpeg,png,jpg,gif|max:10240',
+            'category_id' => 'required|exists:categories,id',
+            'compositions' => 'nullable|array',
+            'compositions.*.id' => 'required|exists:compositions,id',
+            'compositions.*.qty' => 'required|numeric',
+            'compositions.*.qty_type' => 'required|string',
         ]);
 
-        $validatedData['code'] = Str::random(6);
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
 
-        $product = Product::create($validatedData);
-        
-        $this->uploadImages($product, $validatedData);
+        DB::beginTransaction();
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Product created successfully',
-        ]);
+        try {
+            $product = Product::create($request->except('compositions'));
+
+            if ($request->has('compositions')) {
+                $compositions = [];
+                foreach ($request->compositions as $composition) {
+                    $compositions[$composition['id']] = [
+                        'qty' => $composition['qty'],
+                        'qty_type' => $composition['qty_type'],
+                    ];
+                }
+                $product->compositions()->attach($compositions);
+            }
+
+            DB::commit();
+
+            $product->load(['images', 'brand', 'category', 'compositions']);
+            return new ProductResource($product);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['error' => 'An error occurred while creating the product.'], 500);
+        }
     }
 
-    // ... (other methods remain the same)
-
-     /**
-     * @OA\Post(
+    /**
+     * @OA\Put(
      *     path="/api/products/{id}",
+     *     summary="Update an existing product",
      *     tags={"Products"},
-     *     security={{"sanctum":{}}},
-     *     summary="Update a product",
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
      *         required=true,
+     *         description="Product ID",
      *         @OA\Schema(type="integer")
      *     ),
      *     @OA\RequestBody(
-     *         @OA\MediaType(
-     *             mediaType="multipart/form-data",
-     *             @OA\Schema(
-     *                 @OA\Property(property="name", type="string", example="Updated Product Name"),
-     *                 @OA\Property(property="description", type="string", example="Updated Product Description"),
-     *                 @OA\Property(property="price", type="number", format="float", example=129.99),
-     *                 @OA\Property(property="discount", type="number", format="float", example=15.00),
-     *                 @OA\Property(property="attributes", type="string", example="{'color': 'blue', 'size': 'medium'}"),
-     *                 @OA\Property(property="category_id", type="integer", example=2),
-     *                 @OA\Property(property="shop_id", type="integer", example=1),
-     *                 @OA\Property(property="brand_id", type="integer", example=1),
-     *                 @OA\Property(property="_method", type="string", example="PUT"),
-     *                 @OA\Property(
-     *                     property="images[]",
-     *                     type="array",
-     *                     @OA\Items(type="string", format="binary"),
-     *                     description="Image file"
-     *                 ),
-     *             )
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response="200", 
-     *         description="Product updated",
-     *     ),
-     *     @OA\Response(
-     *         response=401,
-     *         description="Unauthenticated",
-     *     )
-     * )
-     */
-    public function update(Request $request, Product $product)
-    {
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'required|string',
-            'price' => 'required',
-            'discount' => 'required',
-            'attributes' => 'required|string',
-            'category_id' => 'required|exists:categories,id',
-            'shop_id' => 'required|exists:shops,id',
-            'brand_id' => 'required|exists:brands,id',
-            'images' => 'sometimes|nullable|array',
-            'images.*' => 'sometimes|nullable|image|mimes:jpeg,png,jpg,gif|max:10240',
-        ]);
-
-        // Update product data
-        $product->update($validatedData);
-
-        // Handle image upload
-        if ($request->hasFile('image')) {
-            $this->uploadImages($product, $request->file('image'));
-        }
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Product updated successfully',
-        ]);
-    }
-
-    /**
-     * @OA\Get(
-     *     path="/api/product/category/{category_id}",
-     *     summary="Get products by category",
-     *     security={{"sanctum":{}}},
-     *     tags={"Products"},
-     *     @OA\Parameter(
-     *         name="category_id",
-     *         in="path",
-     *         description="ID of the category",
      *         required=true,
-     *         @OA\Schema(type="integer")
-     *     ),
-     *     @OA\Parameter(
-     *         name="page",
-     *         in="query",
-     *         description="Page number for pagination",
-     *         required=false,
-     *         @OA\Schema(type="integer", default=1)
-     *     ),
-     *     @OA\Parameter(
-     *         name="per_page",
-     *         in="query",
-     *         description="Number of items per page",
-     *         required=false,
-     *         @OA\Schema(type="integer", default=15)
+     *         @OA\JsonContent(ref="#/components/schemas/ProductRequest")
      *     ),
      *     @OA\Response(
-     *         response="200", 
-     *         description="List of products in the category",
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(property="data", type="array", @OA\Items(ref="#/components/schemas/ProductResource")),
-     *             @OA\Property(property="meta", type="object", description="Pagination metadata")
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=401,
-     *         description="Unauthenticated",
+     *         response=200,
+     *         description="Product updated successfully",
+     *         @OA\JsonContent(ref="#/components/schemas/ProductResource")
      *     ),
      *     @OA\Response(
      *         response=404,
-     *         description="Category not found",
+     *         description="Product not found"
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error"
      *     )
      * )
      */
-    public function getByCategory(Request $request, $category_id)
+    public function update(Request $request, $id)
     {
-        $perPage = $request->input('per_page', 15);
+        $product = Product::findOrFail($id);
 
-        $category = \App\Models\Category::findOrFail($category_id);
+        $validator = Validator::make($request->all(), [
+            'name' => 'string|max:255',
+            'price' => 'numeric',
+            'discount' => 'nullable|integer',
+            'description' => 'string',
+            'gender' => 'nullable|string',
+            'sizes' => 'nullable|json',
+            'separated_sizes' => 'nullable|json',
+            'color' => 'nullable|string',
+            'manufacturer' => 'nullable|string',
+            'width' => 'nullable|numeric',
+            'height' => 'nullable|numeric',
+            'weight' => 'nullable|numeric',
+            'production_time' => 'nullable|integer',
+            'min_order' => 'nullable|integer',
+            'seller_status' => 'boolean',
+            'status' => 'boolean',
+            'shop_id' => 'exists:shops,id',
+            'brand_id' => 'exists:brands,id',
+            'category_id' => 'exists:categories,id',
+            'compositions' => 'nullable|array',
+            'compositions.*.id' => 'required|exists:compositions,id',
+            'compositions.*.qty' => 'required|numeric',
+            'compositions.*.qty_type' => 'required|string',
+        ]);
 
-        $products = Product::where('category_id', $category_id)
-                           ->with(['images', 'shop', 'brand'])
-                           ->paginate($perPage);
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
 
-        return ProductResource::collection($products)
-                              ->additional(['meta' => [
-                                  'category_name' => $category->name,
-                                  'total_products' => $products->total()
-                              ]]);
+        DB::beginTransaction();
+
+        try {
+            $product->update($request->except('compositions'));
+
+            if ($request->has('compositions')) {
+                $compositions = [];
+                foreach ($request->compositions as $composition) {
+                    $compositions[$composition['id']] = [
+                        'qty' => $composition['qty'],
+                        'qty_type' => $composition['qty_type'],
+                    ];
+                }
+                $product->compositions()->sync($compositions);
+            }
+
+            DB::commit();
+
+            $product->load(['images', 'brand', 'category', 'compositions']);
+            return new ProductResource($product);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['error' => 'An error occurred while updating the product.'], 500);
+        }
+    }
+
+    /**
+     * @OA\Delete(
+     *     path="/api/products/{id}",
+     *     summary="Delete a product",
+     *     tags={"Products"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="Product ID",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=204,
+     *         description="Product deleted successfully"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Product not found"
+     *     )
+     * )
+     */
+    public function destroy($id)
+    {
+        $product = Product::findOrFail($id);
+        $product->delete();
+
+        return response()->json(null, 204);
     }
 
     /**
      * @OA\Get(
      *     path="/api/product/search",
      *     summary="Search for products",
-     *     security={{"sanctum":{}}},
      *     tags={"Products"},
      *     @OA\Parameter(
-     *         name="query",
+     *         name="q",
      *         in="query",
-     *         description="Search query string",
+     *         description="Search query",
      *         required=true,
      *         @OA\Schema(type="string")
-     *     ),
-     *     @OA\Parameter(
-     *         name="page",
-     *         in="query",
-     *         description="Page number for pagination",
-     *         required=false,
-     *         @OA\Schema(type="integer", default=1)
-     *     ),
-     *     @OA\Parameter(
-     *         name="per_page",
-     *         in="query",
-     *         description="Number of items per page",
-     *         required=false,
-     *         @OA\Schema(type="integer", default=15)
      *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
      *         @OA\JsonContent(
      *             type="object",
-     *             @OA\Property(property="data", type="array", @OA\Items(ref="#/components/schemas/ProductResource")),
-     *             @OA\Property(property="meta", type="object", description="Pagination metadata")
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="array",
+     *                 @OA\Items(ref="#/components/schemas/ProductResource")
+     *             )
      *         )
-     *     ),
-     *     @OA\Response(
-     *         response=401,
-     *         description="Unauthenticated",
      *     )
      * )
      */
     public function search(Request $request)
     {
-        $query = $request->input('query');
-        $perPage = $request->input('per_page', 15);
+        $validator = Validator::make($request->all(), [
+            'q' => 'required|string|min:3',
+        ]);
 
-        $products = Product::where('name', 'like', "%$query%")
-                           ->orWhere('description', 'like', "%$query%")
-                           ->with(['category', 'shop', 'brand', 'images'])
-                           ->paginate($perPage);
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+
+        $query = $request->input('q');
+        $products = Product::where('name', 'LIKE', "%{$query}%")
+            ->orWhere('description', 'LIKE', "%{$query}%")
+            ->with(['images', 'brand', 'category', 'compositions'])
+            ->paginate(15);
+
+        return ProductResource::collection($products);
+    }
+
+    /**
+     * @OA\Get(
+     *     path="/api/product/category/{category_id}",
+     *     summary="Get products by category",
+     *     tags={"Products"},
+     *     @OA\Parameter(
+     *         name="category_id",
+     *         in="path",
+     *         description="Category ID",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="array",
+     *                 @OA\Items(ref="#/components/schemas/ProductResource")
+     *             )
+     *         )
+     *     )
+     * )
+     */
+    public function getByCategory($category_id)
+    {
+        $products = Product::where('category_id', $category_id)
+            ->with(['images', 'brand', 'category', 'compositions'])
+            ->paginate(15);
 
         return ProductResource::collection($products);
     }

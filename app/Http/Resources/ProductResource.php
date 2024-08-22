@@ -6,6 +6,8 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Resources\ImageResource;
 use App\Http\Resources\CategoryResource;
 use App\Http\Resources\ShopResource;
+use App\Http\Resources\BrandResource;
+use App\Http\Resources\CompositionResource;
 
 class ProductResource extends JsonResource
 {
@@ -23,14 +25,29 @@ class ProductResource extends JsonResource
             'description' => $this->description,
             'price' => $this->price,
             'discount' => $this->discount,
-            'discountPrice' => $this->getDiscountPrice(),
+            'discountedPrice' => $this->getDiscountedPrice(),
             'attributes' => $this->attributes,
             'code' => $this->code,
             'category_id' => $this->category_id,
+            'shop_id' => $this->shop_id,
+            'brand_id' => $this->brand_id,
             'status' => $this->status,
+            'gender' => $this->gender,
+            'sizes' => $this->sizes,
+            'separated_sizes' => $this->separated_sizes,
+            'color' => $this->color,
+            'manufacturer' => $this->manufacturer,
+            'width' => $this->width,
+            'height' => $this->height,
+            'weight' => $this->weight,
+            'production_time' => $this->production_time,
+            'min_order' => $this->min_order,
+            'seller_status' => $this->seller_status,
             'images' => ImageResource::collection($this->whenLoaded('images')),
             'category' => new CategoryResource($this->whenLoaded('category')),
             'shop' => new ShopResource($this->whenLoaded('shop')),
+            'brand' => new BrandResource($this->whenLoaded('brand')),
+            'compositions' => CompositionResource::collection($this->whenLoaded('compositions')),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

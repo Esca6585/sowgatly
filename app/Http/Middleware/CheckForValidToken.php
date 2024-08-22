@@ -13,7 +13,7 @@ class CheckForValidToken
             return response()->json([
                 'message' => 'Invalid or expired token.',
                 'status' => 'error'
-            ], 401);
+            ], 200);
         }
 
         return $next($request);

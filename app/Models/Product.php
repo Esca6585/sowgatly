@@ -12,25 +12,27 @@ class Product extends Model
     protected $table = 'products';
 
     protected $fillable = [
-        'name', 'description', 'price', 'discount', 'attributes', 'code', 'category_id', 'shop_id', 'brand_id', 'status'
+        'name', 'description', 'price', 'discount', 'attributes', 'code', 
+        'category_id', 'shop_id', 'brand_id', 'status',
+        'gender', 'sizes', 'separated_sizes', 'color', 'manufacturer',
+        'width', 'height', 'weight', 'production_time', 'min_order',
+        'seller_status'
     ];
     
     protected $casts = [
-        'name' => 'string',
-        'description' => 'string',
-        'price' => 'float',
-        'discount' => 'float',
+        'price' => 'decimal:2',
+        'discount' => 'integer',
         'attributes' => 'array',
-        'category_id' => 'integer',
-        'shop_id' => 'integer',
-        'brand_id' => 'integer',
+        'sizes' => 'array',
+        'separated_sizes' => 'array',
+        'width' => 'double',
+        'height' => 'double',
+        'weight' => 'double',
+        'production_time' => 'integer',
+        'min_order' => 'integer',
+        'seller_status' => 'boolean',
         'status' => 'boolean',
     ];
-
-    protected function fillableData()
-    {
-        return $this->fillable;
-    }
 
     // Relationships
     public function category()
@@ -53,8 +55,16 @@ class Product extends Model
         return $this->hasMany(Image::class);
     }
 
-    public function getDiscountPrice()
+    public function compositions()
     {
-        return $this->price - ($this->price * $this->discount) / 100;
+        return $this->belongsToMany(Composition::class, 'product_compositions')
+                    ->withPivot('qty', 'qty_type')
+                    ->withTimestamps();
+    }
+
+    // Helper method
+    public function getDiscountedPrice()
+    {
+        return $this->price - ($this->price * $this->discount / 100);
     }
 }
