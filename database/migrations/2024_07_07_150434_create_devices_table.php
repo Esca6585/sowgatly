@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('devices', function (Blueprint $table) {
             $table->id();
             $table->string('token');
-            $table->integer('seller_id');
+            $table->integer('user_id');
             $table->timestamps();
         });
     }

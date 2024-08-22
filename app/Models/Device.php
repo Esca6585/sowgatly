@@ -9,12 +9,10 @@ class Device extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['seller_id', 'token'];
-    protected $table = 'devices';
+    protected $fillable = ['user_id', 'token'];
 
-
-    public function sellers()
+    public function users()
     {
-        return $this->belongsTo(Seller::class);
+        return $this->belongsTo(User::class);
     }
 }
