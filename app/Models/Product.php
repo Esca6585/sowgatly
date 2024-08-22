@@ -12,7 +12,7 @@ class Product extends Model
     protected $table = 'products';
 
     protected $fillable = [
-        'name', 'description', 'price', 'discount', 'attributes', 'code', 'category_id', 'shop_id', 'status'
+        'name', 'description', 'price', 'discount', 'attributes', 'code', 'category_id', 'shop_id', 'brand_id', 'status'
     ];
     
     protected $casts = [
@@ -23,6 +23,7 @@ class Product extends Model
         'attributes' => 'array',
         'category_id' => 'integer',
         'shop_id' => 'integer',
+        'brand_id' => 'integer',
         'status' => 'boolean',
     ];
 
@@ -42,6 +43,11 @@ class Product extends Model
         return $this->belongsTo(Shop::class);
     }
 
+    public function brand()
+    {
+        return $this->belongsTo(Brand::class);
+    }
+
     public function images()
     {
         return $this->hasMany(Image::class);
@@ -49,6 +55,6 @@ class Product extends Model
 
     public function getDiscountPrice()
     {
-        return $this->price - ($this->price*$this->discount) / 100;
+        return $this->price - ($this->price * $this->discount) / 100;
     }
 }
