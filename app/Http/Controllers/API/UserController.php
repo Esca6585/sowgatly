@@ -17,7 +17,7 @@ use Str;
  */
 /**
  * @OA\Schema(
- *     schema="UserResource",
+ *     schema="UserRequest",
  *     @OA\Property(property="id", type="integer", example=1),
  *     @OA\Property(property="name", type="string", example="Esen Meredow"),
  *     @OA\Property(property="phone_number", type="integer", example="65656585"),
@@ -92,7 +92,7 @@ class UserController extends Controller
      *     @OA\Response(
      *         response="201", 
      *         description="User created",
-     *         @OA\JsonContent(ref="#/components/schemas/UserResource"),
+     *         @OA\JsonContent(ref="#/components/schemas/UserRequest"),
      *     ),
      *     @OA\Response(
      *         response=401,

@@ -1115,18 +1115,52 @@
                 "tags": [
                     "Regions"
                 ],
-                "summary": "Get all regions",
+                "summary": "List all regions",
                 "operationId": "ccee2a99d885d0f59e09b4354487ab05",
                 "responses": {
                     "200": {
-                        "description": "Successful operation"
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer"
+                                            },
+                                            "name": {
+                                                "type": "string"
+                                            },
+                                            "type": {
+                                                "type": "string",
+                                                "enum": [
+                                                    "country",
+                                                    "province",
+                                                    "city",
+                                                    "village"
+                                                ]
+                                            },
+                                            "parent_id": {
+                                                "type": "integer",
+                                                "nullable": true
+                                            },
+                                            "created_at": {
+                                                "type": "string",
+                                                "format": "date-time"
+                                            },
+                                            "updated_at": {
+                                                "type": "string",
+                                                "format": "date-time"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
                     }
-                },
-                "security": [
-                    {
-                        "sanctum": []
-                    }
-                ]
+                }
             },
             "post": {
                 "tags": [
@@ -1139,21 +1173,74 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/RegionRequest"
+                                "required": [
+                                    "name",
+                                    "type"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "country",
+                                            "province",
+                                            "city",
+                                            "village"
+                                        ]
+                                    },
+                                    "parent_id": {
+                                        "type": "integer",
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
                             }
                         }
                     }
                 },
                 "responses": {
                     "201": {
-                        "description": "Region created successfully"
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer"
+                                        },
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "type": {
+                                            "type": "string",
+                                            "enum": [
+                                                "country",
+                                                "province",
+                                                "city",
+                                                "village"
+                                            ]
+                                        },
+                                        "parent_id": {
+                                            "type": "integer",
+                                            "nullable": true
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
-                },
-                "security": [
-                    {
-                        "sanctum": []
-                    }
-                ]
+                }
             }
         },
         "/api/regions/{id}": {
@@ -1175,17 +1262,48 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Successful operation"
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer"
+                                        },
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "type": {
+                                            "type": "string",
+                                            "enum": [
+                                                "country",
+                                                "province",
+                                                "city",
+                                                "village"
+                                            ]
+                                        },
+                                        "parent_id": {
+                                            "type": "integer",
+                                            "nullable": true
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "404": {
                         "description": "Region not found"
                     }
-                },
-                "security": [
-                    {
-                        "sanctum": []
-                    }
-                ]
+                }
             },
             "put": {
                 "tags": [
@@ -1208,24 +1326,80 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/RegionRequest"
+                                "required": [
+                                    "name",
+                                    "type"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "country",
+                                            "province",
+                                            "city",
+                                            "village"
+                                        ]
+                                    },
+                                    "parent_id": {
+                                        "type": "integer",
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
                             }
                         }
                     }
                 },
                 "responses": {
                     "200": {
-                        "description": "Region updated successfully"
+                        "description": "Region updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer"
+                                        },
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "type": {
+                                            "type": "string",
+                                            "enum": [
+                                                "country",
+                                                "province",
+                                                "city",
+                                                "village"
+                                            ]
+                                        },
+                                        "parent_id": {
+                                            "type": "integer",
+                                            "nullable": true
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "404": {
                         "description": "Region not found"
+                    },
+                    "422": {
+                        "description": "Validation error"
                     }
-                },
-                "security": [
-                    {
-                        "sanctum": []
-                    }
-                ]
+                }
             },
             "delete": {
                 "tags": [
@@ -1250,12 +1424,7 @@
                     "404": {
                         "description": "Region not found"
                     }
-                },
-                "security": [
-                    {
-                        "sanctum": []
-                    }
-                ]
+                }
             }
         },
         "/api/shops": {
@@ -1618,7 +1787,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/UserResource"
+                                    "$ref": "#/components/schemas/UserRequest"
                                 }
                             }
                         }
@@ -1833,61 +2002,6 @@
                 },
                 "type": "object"
             },
-            "RegionRequest": {
-                "required": [
-                    "name",
-                    "type"
-                ],
-                "properties": {
-                    "name": {
-                        "description": "The name of the region",
-                        "type": "string"
-                    },
-                    "type": {
-                        "description": "The type of the region",
-                        "type": "string",
-                        "enum": [
-                            "country",
-                            "province",
-                            "city",
-                            "village"
-                        ]
-                    },
-                    "parent_id": {
-                        "description": "The ID of the parent region (if any)",
-                        "type": "integer",
-                        "nullable": true
-                    },
-                    "address": {
-                        "description": "The address details of the region",
-                        "properties": {
-                            "street": {
-                                "type": "string",
-                                "nullable": true
-                            },
-                            "city": {
-                                "type": "string",
-                                "nullable": true
-                            },
-                            "state": {
-                                "type": "string",
-                                "nullable": true
-                            },
-                            "country": {
-                                "type": "string",
-                                "nullable": true
-                            },
-                            "postal_code": {
-                                "type": "string",
-                                "nullable": true
-                            }
-                        },
-                        "type": "object",
-                        "nullable": true
-                    }
-                },
-                "type": "object"
-            },
             "ShopResource": {
                 "properties": {
                     "id": {
@@ -1971,7 +2085,7 @@
                 },
                 "type": "object"
             },
-            "UserResource": {
+            "UserRequest": {
                 "properties": {
                     "id": {
                         "type": "integer",
@@ -2037,6 +2151,10 @@
             "description": "API Endpoints for Order operations"
         },
         {
+            "name": "Regions",
+            "description": "API Endpoints of Regions"
+        },
+        {
             "name": "Authentication",
             "description": "Authentication"
         },
@@ -2047,10 +2165,6 @@
         {
             "name": "Products",
             "description": "Products"
-        },
-        {
-            "name": "Regions",
-            "description": "Regions"
         },
         {
             "name": "Shops",
