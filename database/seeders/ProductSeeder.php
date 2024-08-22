@@ -69,7 +69,6 @@ class ProductSeeder extends Seeder
                     'shop_id' => $faker->randomElement($shopIds),
                     'brand_id' => $brand->id,
                     'category_id' => $faker->randomElement($categoryIds),
-                    'featured' => $faker->boolean(20), // 20% chance of being featured
                 ]);
 
                 // Create 1-5 images for each product
