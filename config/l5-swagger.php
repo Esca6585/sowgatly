@@ -299,4 +299,10 @@ return [
             'L5_SWAGGER_CONST_REMOTE_HOST' => env('L5_SWAGGER_CONST_REMOTE_HOST', 'http://localhost:8000'),
         ],
     ],
+    'servers' => [
+        [
+            'url' => 'https://sowgatly.app/api/v1',
+            'description' => 'Sowgatly API Server',
+        ],
+    ],
 ];

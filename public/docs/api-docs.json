@@ -377,6 +377,166 @@
                 ]
             }
         },
+        "/api/brands": {
+            "get": {
+                "tags": [
+                    "Brands"
+                ],
+                "summary": "Get all brands",
+                "operationId": "fc4762c01629430942030dcf220ba534",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/BrandResource"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Brands"
+                ],
+                "summary": "Create a new brand",
+                "operationId": "65634a997dfda2178e634ee882c130f3",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/BrandResource"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Brand created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BrandResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "/api/brands/{id}": {
+            "get": {
+                "tags": [
+                    "Brands"
+                ],
+                "summary": "Get a specific brand",
+                "operationId": "ce7f9160a0c3849dc9dcf3c817afa76b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BrandResource"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Brand not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Brands"
+                ],
+                "summary": "Update a specific brand",
+                "operationId": "e70560b8ce1e5305553eb6427ec5716d",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/BrandResource"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Brand updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BrandResource"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Brand not found"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Brands"
+                ],
+                "summary": "Delete a specific brand",
+                "operationId": "5ff3ec7ba20a152062a79c5a34b9b85b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Brand deleted successfully"
+                    },
+                    "404": {
+                        "description": "Brand not found"
+                    }
+                }
+            }
+        },
         "/api/cart/add": {
             "post": {
                 "tags": [
@@ -2210,6 +2370,10 @@
         {
             "name": "Addresses",
             "description": "API Endpoints of Addresses"
+        },
+        {
+            "name": "Brands",
+            "description": "API Endpoints of Brands"
         },
         {
             "name": "Cart",
