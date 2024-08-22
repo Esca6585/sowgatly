@@ -45,7 +45,7 @@ Route::middleware(['auth:sanctum', 'check.token'])->group(function () {
     Route::apiResource('shops', App\Http\Controllers\API\ShopController::class);
 
     // Brand routes
-    Route::apiResource('brands', BrandController::class);
+    Route::apiResource('brands', App\Http\Controllers\API\BrandController::class);
 
     // Carts routes
     Route::apiResource('carts', App\Http\Controllers\API\CartController::class);
