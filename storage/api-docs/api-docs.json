@@ -2487,20 +2487,17 @@
             },
             "AddressRequest": {
                 "properties": {
-                    "street": {
-                        "type": "string"
+                    "shop_id": {
+                        "type": "integer",
+                        "example": 1
                     },
-                    "city": {
-                        "type": "string"
-                    },
-                    "state": {
-                        "type": "string"
-                    },
-                    "country": {
-                        "type": "string"
+                    "address_name": {
+                        "type": "string",
+                        "example": "123 Main St, Anytown"
                     },
                     "postal_code": {
-                        "type": "string"
+                        "type": "string",
+                        "example": "744000"
                     }
                 },
                 "type": "object"
@@ -2585,6 +2582,28 @@
                     },
                     "category_id": {
                         "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "AddressResource": {
+                "title": "Address Resource",
+                "properties": {
+                    "street": {
+                        "description": "Transform the resource into an array.",
+                        "type": "string"
+                    },
+                    "city": {
+                        "type": "string"
+                    },
+                    "state": {
+                        "type": "string"
+                    },
+                    "country": {
+                        "type": "string"
+                    },
+                    "postal_code": {
+                        "type": "string"
                     }
                 },
                 "type": "object"

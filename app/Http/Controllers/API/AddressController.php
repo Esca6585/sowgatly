@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Models\Address;
+use App\Http\Requests\AddressRequest;
 use App\Http\Resources\AddressResource;
 use Illuminate\Http\Request;
 
 /**
  * @OA\Tag(
  *     name="Addresses",
- *     description="API Endpoints of Addresses"
+ *     description="API Endpoints for managing shop addresses"
  * )
  */
 class AddressController extends Controller
@@ -18,48 +18,53 @@ class AddressController extends Controller
     /**
      * @OA\Get(
      *     path="/api/addresses",
-     *     security={{"sanctum":{}}},
-     *     summary="Get a list of addresses",
+     *     summary="List all addresses",
      *     tags={"Addresses"},
-     *     @OA\Response(response="200", description="Successful operation")
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(ref="#/components/schemas/AddressResource")
+     *         )
+     *     )
      * )
      */
     public function index()
     {
-        return AddressResource::collection(Address::all());
+        $addresses = Address::all();
+        return AddressResource::collection($addresses);
     }
 
     /**
      * @OA\Post(
      *     path="/api/addresses",
-     *     security={{"sanctum":{}}},
      *     summary="Create a new address",
      *     tags={"Addresses"},
      *     @OA\RequestBody(
+     *         required=true,
      *         @OA\JsonContent(ref="#/components/schemas/AddressRequest")
      *     ),
-     *     @OA\Response(response="201", description="Address created successfully")
+     *     @OA\Response(
+     *         response=201,
+     *         description="Address created successfully",
+     *         @OA\JsonContent(ref="#/components/schemas/AddressResource")
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error"
+     *     )
      * )
      */
-    public function store(Request $request)
+    public function store(AddressRequest $request)
     {
-        $validatedData = $request->validate([
-            'street' => 'nullable|string|max:255',
-            'city' => 'nullable|string|max:255',
-            'state' => 'nullable|string|max:255',
-            'country' => 'nullable|string|max:255',
-            'postal_code' => 'nullable|string|max:20',
-        ]);
-
-        $address = Address::create($validatedData);
-
+        $address = Address::create($request->validated());
         return new AddressResource($address);
     }
 
     /**
      * @OA\Get(
      *     path="/api/addresses/{id}",
-     *     security={{"sanctum":{}}},
      *     summary="Get a specific address",
      *     tags={"Addresses"},
      *     @OA\Parameter(
@@ -68,19 +73,26 @@ class AddressController extends Controller
      *         required=true,
      *         @OA\Schema(type="integer")
      *     ),
-     *     @OA\Response(response="200", description="Successful operation"),
-     *     @OA\Response(response="404", description="Address not found")
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(ref="#/components/schemas/AddressResource")
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Address not found"
+     *     )
      * )
      */
-    public function show(Address $address)
+    public function show($id)
     {
+        $address = Address::findOrFail($id);
         return new AddressResource($address);
     }
 
     /**
      * @OA\Put(
      *     path="/api/addresses/{id}",
-     *     security={{"sanctum":{}}},
      *     summary="Update an existing address",
      *     tags={"Addresses"},
      *     @OA\Parameter(
@@ -90,31 +102,34 @@ class AddressController extends Controller
      *         @OA\Schema(type="integer")
      *     ),
      *     @OA\RequestBody(
+     *         required=true,
      *         @OA\JsonContent(ref="#/components/schemas/AddressRequest")
      *     ),
-     *     @OA\Response(response="200", description="Address updated successfully"),
-     *     @OA\Response(response="404", description="Address not found")
+     *     @OA\Response(
+     *         response=200,
+     *         description="Address updated successfully",
+     *         @OA\JsonContent(ref="#/components/schemas/AddressResource")
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Address not found"
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error"
+     *     )
      * )
      */
-    public function update(Request $request, Address $address)
+    public function update(AddressRequest $request, $id)
     {
-        $validatedData = $request->validate([
-            'street' => 'nullable|string|max:255',
-            'city' => 'nullable|string|max:255',
-            'state' => 'nullable|string|max:255',
-            'country' => 'nullable|string|max:255',
-            'postal_code' => 'nullable|string|max:20',
-        ]);
-
-        $address->update($validatedData);
-
+        $address = Address::findOrFail($id);
+        $address->update($request->validated());
         return new AddressResource($address);
     }
 
     /**
      * @OA\Delete(
      *     path="/api/addresses/{id}",
-     *     security={{"sanctum":{}}},
      *     summary="Delete an address",
      *     tags={"Addresses"},
      *     @OA\Parameter(
@@ -123,14 +138,20 @@ class AddressController extends Controller
      *         required=true,
      *         @OA\Schema(type="integer")
      *     ),
-     *     @OA\Response(response="204", description="Address deleted successfully"),
-     *     @OA\Response(response="404", description="Address not found")
+     *     @OA\Response(
+     *         response=204,
+     *         description="Address deleted successfully"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Address not found"
+     *     )
      * )
      */
-    public function destroy(Address $address)
+    public function destroy($id)
     {
+        $address = Address::findOrFail($id);
         $address->delete();
-
         return response()->noContent();
     }
 }
