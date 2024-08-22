@@ -20,8 +20,8 @@ class DatabaseSeeder extends Seeder
             RegionSeeder::class,
             ShopSeeder::class,
             AddressSeeder::class,
-            ProductSeeder::class,
             BrandSeeder::class,
+            ProductSeeder::class,
         ]);
     }
 }
