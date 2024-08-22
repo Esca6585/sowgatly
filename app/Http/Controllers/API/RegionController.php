@@ -31,7 +31,7 @@ class RegionController extends Controller
      *                 @OA\Property(property="id", type="integer"),
      *                 @OA\Property(property="name", type="string"),
      *                 @OA\Property(property="type", type="string", enum={"country", "province", "city", "village"}),
-     *                 @OA\Property(property="parent_id", type="integer", nullable=true),
+     *                 @OA\Property(property="parent_id", type="integer", nullable=true, default=null, example=null),
      *                 @OA\Property(property="created_at", type="string", format="date-time"),
      *                 @OA\Property(property="updated_at", type="string", format="date-time")
      *             )
@@ -57,7 +57,7 @@ class RegionController extends Controller
      *             required={"name", "type"},
      *             @OA\Property(property="name", type="string"),
      *             @OA\Property(property="type", type="string", enum={"country", "province", "city", "village"}),
-     *             @OA\Property(property="parent_id", type="integer", nullable=true)
+     *             @OA\Property(property="parent_id", type="integer", nullable=true, default=null, example=null)
      *         )
      *     ),
      *     @OA\Response(
@@ -143,7 +143,7 @@ class RegionController extends Controller
      *             required={"name", "type"},
      *             @OA\Property(property="name", type="string"),
      *             @OA\Property(property="type", type="string", enum={"country", "province", "city", "village"}),
-     *             @OA\Property(property="parent_id", type="integer", nullable=true)
+     *             @OA\Property(property="parent_id", type="integer", nullable=true, default=null, example=null)
      *         )
      *     ),
      *     @OA\Response(
