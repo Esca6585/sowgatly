@@ -42,38 +42,41 @@ class ProductSeeder extends Seeder
         }
 
         if (empty($brandIds)) {
-            // Create some brands if none exist
-            for ($i = 0; $i < 5; $i++) {
-                $brandIds[] = Brand::create(['name' => $faker->company])->id;
-            }
+            // Run the BrandSeeder if no brands exist
+            $this->call(BrandSeeder::class);
+            $brandIds = Brand::pluck('id')->toArray();
         }
 
-        // Create 50 products
-        for ($i = 0; $i < 50; $i++) {
-            $product = Product::create([
-                'name' => $faker->words(3, true),
-                'description' => $faker->sentence,
-                'price' => $faker->numberBetween(10, 999),
-                'discount' => $faker->numberBetween(0, 50),
-                'attributes' => json_encode([
-                    'color' => $faker->colorName,
-                    'size' => $faker->randomElement(['S', 'M', 'L', 'XL']),
-                    'weight' => $faker->numberBetween(100, 1000) . 'g'
-                ]),
-                'code' => Str::random(10),
-                'status' => $faker->boolean,
-                'category_id' => $faker->randomElement($categoryIds),
-                'shop_id' => $faker->randomElement($shopIds),
-                'brand_id' => $faker->randomElement($brandIds), // Added brand_id
-            ]);
+        $brands = Brand::all();
 
-            // Create 1-5 images for each product
-            $imageCount = $faker->numberBetween(1, 5);
-            for ($j = 0; $j < $imageCount; $j++) {
-                Image::create([
-                    'image' => $faker->imageUrl(640, 480, 'products', true),
-                    'product_id' => $product->id
+        // Create 50 products
+        foreach ($brands as $brand) {
+            for ($i = 0; $i < 10; $i++) { // 10 products per brand
+                $product = Product::create([
+                    'name' => $faker->words(3, true),
+                    'description' => $faker->paragraph,
+                    'price' => $faker->numberBetween(50, 500),
+                    'discount' => $faker->numberBetween(0, 30),
+                    'attributes' => json_encode([
+                        'color' => $faker->colorName,
+                        'size' => $faker->randomElement(['S', 'M', 'L', 'XL']),
+                        'weight' => $faker->numberBetween(100, 1000) . 'g'
+                    ]),
+                    'code' => Str::upper(Str::random(8)),
+                    'status' => $faker->boolean(80), // 80% chance of being active
+                    'category_id' => $faker->randomElement($categoryIds),
+                    'shop_id' => $faker->randomElement($shopIds),
+                    'brand_id' => $brand->id,
                 ]);
+
+                // Create 1-5 images for each product
+                $imageCount = $faker->numberBetween(1, 5);
+                for ($j = 0; $j < $imageCount; $j++) {
+                    Image::create([
+                        'image' => $faker->imageUrl(640, 480, 'products', true),
+                        'product_id' => $product->id
+                    ]);
+                }
             }
         }
     }
