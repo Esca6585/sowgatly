@@ -33,7 +33,7 @@ Route::middleware(['auth:sanctum', 'check.token'])->group(function () {
     Route::apiResource('products', App\Http\Controllers\API\ProductController::class);
     Route::get('product/search', [App\Http\Controllers\API\ProductController::class , 'search']);
     Route::get('product/category/{category_id}', [App\Http\Controllers\API\ProductController::class , 'getByCategory']);
-    
+
     // Categories routes
     Route::apiResource('categories', App\Http\Controllers\API\CategoryController::class);
     Route::get('/categories/{id}/subcategories', [App\Http\Controllers\API\CategoryController::class, 'getSubcategories']);

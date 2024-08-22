@@ -17,6 +17,12 @@ use App\Http\Resources\ShopResource;
 use App\Http\Resources\DeviceResource;
 use Str;
 
+/**
+ * @OA\Tag(
+ *     name="Authentication",
+ *     description="API Endpoints of Authentication
+ * )
+ */
 class AuthOtpController extends Controller
 {
     /**
