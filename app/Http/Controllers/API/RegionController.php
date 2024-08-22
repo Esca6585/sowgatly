@@ -20,6 +20,7 @@ class RegionController extends Controller
      *     path="/api/regions",
      *     summary="List all regions",
      *     tags={"Regions"},
+     *     security={{"sanctum":{}}},
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
@@ -49,6 +50,7 @@ class RegionController extends Controller
      *     path="/api/regions",
      *     summary="Create a new region",
      *     tags={"Regions"},
+     *     security={{"sanctum":{}}},
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
@@ -91,6 +93,7 @@ class RegionController extends Controller
      *     path="/api/regions/{id}",
      *     summary="Get a specific region",
      *     tags={"Regions"},
+     *     security={{"sanctum":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -127,6 +130,7 @@ class RegionController extends Controller
      *     path="/api/regions/{id}",
      *     summary="Update a region",
      *     tags={"Regions"},
+     *     security={{"sanctum":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -184,6 +188,7 @@ class RegionController extends Controller
      *     path="/api/regions/{id}",
      *     summary="Delete a region",
      *     tags={"Regions"},
+     *     security={{"sanctum":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
