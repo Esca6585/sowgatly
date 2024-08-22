@@ -179,7 +179,7 @@
                                 "properties": {
                                     "phone_number": {
                                         "type": "string",
-                                        "example": "65123456"
+                                        "example": "65656585"
                                     }
                                 },
                                 "type": "object"
@@ -209,13 +209,13 @@
                 }
             }
         },
-        "/api/otp/login": {
+        "/api/login": {
             "post": {
                 "tags": [
                     "Authentication"
                 ],
                 "summary": "Login with OTP",
-                "operationId": "99b14aa9ee8c9aa00ba3f429a11a0410",
+                "operationId": "da408033eeca26e32aff2cbb663e583b",
                 "requestBody": {
                     "content": {
                         "application/json": {
@@ -227,7 +227,7 @@
                                 "properties": {
                                     "phone_number": {
                                         "type": "string",
-                                        "example": "65123456"
+                                        "example": "65656585"
                                     },
                                     "otp": {
                                         "type": "string",
@@ -271,13 +271,13 @@
                 }
             }
         },
-        "/api/otp/register": {
+        "/api/register": {
             "post": {
                 "tags": [
                     "Authentication"
                 ],
                 "summary": "Register with OTP",
-                "operationId": "1a5805e5724689f0e29d9068fb0b9ce8",
+                "operationId": "f3c99462e7d72b17224d0716b80f367f",
                 "requestBody": {
                     "content": {
                         "application/json": {
@@ -289,19 +289,15 @@
                                 "properties": {
                                     "phone_number": {
                                         "type": "string",
-                                        "example": "65123456"
+                                        "example": "65656565"
                                     },
                                     "name": {
                                         "type": "string",
-                                        "example": "John Doe"
+                                        "example": "Esen Meredow"
                                     },
                                     "email": {
                                         "type": "string",
-                                        "example": "john@example.com"
-                                    },
-                                    "device_token": {
-                                        "type": "string",
-                                        "example": "device_token_here"
+                                        "example": "esca6585@modahouse.top"
                                     }
                                 },
                                 "type": "object"
@@ -334,6 +330,9 @@
                                         "shops": {
                                             "type": "array",
                                             "items": {}
+                                        },
+                                        "device_token": {
+                                            "type": "string"
                                         }
                                     },
                                     "type": "object"
@@ -344,13 +343,13 @@
                 }
             }
         },
-        "/api/otp/logout": {
+        "/api/logout": {
             "post": {
                 "tags": [
                     "Authentication"
                 ],
                 "summary": "Logout",
-                "operationId": "1ea5054fc25f6ec5b8f2b2025f4fca9c",
+                "operationId": "6eaab1a5e29916ce9949b0577baaf2f1",
                 "responses": {
                     "200": {
                         "description": "Logout successful",

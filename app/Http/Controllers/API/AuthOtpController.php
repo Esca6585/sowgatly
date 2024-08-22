@@ -25,7 +25,7 @@ class AuthOtpController extends Controller
      *     @OA\RequestBody(
      *         @OA\JsonContent(
      *             required={"phone_number"},
-     *             @OA\Property(property="phone_number", type="string", example="65123456")
+     *             @OA\Property(property="phone_number", type="string", example="65656585")
      *         )
      *     ),
      *     @OA\Response(
@@ -120,13 +120,13 @@ class AuthOtpController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/otp/login",
+     *     path="/api/login",
      *     summary="Login with OTP",
      *     tags={"Authentication"},
      *     @OA\RequestBody(
      *         @OA\JsonContent(
      *             required={"phone_number", "otp"},
-     *             @OA\Property(property="phone_number", type="string", example="65123456"),
+     *             @OA\Property(property="phone_number", type="string", example="65656585"),
      *             @OA\Property(property="otp", type="string", example="0000")
      *         )
      *     ),
@@ -204,16 +204,15 @@ class AuthOtpController extends Controller
     }
     /**
      * @OA\Post(
-     *     path="/api/otp/register",
+     *     path="/api/register",
      *     summary="Register with OTP",
      *     tags={"Authentication"},
      *     @OA\RequestBody(
      *         @OA\JsonContent(
      *             required={"phone_number", "name"},
-     *             @OA\Property(property="phone_number", type="string", example="65123456"),
-     *             @OA\Property(property="name", type="string", example="John Doe"),
-     *             @OA\Property(property="email", type="string", example="john@example.com"),
-     *             @OA\Property(property="device_token", type="string", example="device_token_here")
+     *             @OA\Property(property="phone_number", type="string", example="65656565"),
+     *             @OA\Property(property="name", type="string", example="Esen Meredow"),
+     *             @OA\Property(property="email", type="string", example="esca6585@modahouse.top")
      *         )
      *     ),
      *     @OA\Response(
@@ -225,7 +224,8 @@ class AuthOtpController extends Controller
      *             @OA\Property(property="token_type", type="string"),
      *             @OA\Property(property="otp", type="string"),
      *             @OA\Property(property="user", type="object"),
-     *             @OA\Property(property="shops", type="array", @OA\Items())
+     *             @OA\Property(property="shops", type="array", @OA\Items()),
+     *             @OA\Property(property="device_token", type="string")
      *         )
      *     )
      * )
@@ -261,12 +261,13 @@ class AuthOtpController extends Controller
                 'expire_at' => now()->addMinutes(10),
             ]);
 
-            if ($request->device_token) {
-                Device::updateOrCreate(
-                    ['user_id' => $user->id],
-                    ['token' => $request->device_token]
-                );
-            }
+            // Generate a unique device token
+            $deviceToken = Str::random(64);
+
+            Device::create([
+                'user_id' => $user->id,
+                'token' => $deviceToken
+            ]);
 
             $token = $user->createToken('api-token')->plainTextToken;
 
@@ -279,6 +280,7 @@ class AuthOtpController extends Controller
                 'otp' => $otpCode,
                 'user' => new UserResource($user),
                 'shops' => ShopResource::collection($user->shops),
+                'device_token' => $deviceToken,
             ], 200);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -292,7 +294,7 @@ class AuthOtpController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/otp/logout",
+     *     path="/api/logout",
      *     summary="Logout",
      *     tags={"Authentication"},
      *     security={{"bearerAuth":{}}},
