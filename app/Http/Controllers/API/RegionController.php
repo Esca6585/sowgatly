@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Region;
+use App\Models\Address;
 use App\Http\Resources\RegionResource;
 use Illuminate\Http\Request;
 
@@ -29,10 +30,7 @@ use Illuminate\Http\Request;
  *         type="object",
  *         nullable=true,
  *         description="The address details of the region",
- *         @OA\Property(property="street", type="string", nullable=true),
- *         @OA\Property(property="city", type="string", nullable=true),
- *         @OA\Property(property="state", type="string", nullable=true),
- *         @OA\Property(property="country", type="string", nullable=true),
+ *         @OA\Property(property="address_name", type="string", nullable=true),
  *         @OA\Property(property="postal_code", type="string", nullable=true)
  *     )
  * )
@@ -74,19 +72,15 @@ class RegionController extends Controller
             'type' => 'required|in:country,province,city,village',
             'parent_id' => 'nullable|exists:regions,id',
             'address' => 'nullable|array',
-            'address.street' => 'nullable|string',
-            'address.city' => 'nullable|string',
-            'address.state' => 'nullable|string',
-            'address.country' => 'nullable|string',
+            'address.address_name' => 'nullable|string',
             'address.postal_code' => 'nullable|string',
         ]);
 
         $region = Region::create($validatedData);
 
         if (isset($validatedData['address'])) {
-            $address = $region->address()->create($validatedData['address']);
-            $region->address_id = $address->id;
-            $region->save();
+            $address = new Address($validatedData['address']);
+            $region->address()->save($address);
         }
 
         return new RegionResource($region);
@@ -143,10 +137,7 @@ class RegionController extends Controller
             'type' => 'required|in:country,province,city,village',
             'parent_id' => 'nullable|exists:regions,id',
             'address' => 'nullable|array',
-            'address.street' => 'nullable|string',
-            'address.city' => 'nullable|string',
-            'address.state' => 'nullable|string',
-            'address.country' => 'nullable|string',
+            'address.address_name' => 'nullable|string',
             'address.postal_code' => 'nullable|string',
         ]);
 
@@ -156,9 +147,8 @@ class RegionController extends Controller
             if ($region->address) {
                 $region->address->update($validatedData['address']);
             } else {
-                $address = $region->address()->create($validatedData['address']);
-                $region->address_id = $address->id;
-                $region->save();
+                $address = new Address($validatedData['address']);
+                $region->address()->save($address);
             }
         }
 
