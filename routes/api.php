@@ -25,10 +25,10 @@ Route::controller(App\Http\Controllers\API\AuthOtpController::class)->group(func
     Route::post('register', 'registerWithOtp');
 
     // logout route
-    Route::post('logout', 'logout')->middleware(['auth:sanctum']);
+    Route::post('logout', 'logout')->middleware(['auth:sanctum', 'check.token']);
 });
 
-Route::middleware(['auth:sanctum'])->group(function () {
+Route::middleware(['auth:sanctum', 'check.token'])->group(function () {
     // Products routes
     Route::apiResource('products', App\Http\Controllers\API\ProductController::class);
     Route::get('product/search', [App\Http\Controllers\API\ProductController::class , 'search']);
