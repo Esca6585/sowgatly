@@ -226,7 +226,7 @@ class AuthOtpController extends Controller
      *             @OA\Property(property="otp", type="string"),
      *             @OA\Property(property="user", type="object"),
      *             @OA\Property(property="shops", type="array", @OA\Items()),
-     *             @OA\Property(property="device_type", type="string")
+     *             @OA\Property(property="device", type="object")
      *         )
      *     )
      * )
@@ -268,7 +268,7 @@ class AuthOtpController extends Controller
             // Generate a unique device token
             $deviceToken = Str::random(64);
 
-            Device::create([
+            $device = Device::create([
                 'user_id' => $user->id,
                 'device_token' => $deviceToken,
                 'device_type' => $deviceType
@@ -285,7 +285,7 @@ class AuthOtpController extends Controller
                 'otp' => $otpCode,
                 'user' => new UserResource($user),
                 'shops' => ShopResource::collection($user->shops),
-                'device_type' => $deviceType,
+                'device' => new DeviceResource($device),
             ], 200);
         } catch (\Exception $e) {
             DB::rollBack();

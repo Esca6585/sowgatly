@@ -298,10 +298,6 @@
                                     "email": {
                                         "type": "string",
                                         "example": "esca6585@modahouse.top"
-                                    },
-                                    "device_token": {
-                                        "type": "string",
-                                        "example": "FCM_or_APNS_token_here"
                                     }
                                 },
                                 "type": "object"
