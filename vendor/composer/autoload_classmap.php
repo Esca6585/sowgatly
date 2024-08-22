@@ -90,6 +90,7 @@ return array(
     'App\\Http\\Resources\\AddressResource' => $baseDir . '/app/Http/Resources/AddressResource.php',
     'App\\Http\\Resources\\BrandResource' => $baseDir . '/app/Http/Resources/BrandResource.php',
     'App\\Http\\Resources\\CategoryResource' => $baseDir . '/app/Http/Resources/CategoryResource.php',
+    'App\\Http\\Resources\\CompositionResource' => $baseDir . '/app/Http/Resources/CompositionResource.php',
     'App\\Http\\Resources\\DeviceResource' => $baseDir . '/app/Http/Resources/DeviceResource.php',
     'App\\Http\\Resources\\ImageResource' => $baseDir . '/app/Http/Resources/ImageResource.php',
     'App\\Http\\Resources\\ProductResource' => $baseDir . '/app/Http/Resources/ProductResource.php',
