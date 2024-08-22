@@ -14,7 +14,6 @@ use Illuminate\Support\Facades\DB;
  * @OA\Info(
  *     title="Products API",
  *     version="1.0.0",
- *     description="API endpoints for managing products"
  * )
  */
 class ProductController extends Controller
