@@ -12,6 +12,11 @@ class GenerateSwaggerJson extends Command
 
     public function handle(Generator $generator)
     {
+        $this->info('Migrate Fresh');
+        $this->call('migrate:fresh');
+        $this->info('Database Seed');
+        $this->call('db:seed');
+        
         $this->info('Clear cache');
         $this->call('optimize:clear');
 
