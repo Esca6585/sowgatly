@@ -891,6 +891,137 @@
                 ]
             }
         },
+        "/api/compositions": {
+            "get": {
+                "tags": [
+                    "Compositions"
+                ],
+                "summary": "Get all compositions",
+                "operationId": "ff7b050ac312a78d2095647225d38243",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Compositions"
+                ],
+                "summary": "Create a new composition",
+                "operationId": "d81469ecbc3270b42e286a55c8257dd0",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful operation"
+                    }
+                }
+            }
+        },
+        "/api/compositions/{id}": {
+            "get": {
+                "tags": [
+                    "Compositions"
+                ],
+                "summary": "Get a specific composition",
+                "operationId": "16c21e1d8aa49540f7a518d7573396b0",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Composition not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Compositions"
+                ],
+                "summary": "Update a composition",
+                "operationId": "185ea6161b45ffc51586fc287d3671f9",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Composition not found"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Compositions"
+                ],
+                "summary": "Delete a composition",
+                "operationId": "ca89eaf9bfa03f0dac6eaff84c10f1dc",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Composition not found"
+                    }
+                }
+            }
+        },
         "/api/orders": {
             "get": {
                 "tags": [
@@ -2539,6 +2670,10 @@
         {
             "name": "Cart",
             "description": "API Endpoints for Cart operations"
+        },
+        {
+            "name": "Compositions",
+            "description": "API Endpoints of Compositions"
         },
         {
             "name": "Orders",

@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             AddressSeeder::class,
             BrandSeeder::class,
             ProductSeeder::class,
+            CompositionSeeder::class,
         ]);
     }
 }

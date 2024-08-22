@@ -8,4 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class Composition extends Model
 {
     use HasFactory;
+
+    protected $fillable = ['name'];
+
+    public function products()
+    {
+        return $this->belongsToMany(Product::class, 'product_compositions')
+                    ->withPivot('qty', 'qty_type');
+    }
 }
