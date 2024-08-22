@@ -28,6 +28,11 @@ class Address extends Model
         return $this->belongsTo(Shop::class);
     }
 
+    public function region()
+    {
+        return $this->belongsTo(Region::class);
+    }
+
     /**
      * Get the full address as a string.
      *
