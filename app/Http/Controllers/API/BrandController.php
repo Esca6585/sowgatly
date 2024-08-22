@@ -14,6 +14,24 @@ use Illuminate\Support\Facades\Validator;
  *     description="API Endpoints of Brands"
  * )
  */
+/**
+ * @OA\Info(
+ *     version="1.0.0",
+ *     title="Sowgatly API Documentation",
+ *     description="Sowgatly API description",
+ *     @OA\Contact(
+ *         email="support@sowgatly.app"
+ *     ),
+ *     @OA\License(
+ *         name="Apache 2.0",
+ *         url="http://www.apache.org/licenses/LICENSE-2.0.html"
+ *     )
+ * )
+ * @OA\Server(
+ *     description="Sowgatly API Server",
+ *     url="https://sowgatly.app"
+ * )
+ */
 class BrandController extends Controller
 {
     /**
