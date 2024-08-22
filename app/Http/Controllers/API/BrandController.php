@@ -21,6 +21,7 @@ class BrandController extends Controller
      *     path="/api/brands",
      *     summary="Get all brands",
      *     tags={"Brands"},
+     *     security={{"sanctum":{}}},
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
@@ -42,6 +43,7 @@ class BrandController extends Controller
      *     path="/api/brands",
      *     summary="Create a new brand",
      *     tags={"Brands"},
+     *     security={{"sanctum":{}}},
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(ref="#/components/schemas/BrandResource")
@@ -79,6 +81,7 @@ class BrandController extends Controller
      *     path="/api/brands/{id}",
      *     summary="Get a specific brand",
      *     tags={"Brands"},
+     *     security={{"sanctum":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -107,6 +110,7 @@ class BrandController extends Controller
      *     path="/api/brands/{id}",
      *     summary="Update a specific brand",
      *     tags={"Brands"},
+     *     security={{"sanctum":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -156,6 +160,7 @@ class BrandController extends Controller
      *     path="/api/brands/{id}",
      *     summary="Delete a specific brand",
      *     tags={"Brands"},
+     *     security={{"sanctum":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
