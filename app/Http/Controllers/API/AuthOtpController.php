@@ -213,7 +213,8 @@ class AuthOtpController extends Controller
      *             required={"phone_number", "name"},
      *             @OA\Property(property="phone_number", type="string", example="65656565"),
      *             @OA\Property(property="name", type="string", example="Esen Meredow"),
-     *             @OA\Property(property="email", type="string", example="esca6585@modahouse.top")
+     *             @OA\Property(property="email", type="string", example="esca6585@modahouse.top"),
+     *             @OA\Property(property="device_token", type="string", example="FCM_or_APNS_token_here")
      *         )
      *     ),
      *     @OA\Response(
@@ -226,7 +227,7 @@ class AuthOtpController extends Controller
      *             @OA\Property(property="otp", type="string"),
      *             @OA\Property(property="user", type="object"),
      *             @OA\Property(property="shops", type="array", @OA\Items()),
-     *             @OA\Property(property="device_token", type="string")
+     *             @OA\Property(property="device_type", type="string")
      *         )
      *     )
      * )
@@ -237,6 +238,7 @@ class AuthOtpController extends Controller
             'phone_number' => ['required', new TurkmenistanPhoneNumber],
             'name' => 'required|string|max:255',
             'email' => 'nullable|string|email|max:255|unique:users',
+            'device_token' => 'required|string',
         ]);
 
         if ($validator->fails()) {
@@ -262,12 +264,13 @@ class AuthOtpController extends Controller
                 'expire_at' => now()->addMinutes(10),
             ]);
 
-            // Generate a unique device token
-            $deviceToken = Str::random(64);
+            // Detect device type
+            $deviceType = $this->detectDeviceType($request);
 
             Device::create([
                 'user_id' => $user->id,
-                'token' => $deviceToken
+                'device_token' => $request->device_token,
+                'device_type' => $deviceType
             ]);
 
             $token = $user->createToken('api-token')->plainTextToken;
@@ -281,7 +284,7 @@ class AuthOtpController extends Controller
                 'otp' => $otpCode,
                 'user' => new UserResource($user),
                 'shops' => ShopResource::collection($user->shops),
-                'device_token' => $deviceToken,
+                'device_type' => $deviceType,
             ], 200);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -290,6 +293,25 @@ class AuthOtpController extends Controller
                 'success' => false,
                 'message' => 'Registration failed: ' . $e->getMessage(),
             ], 200);
+        }
+    }
+
+    private function detectDeviceType(Request $request)
+    {
+        $userAgent = $request->header('User-Agent');
+        
+        if (strpos($userAgent, 'Android') !== false) {
+            return 'android';
+        } elseif (strpos($userAgent, 'iPhone') !== false || strpos($userAgent, 'iPad') !== false) {
+            return 'ios';
+        } elseif (strpos($userAgent, 'Windows') !== false) {
+            return 'windows';
+        } elseif (strpos($userAgent, 'Macintosh') !== false) {
+            return 'macos';
+        } elseif (strpos($userAgent, 'Linux') !== false) {
+            return 'linux';
+        } else {
+            return 'web';
         }
     }
 

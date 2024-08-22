@@ -9,9 +9,9 @@ class Device extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'token'];
+    protected $fillable = ['user_id', 'device_token', 'device_type'];
 
-    public function users()
+    public function user()
     {
         return $this->belongsTo(User::class);
     }

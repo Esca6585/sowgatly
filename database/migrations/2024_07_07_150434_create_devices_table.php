@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+class CreateDevicesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -15,9 +15,12 @@ return new class extends Migration
     {
         Schema::create('devices', function (Blueprint $table) {
             $table->id();
-            $table->string('token');
-            $table->integer('user_id');
+            $table->string('device_token')->unique();
+            $table->unsignedBigInteger('user_id');
+            $table->string('device_type')->nullable();
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
@@ -30,4 +33,4 @@ return new class extends Migration
     {
         Schema::dropIfExists('devices');
     }
-};
+}

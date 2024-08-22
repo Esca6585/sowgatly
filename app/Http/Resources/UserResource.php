@@ -22,6 +22,9 @@ class UserResource extends JsonResource
             'status' => $this->status,
             'created_at' => $this->created_at->toDateTimeString(),
             'updated_at' => $this->updated_at->toDateTimeString(),
+            'device_tokens' => $this->whenLoaded('devices', function () {
+                return $this->devices->pluck('device_token');
+            }),
         ];
     }
 }
