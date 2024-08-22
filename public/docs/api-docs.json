@@ -21,26 +21,32 @@
                 "tags": [
                     "Addresses"
                 ],
-                "summary": "Get a list of addresses",
-                "operationId": "05d45400dc99e36f78ac7453a329d22e",
+                "summary": "List all addresses",
+                "operationId": "dc6b190d3f07db7ed032fa181dc45150",
                 "responses": {
                     "200": {
-                        "description": "Successful operation"
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/AddressResource"
+                                    }
+                                }
+                            }
+                        }
                     }
-                },
-                "security": [
-                    {
-                        "sanctum": []
-                    }
-                ]
+                }
             },
             "post": {
                 "tags": [
                     "Addresses"
                 ],
                 "summary": "Create a new address",
-                "operationId": "94fa3d44216521505cefc876e95c85bd",
+                "operationId": "6344fc023028e43a5490f1c6372bd391",
                 "requestBody": {
+                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
@@ -51,14 +57,19 @@
                 },
                 "responses": {
                     "201": {
-                        "description": "Address created successfully"
+                        "description": "Address created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AddressResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error"
                     }
-                },
-                "security": [
-                    {
-                        "sanctum": []
-                    }
-                ]
+                }
             }
         },
         "/api/addresses/{id}": {
@@ -67,7 +78,7 @@
                     "Addresses"
                 ],
                 "summary": "Get a specific address",
-                "operationId": "0bcfe687364805ac5b63f6543a939676",
+                "operationId": "2a46bc21bf18060f0ec3a4fff2debe57",
                 "parameters": [
                     {
                         "name": "id",
@@ -80,24 +91,26 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Successful operation"
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AddressResource"
+                                }
+                            }
+                        }
                     },
                     "404": {
                         "description": "Address not found"
                     }
-                },
-                "security": [
-                    {
-                        "sanctum": []
-                    }
-                ]
+                }
             },
             "put": {
                 "tags": [
                     "Addresses"
                 ],
                 "summary": "Update an existing address",
-                "operationId": "37fd837c934a3d8d398f03edc65c5e39",
+                "operationId": "b4967e4140f305290dbde0982a3fc7d0",
                 "parameters": [
                     {
                         "name": "id",
@@ -109,6 +122,7 @@
                     }
                 ],
                 "requestBody": {
+                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
@@ -119,24 +133,29 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Address updated successfully"
+                        "description": "Address updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AddressResource"
+                                }
+                            }
+                        }
                     },
                     "404": {
                         "description": "Address not found"
+                    },
+                    "422": {
+                        "description": "Validation error"
                     }
-                },
-                "security": [
-                    {
-                        "sanctum": []
-                    }
-                ]
+                }
             },
             "delete": {
                 "tags": [
                     "Addresses"
                 ],
                 "summary": "Delete an address",
-                "operationId": "fd6c07ccab4cab14b0f9d9124fc9f5bf",
+                "operationId": "eedadf79fef97e5ee1af0b11c8856d8b",
                 "parameters": [
                     {
                         "name": "id",
@@ -154,12 +173,7 @@
                     "404": {
                         "description": "Address not found"
                     }
-                },
-                "security": [
-                    {
-                        "sanctum": []
-                    }
-                ]
+                }
             }
         },
         "/api/otp/generate": {
@@ -168,7 +182,7 @@
                     "Authentication"
                 ],
                 "summary": "Generate OTP",
-                "operationId": "081228e853685a7b3013eaa9f6069353",
+                "operationId": "21f7452be8597d704b5a0d575eaf49e5",
                 "requestBody": {
                     "content": {
                         "application/json": {
@@ -215,7 +229,7 @@
                     "Authentication"
                 ],
                 "summary": "Login with OTP",
-                "operationId": "da408033eeca26e32aff2cbb663e583b",
+                "operationId": "66abb7e56698406da81ec2b79b9905ad",
                 "requestBody": {
                     "content": {
                         "application/json": {
@@ -277,7 +291,7 @@
                     "Authentication"
                 ],
                 "summary": "Register with OTP",
-                "operationId": "f3c99462e7d72b17224d0716b80f367f",
+                "operationId": "0bf132e13ca714d80c509bc24c437cee",
                 "requestBody": {
                     "content": {
                         "application/json": {
@@ -349,7 +363,7 @@
                     "Authentication"
                 ],
                 "summary": "Logout",
-                "operationId": "6eaab1a5e29916ce9949b0577baaf2f1",
+                "operationId": "a43e945404b3e9994a38407e66572eef",
                 "responses": {
                     "200": {
                         "description": "Logout successful",
@@ -398,7 +412,7 @@
                     "Brands"
                 ],
                 "summary": "Get all brands",
-                "operationId": "fc4762c01629430942030dcf220ba534",
+                "operationId": "130f2bd423b6fe2355253e2c39878d99",
                 "responses": {
                     "200": {
                         "description": "Successful operation",
@@ -425,7 +439,7 @@
                     "Brands"
                 ],
                 "summary": "Create a new brand",
-                "operationId": "65634a997dfda2178e634ee882c130f3",
+                "operationId": "283de011874bd2a1ada6efafb676e83f",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -464,7 +478,7 @@
                     "Brands"
                 ],
                 "summary": "Get a specific brand",
-                "operationId": "ce7f9160a0c3849dc9dcf3c817afa76b",
+                "operationId": "2086e16f9b1a70aea714677ef42808a7",
                 "parameters": [
                     {
                         "name": "id",
@@ -501,7 +515,7 @@
                     "Brands"
                 ],
                 "summary": "Update a specific brand",
-                "operationId": "e70560b8ce1e5305553eb6427ec5716d",
+                "operationId": "40baf1fc4e11f1ccc369eb0b36b56f54",
                 "parameters": [
                     {
                         "name": "id",
@@ -551,7 +565,7 @@
                     "Brands"
                 ],
                 "summary": "Delete a specific brand",
-                "operationId": "5ff3ec7ba20a152062a79c5a34b9b85b",
+                "operationId": "b3f38ad7a979e5c78ac4e95ceb640c7e",
                 "parameters": [
                     {
                         "name": "id",
@@ -583,7 +597,7 @@
                     "Cart"
                 ],
                 "summary": "Add product to cart",
-                "operationId": "74b5ae8a0195a2dfc748a1b7caa89e6b",
+                "operationId": "1fd304ca79daacf6570caa5e412bccc7",
                 "requestBody": {
                     "content": {
                         "application/json": {
@@ -627,7 +641,7 @@
                     "Cart"
                 ],
                 "summary": "Get user's cart",
-                "operationId": "f514ef4506ec632e849d68bf8f6a42bf",
+                "operationId": "f5a6af9d859f5af3146dd7e0f33f80c2",
                 "responses": {
                     "200": {
                         "description": "Successful operation"
@@ -646,7 +660,7 @@
                     "Categories"
                 ],
                 "summary": "Get list of categories",
-                "operationId": "8e17a9627dbed245cf032f867569cf11",
+                "operationId": "ac9c4d978ea4e5b72915ca9728e5b8b1",
                 "parameters": [
                     {
                         "name": "page",
@@ -685,7 +699,7 @@
                     "Categories"
                 ],
                 "summary": "Create a new category",
-                "operationId": "2140f330d926c3e118cab9391dc4ff42",
+                "operationId": "cca49a87d9b0ebb9a98ad7c154b71737",
                 "requestBody": {
                     "content": {
                         "multipart/form-data": {
@@ -746,7 +760,7 @@
                     "Categories"
                 ],
                 "summary": "Get all subcategories by parent category ID",
-                "operationId": "3d489dd311a2b2ae582ced3c4e0a4e37",
+                "operationId": "6e66011821d8723f4b3f7934b7357acb",
                 "parameters": [
                     {
                         "name": "id",
@@ -778,7 +792,7 @@
                     "Categories"
                 ],
                 "summary": "Get a category",
-                "operationId": "6a038665b20191638e1608ea8897bf64",
+                "operationId": "09767bb2e47dde77dd1e2591428b0ae1",
                 "parameters": [
                     {
                         "name": "id",
@@ -808,7 +822,7 @@
                     "Categories"
                 ],
                 "summary": "Update a category",
-                "operationId": "c801ba2dc7ddfc8237ad4be7928f7bf6",
+                "operationId": "2f7d9f2ba3bc3ed6781461b21f7eb8cb",
                 "parameters": [
                     {
                         "name": "id",
@@ -877,7 +891,7 @@
                     "Categories"
                 ],
                 "summary": "Delete a category",
-                "operationId": "f365d407ea3098d6b545847b09322b13",
+                "operationId": "9b61b65823f4a21f182506b34ddf805c",
                 "parameters": [
                     {
                         "name": "id",
@@ -912,7 +926,7 @@
                     "Compositions"
                 ],
                 "summary": "Get all compositions",
-                "operationId": "ff7b050ac312a78d2095647225d38243",
+                "operationId": "6229172f2e42ba2f80992d8680e98d6c",
                 "responses": {
                     "200": {
                         "description": "Successful operation"
@@ -929,7 +943,7 @@
                     "Compositions"
                 ],
                 "summary": "Create a new composition",
-                "operationId": "d81469ecbc3270b42e286a55c8257dd0",
+                "operationId": "4481a3d0bb911c51d5955f272354dd3f",
                 "requestBody": {
                     "content": {
                         "application/json": {
@@ -962,7 +976,7 @@
                     "Compositions"
                 ],
                 "summary": "Get a specific composition",
-                "operationId": "16c21e1d8aa49540f7a518d7573396b0",
+                "operationId": "99d654606fa8239c2d0bd20534b02b4f",
                 "parameters": [
                     {
                         "name": "id",
@@ -992,7 +1006,7 @@
                     "Compositions"
                 ],
                 "summary": "Update a composition",
-                "operationId": "185ea6161b45ffc51586fc287d3671f9",
+                "operationId": "b6cb47f315741664864939be70544b83",
                 "parameters": [
                     {
                         "name": "id",
@@ -1036,7 +1050,7 @@
                     "Compositions"
                 ],
                 "summary": "Delete a composition",
-                "operationId": "ca89eaf9bfa03f0dac6eaff84c10f1dc",
+                "operationId": "b64b36bd07696703cc793a5112bb9157",
                 "parameters": [
                     {
                         "name": "id",
@@ -1068,7 +1082,7 @@
                     "Orders"
                 ],
                 "summary": "Get user's orders",
-                "operationId": "b151ab9e056a2e8d1de38f2d75d60a77",
+                "operationId": "f641842a2abf975fee5362d88c320539",
                 "responses": {
                     "200": {
                         "description": "Successful operation"
@@ -1085,7 +1099,7 @@
                     "Orders"
                 ],
                 "summary": "Create a new order from cart",
-                "operationId": "a4cbba2106e588b6d787612d6f4f4f9e",
+                "operationId": "b0f5daac05dcbd2f54bd761f92afcbf6",
                 "requestBody": {
                     "content": {
                         "application/json": {
@@ -1124,7 +1138,7 @@
                     "Orders"
                 ],
                 "summary": "Get a specific order",
-                "operationId": "93110812e9f34e8dd0d67bd0f13a2def",
+                "operationId": "ca5d23a81020b17dad07d341668d73d2",
                 "parameters": [
                     {
                         "name": "id",
@@ -1156,7 +1170,7 @@
                     "Products"
                 ],
                 "summary": "Get all products",
-                "operationId": "ab015cc2055ac75e6d23c628675c26e7",
+                "operationId": "d97d1c3727cbac49708b85f7d11f7d58",
                 "responses": {
                     "200": {
                         "description": "Successful operation",
@@ -1188,7 +1202,7 @@
                     "Products"
                 ],
                 "summary": "Create a new product",
-                "operationId": "7ff81b1681ff3180e5b73a2e15f2c67b",
+                "operationId": "785644b7d7dd38af4b51dafd0fbc1b6d",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -1227,7 +1241,7 @@
                     "Products"
                 ],
                 "summary": "Get a specific product",
-                "operationId": "47affec446a4e21ba3cbf0b6b14abb44",
+                "operationId": "c87fb2e4d617e7b36c712cad358acdb8",
                 "parameters": [
                     {
                         "name": "id",
@@ -1265,7 +1279,7 @@
                     "Products"
                 ],
                 "summary": "Update an existing product",
-                "operationId": "b0605b594dede1c8d6d6412b452efd96",
+                "operationId": "416e4959a3919547eb609d87e3db9135",
                 "parameters": [
                     {
                         "name": "id",
@@ -1316,7 +1330,7 @@
                     "Products"
                 ],
                 "summary": "Delete a product",
-                "operationId": "33173a96c7ab5ed4ba9ceaffb4c6003d",
+                "operationId": "b49ce9f3cb168b233245548fb4ef36d3",
                 "parameters": [
                     {
                         "name": "id",
@@ -1349,7 +1363,7 @@
                     "Products"
                 ],
                 "summary": "Search for products",
-                "operationId": "d80b7efa5b94717d2aaeb1a38d9066cd",
+                "operationId": "4fcb8a259e58aa3b128ce113aa7b749c",
                 "parameters": [
                     {
                         "name": "q",
@@ -1394,7 +1408,7 @@
                     "Products"
                 ],
                 "summary": "Get products by category",
-                "operationId": "fb0abfa680d510029dd03b8c08d7b5f0",
+                "operationId": "cbf8da4137540e5bdc84ad6851d3730f",
                 "parameters": [
                     {
                         "name": "category_id",
@@ -1439,7 +1453,7 @@
                     "Products"
                 ],
                 "summary": "Get featured products",
-                "operationId": "a402c4cad10855924e254a0c2414756e",
+                "operationId": "787711e5f2b08d01a9338d339746e9e1",
                 "responses": {
                     "200": {
                         "description": "Successful operation",
@@ -1468,7 +1482,7 @@
                     "Products"
                 ],
                 "summary": "Get latest products",
-                "operationId": "37c27078c97e4f9f7b4e0459f2dccc48",
+                "operationId": "7ffdacbdbf0e7d7f668510c8ce20622a",
                 "responses": {
                     "200": {
                         "description": "Successful operation",
@@ -1497,7 +1511,7 @@
                     "Products"
                 ],
                 "summary": "Get discounted products",
-                "operationId": "7c0016c8672e731daedbc4b99d726ec7",
+                "operationId": "86f025ce835695d5af74892edb2b0f95",
                 "responses": {
                     "200": {
                         "description": "Successful operation",
@@ -1526,7 +1540,7 @@
                     "Products"
                 ],
                 "summary": "Get products by brand",
-                "operationId": "4813419babd86eeed5d744aced5cb7f0",
+                "operationId": "85b16e9b7540a698d911f141f7b4820c",
                 "parameters": [
                     {
                         "name": "brand_id",
@@ -1576,7 +1590,7 @@
                     "Products"
                 ],
                 "summary": "Toggle featured status of a product",
-                "operationId": "52b194d27b0693e6db24907b5dd1e9a2",
+                "operationId": "573915d7fb7a655559d532eaece4c72e",
                 "parameters": [
                     {
                         "name": "id",
@@ -1615,7 +1629,7 @@
                     "Regions"
                 ],
                 "summary": "List all regions",
-                "operationId": "ccee2a99d885d0f59e09b4354487ab05",
+                "operationId": "55a86a3e6cad996799d0f7eb926559e1",
                 "responses": {
                     "200": {
                         "description": "Successful operation",
@@ -1673,7 +1687,7 @@
                     "Regions"
                 ],
                 "summary": "Create a new region",
-                "operationId": "1e48c64261ef945edb506c1a5d112a3d",
+                "operationId": "a774206732b4fd23848a53a1eb143ada",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -1764,7 +1778,7 @@
                     "Regions"
                 ],
                 "summary": "Get a specific region",
-                "operationId": "6a2fa52c868de9118a7d732562004117",
+                "operationId": "5f7d3aae22684e0542de09960daa956f",
                 "parameters": [
                     {
                         "name": "id",
@@ -1832,7 +1846,7 @@
                     "Regions"
                 ],
                 "summary": "Update a region",
-                "operationId": "3087a020e76a9ce879696fc807030b40",
+                "operationId": "b12106b8a7dd961d198f34d8c3055e40",
                 "parameters": [
                     {
                         "name": "id",
@@ -1937,7 +1951,7 @@
                     "Regions"
                 ],
                 "summary": "Delete a region",
-                "operationId": "277b879c8d2c7f4d43258cc4cfefd866",
+                "operationId": "a88665c37bfa34ad8df0d7b54eda79d1",
                 "parameters": [
                     {
                         "name": "id",
@@ -1969,7 +1983,7 @@
                     "Shops"
                 ],
                 "summary": "Get all shops",
-                "operationId": "95ded005a7ee4576abe647d63831a77a",
+                "operationId": "27017e83e03c95e6a4fb951511513cda",
                 "responses": {
                     "200": {
                         "description": "Successful operation",
@@ -1991,7 +2005,7 @@
                     "Shops"
                 ],
                 "summary": "Create a new shop",
-                "operationId": "1146fe689655fef1df0da68f7642c3ba",
+                "operationId": "e428784a186e12dcf23a33a07e681daa",
                 "requestBody": {
                     "content": {
                         "multipart/form-data": {
@@ -2071,7 +2085,7 @@
                     "Shops"
                 ],
                 "summary": "Get a shop",
-                "operationId": "333920b5aebb487eae92b7d37ffbd24e",
+                "operationId": "8a7f990e83583eeb3a061e4edfb156f4",
                 "parameters": [
                     {
                         "name": "id",
@@ -2108,7 +2122,7 @@
                     "Shops"
                 ],
                 "summary": "Update a shop",
-                "operationId": "9386fdcbb5699b3fe7988bf99dda63cc",
+                "operationId": "9202b1b4a330a9232b6f393acba6362c",
                 "parameters": [
                     {
                         "name": "id",
@@ -2199,7 +2213,7 @@
                     "Shops"
                 ],
                 "summary": "Delete a shop",
-                "operationId": "5332e0d6fc1567d7758065a4d525bd42",
+                "operationId": "c1541e4b9ff5ec479b8d34b47d20464e",
                 "parameters": [
                     {
                         "name": "id",
@@ -2231,7 +2245,7 @@
                     "Users"
                 ],
                 "summary": "Get list of users",
-                "operationId": "d7a57f4d7de18fb0f92501172472c9b6",
+                "operationId": "566aed8efb436ca506e0ef51a032ecd9",
                 "parameters": [
                     {
                         "name": "page",
@@ -2262,7 +2276,7 @@
                     "Users"
                 ],
                 "summary": "Create a new user",
-                "operationId": "9fea6f2adcb69614c521a7733358382d",
+                "operationId": "be551c1d694a01c164966f58bfa77013",
                 "requestBody": {
                     "content": {
                         "multipart/form-data": {
@@ -2315,7 +2329,7 @@
                     "Users"
                 ],
                 "summary": "Get a user",
-                "operationId": "40a5104e23b52137e78c3d3ac48b88a8",
+                "operationId": "6f51bd5fa2dddcd25e44cfa53dcbd10a",
                 "parameters": [
                     {
                         "name": "id",
@@ -2345,7 +2359,7 @@
                     "Users"
                 ],
                 "summary": "Update a user",
-                "operationId": "aa81151559ac4eeb9606336b205bfa3f",
+                "operationId": "6d6370298731666449ca1968f58a11f8",
                 "parameters": [
                     {
                         "name": "id",
@@ -2402,7 +2416,7 @@
                     "Users"
                 ],
                 "summary": "Delete a user",
-                "operationId": "ce06860a51ab016ef66e753544fe4563",
+                "operationId": "0b4133ed462528a5e648b88ead11e929",
                 "parameters": [
                     {
                         "name": "id",
@@ -2486,18 +2500,23 @@
                 "type": "object"
             },
             "AddressRequest": {
+                "title": "Address Request",
+                "description": "Address request body data",
                 "properties": {
                     "shop_id": {
+                        "description": "ID of the shop",
                         "type": "integer",
                         "example": 1
                     },
                     "address_name": {
+                        "description": "Name of the address",
                         "type": "string",
-                        "example": "123 Main St, Anytown"
+                        "example": "Main Office"
                     },
                     "postal_code": {
+                        "description": "Postal code",
                         "type": "string",
-                        "example": "744000"
+                        "example": "12345"
                     }
                 },
                 "type": "object"
@@ -2588,22 +2607,39 @@
             },
             "AddressResource": {
                 "title": "Address Resource",
+                "description": "Address resource",
                 "properties": {
-                    "street": {
-                        "description": "Transform the resource into an array.",
-                        "type": "string"
+                    "id": {
+                        "description": "Address ID",
+                        "type": "integer",
+                        "example": 1
                     },
-                    "city": {
-                        "type": "string"
+                    "shop_id": {
+                        "description": "Shop ID",
+                        "type": "integer",
+                        "example": 1
                     },
-                    "state": {
-                        "type": "string"
-                    },
-                    "country": {
-                        "type": "string"
+                    "address_name": {
+                        "description": "Address name",
+                        "type": "string",
+                        "example": "123 Main St, Anytown"
                     },
                     "postal_code": {
-                        "type": "string"
+                        "description": "Postal code",
+                        "type": "string",
+                        "example": "744000"
+                    },
+                    "created_at": {
+                        "description": "Creation date and time",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2023-06-07T12:00:00Z"
+                    },
+                    "updated_at": {
+                        "description": "Last update date and time",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2023-06-07T12:00:00Z"
                     }
                 },
                 "type": "object"
@@ -2776,7 +2812,7 @@
     "tags": [
         {
             "name": "Addresses",
-            "description": "API Endpoints of Addresses"
+            "description": "API Endpoints for managing shop addresses"
         },
         {
             "name": "Authentication",

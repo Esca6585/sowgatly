@@ -26,6 +26,7 @@ class ShopController extends Controller
      *     path="/api/shops",
      *     summary="Get all shops",
      *     tags={"Shops"},
+     *     security={{"sanctum":{}}},
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
