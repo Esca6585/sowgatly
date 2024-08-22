@@ -11,7 +11,7 @@ class CheckForValidToken
     {
         if (!$request->user()) {
             return response()->json([
-                'message' => 'Invalid or expired token.',
+                'message' => 'Unauthenticated.',
                 'status' => 'error'
             ], 200);
         }

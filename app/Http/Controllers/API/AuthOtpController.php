@@ -336,13 +336,30 @@ class AuthOtpController extends Controller
      *             @OA\Property(property="success", type="boolean"),
      *             @OA\Property(property="message", type="string")
      *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string")
+     *         )
      *     )
      * )
      */
     public function logout(Request $request)
     {
         try {
-            $request->user()->currentAccessToken()->delete();
+            // Check if the user is authenticated
+            if (!$request->user()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'User not authenticated',
+                ], 401);
+            }
+
+            // Attempt to revoke the token
+            $request->user()->tokens()->delete();
+
             return response()->json([
                 'success' => true,
                 'message' => 'Logged out successfully',
@@ -351,7 +368,7 @@ class AuthOtpController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Logout failed: ' . $e->getMessage(),
-            ], 200);
+            ], 500);
         }
     }
 }
