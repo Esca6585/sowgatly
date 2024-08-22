@@ -8,7 +8,6 @@ use App\Models\Image;
 use App\Models\Category;
 use App\Models\Shop;
 use App\Models\Brand;
-use Illuminate\Support\Str;
 use Faker\Factory as Faker;
 
 class ProductSeeder extends Seeder
