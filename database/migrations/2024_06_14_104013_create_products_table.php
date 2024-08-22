@@ -28,14 +28,14 @@ class CreateProductsTable extends Migration
             
             $table->unsignedBigInteger('category_id');
             $table->unsignedBigInteger('shop_id');
-            $table->unsignedBigInteger('brand_id'); // Added brand_id column
+            $table->unsignedBigInteger('brand_id');
 
             $table->boolean('status')->default(0);
             $table->timestamps();
 
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
             $table->foreign('shop_id')->references('id')->on('shops')->onDelete('cascade');
-            $table->foreign('brand_id')->references('id')->on('brands')->onDelete('cascade'); // Added foreign key constraint
+            $table->foreign('brand_id')->references('id')->on('brands')->onDelete('cascade');
         });
     }
 
