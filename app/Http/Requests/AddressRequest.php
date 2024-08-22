@@ -7,28 +7,34 @@ use Illuminate\Foundation\Http\FormRequest;
 /**
  * @OA\Schema(
  *     schema="AddressRequest",
- *     @OA\Property(property="street", type="string"),
- *     @OA\Property(property="city", type="string"),
- *     @OA\Property(property="state", type="string"),
- *     @OA\Property(property="country", type="string"),
- *     @OA\Property(property="postal_code", type="string")
+ *     @OA\Property(property="shop_id", type="integer", example=1),
+ *     @OA\Property(property="address_name", type="string", example="123 Main St, Anytown"),
+ *     @OA\Property(property="postal_code", type="string", example="744000")
  * )
  */
 class AddressRequest extends FormRequest
 {
+    /**
+     * Determine if the user is authorized to make this request.
+     *
+     * @return bool
+     */
     public function authorize()
     {
         return true;
     }
 
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, mixed>
+     */
     public function rules()
     {
         return [
-            'street' => 'nullable|string|max:255',
-            'city' => 'nullable|string|max:255',
-            'state' => 'nullable|string|max:255',
-            'country' => 'nullable|string|max:255',
-            'postal_code' => 'nullable|string|max:20',
+            'shop_id' => 'required|integer|exists:shops,id',
+            'address_name' => 'required|string|max:255',
+            'postal_code' => 'required|string|max:20',
         ];
     }
 }
