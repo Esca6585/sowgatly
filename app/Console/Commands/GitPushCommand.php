@@ -11,6 +11,9 @@ class GitPushCommand extends Command
 
     public function handle()
     {
+        $this->info('Generating Swagger documentation...');
+        $this->call('swagger:generate');
+
         $message = $this->argument('message') ?? 'Update from Artisan command';
         $fullMessage = sprintf('"%s - inside data updated"', $message);
 
@@ -24,8 +27,5 @@ class GitPushCommand extends Command
         exec('git push');
 
         $this->info('Changes pushed successfully!');
-
-        $this->info('Generating Swagger documentation...');
-        $this->call('swagger:generate');
     }
 }
