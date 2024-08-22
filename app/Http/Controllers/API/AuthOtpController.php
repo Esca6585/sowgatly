@@ -213,8 +213,7 @@ class AuthOtpController extends Controller
      *             required={"phone_number", "name"},
      *             @OA\Property(property="phone_number", type="string", example="65656565"),
      *             @OA\Property(property="name", type="string", example="Esen Meredow"),
-     *             @OA\Property(property="email", type="string", example="esca6585@modahouse.top"),
-     *             @OA\Property(property="device_token", type="string", example="FCM_or_APNS_token_here")
+     *             @OA\Property(property="email", type="string", example="esca6585@modahouse.top")
      *         )
      *     ),
      *     @OA\Response(
@@ -238,7 +237,6 @@ class AuthOtpController extends Controller
             'phone_number' => ['required', new TurkmenistanPhoneNumber],
             'name' => 'required|string|max:255',
             'email' => 'nullable|string|email|max:255|unique:users',
-            'device_token' => 'required|string',
         ]);
 
         if ($validator->fails()) {
@@ -267,9 +265,12 @@ class AuthOtpController extends Controller
             // Detect device type
             $deviceType = $this->detectDeviceType($request);
 
+            // Generate a unique device token
+            $deviceToken = Str::random(64);
+
             Device::create([
                 'user_id' => $user->id,
-                'device_token' => $request->device_token,
+                'device_token' => $deviceToken,
                 'device_type' => $deviceType
             ]);
 
