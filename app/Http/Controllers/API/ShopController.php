@@ -37,7 +37,7 @@ use Illuminate\Support\Facades\DB;
  *         type="object",
  *         @OA\Property(property="id", type="integer", example=1),
  *         @OA\Property(property="address_name", type="string", example="123 Main St"),
- *         @OA\Property(property="postal_code", type="string", example="12345"),
+ *         @OA\Property(property="postal_code", type="string", example="744000"),
  *     ),
  *     @OA\Property(
  *         property="region",
@@ -109,7 +109,7 @@ class ShopController extends Controller
      *               @OA\Property(property="image", type="string", format="binary"),
      *               @OA\Property(property="region_id", type="integer", example=1),
      *               @OA\Property(property="address_name", type="string", example="123 Main St"),
-     *               @OA\Property(property="postal_code", type="string", example="12345"),
+     *               @OA\Property(property="postal_code", type="string", example="744000"),
      *             )
      *         )
      *     ),
@@ -226,7 +226,7 @@ class ShopController extends Controller
      *               @OA\Property(property="image", type="string", format="binary"),
      *               @OA\Property(property="region_id", type="integer", example=2),
      *               @OA\Property(property="address_name", type="string", example="456 New St"),
-     *               @OA\Property(property="postal_code", type="string", example="54321"),
+     *               @OA\Property(property="postal_code", type="string", example="744000"),
      *             )
      *         )
      *     ),
