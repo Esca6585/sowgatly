@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Rules\TurkmenistanPhoneNumber;
 use App\Http\Resources\UserResource;
 use App\Http\Resources\ShopResource;
+use App\Http\Resources\DeviceResource;
 use Str;
 
 class AuthOtpController extends Controller

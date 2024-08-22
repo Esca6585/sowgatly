@@ -331,8 +331,8 @@
                                             "type": "array",
                                             "items": {}
                                         },
-                                        "device_type": {
-                                            "type": "string"
+                                        "device": {
+                                            "type": "object"
                                         }
                                     },
                                     "type": "object"
