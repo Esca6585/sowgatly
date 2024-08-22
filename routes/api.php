@@ -34,6 +34,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('product/search', [App\Http\Controllers\API\ProductController::class , 'search']);
     Route::get('product/category/{category_id}', [App\Http\Controllers\API\ProductController::class , 'getByCategory']);
 
+    // Compositions routes
+    Route::apiResource('compositions', App\Http\Controllers\API\CompositionController::class);
+
     // Categories routes
     Route::apiResource('categories', App\Http\Controllers\API\CategoryController::class);
     Route::get('/categories/{id}/subcategories', [App\Http\Controllers\API\CategoryController::class, 'getSubcategories']);
