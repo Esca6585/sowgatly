@@ -24,7 +24,7 @@ use Illuminate\Support\Facades\DB;
  *     schema="ShopResource",
  *     @OA\Property(property="id", type="integer", example=1),
  *     @OA\Property(property="name", type="string", example="Modahouse"),
- *     @OA\Property(property="email", type="string", example="shop@example.com"),
+ *     @OA\Property(property="email", type="string", example="modahouse@modahouse.top"),
  *     @OA\Property(property="mon_fri_open", type="string", example="09:00"),
  *     @OA\Property(property="mon_fri_close", type="string", example="18:00"),
  *     @OA\Property(property="sat_sun_open", type="string", example="10:00"),
@@ -102,7 +102,7 @@ class ShopController extends Controller
      *             mediaType="multipart/form-data",
      *             @OA\Schema(
      *               @OA\Property(property="name", type="string", example="Modahouse"),
-     *               @OA\Property(property="email", type="string", example="shop@example.com"),
+     *               @OA\Property(property="email", type="string", example="modahouse@modahouse.top"),
      *               @OA\Property(property="mon_fri_open", type="string", example="09:00"),
      *               @OA\Property(property="mon_fri_close", type="string", example="18:00"),
      *               @OA\Property(property="sat_sun_open", type="string", example="10:00"),
