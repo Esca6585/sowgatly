@@ -38,5 +38,8 @@ class GitPullCommand extends Command
                 $this->error($line);
             }
         }
+
+        $this->info('Generating Swagger documentation...');
+        $this->call('swagger:generate');
     }
 }
