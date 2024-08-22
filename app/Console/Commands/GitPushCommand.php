@@ -24,5 +24,8 @@ class GitPushCommand extends Command
         exec('git push');
 
         $this->info('Changes pushed successfully!');
+
+        $this->info('Generating Swagger documentation...');
+        $this->call('swagger:generate');
     }
 }
