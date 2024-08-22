@@ -8,7 +8,7 @@ use App\Http\Controllers\Controller;
  * @OA\Info(
  *     title="Product API",
  *     version="1.0.0",
- *     description="API for managing products and their images"
+ *     description="API of sowgatly.app"
  * )
  * @OA\Server(
  *     description="Local server",

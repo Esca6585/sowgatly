@@ -10,10 +10,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 
-/**
+ /**
  * @OA\Tag(
- *     title="Products API",
- *     version="1.0.0",
+ *     name="Products",
+ *     description="API Endpoints for Products"
  * )
  */
 class ProductController extends Controller
