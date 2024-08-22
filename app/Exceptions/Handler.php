@@ -17,9 +17,11 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $exception)
     {
-        // Customize the response for unauthenticated requests
-        if ($exception instanceof AuthenticationException) {
-            return $this->unauthenticated($request, $exception);
+        if ($exception instanceof \Illuminate\Auth\AuthenticationException) {
+            return response()->json([
+                'message' => 'Unauthenticated.',
+                'status' => 'error'
+            ], 200);
         }
 
         return parent::render($request, $exception);
