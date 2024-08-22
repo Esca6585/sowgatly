@@ -47,8 +47,8 @@ class ShopResource extends JsonResource
             'region_id' => $this->region_id,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'address_name' => $this->address->address_name,
-            'postal_code' => $this->address->postal_code,
+            'address_name' => $this->address_name,
+            'postal_code' => $this->postal_code,
         ];
     }
 }

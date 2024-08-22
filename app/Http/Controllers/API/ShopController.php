@@ -19,74 +19,26 @@ use Illuminate\Support\Facades\DB;
  *     description="API Endpoints of shops"
  * )
  */
-/**
- * @OA\Schema(
- *     schema="ShopResource",
- *     @OA\Property(property="id", type="integer", example=1),
- *     @OA\Property(property="name", type="string", example="Modahouse"),
- *     @OA\Property(property="email", type="string", example="modahouse@modahouse.top"),
- *     @OA\Property(property="mon_fri_open", type="string", example="09:00"),
- *     @OA\Property(property="mon_fri_close", type="string", example="18:00"),
- *     @OA\Property(property="sat_sun_open", type="string", example="10:00"),
- *     @OA\Property(property="sat_sun_close", type="string", example="16:00"),
- *     @OA\Property(property="image", type="string", example="shop_images/abcdef1234.jpg"),
- *     @OA\Property(property="user_id", type="integer", example=1),
- *     @OA\Property(property="region_id", type="integer", example=1),
- *     @OA\Property(
- *         property="address",
- *         type="object",
- *         @OA\Property(property="id", type="integer", example=1),
- *         @OA\Property(property="address_name", type="string", example="123 Main St"),
- *         @OA\Property(property="postal_code", type="string", example="744000"),
- *     ),
- *     @OA\Property(
- *         property="region",
- *         type="object",
- *         @OA\Property(property="id", type="integer", example=1),
- *         @OA\Property(property="name", type="string", example="New York"),
- *         @OA\Property(property="type", type="string", example="city"),
- *         @OA\Property(property="parent_id", type="integer", example=null),
- *     ),
- * )
- */
 class ShopController extends Controller
 {
     /**
      * @OA\Get(
      *     path="/api/shops",
+     *     summary="Get all shops",
      *     tags={"Shops"},
-     *     security={{"sanctum":{}}},
-     *     summary="Get list of shops",
-     *     @OA\Parameter(
-     *         name="page",
-     *         in="query",
-     *         description="Page number",
-     *         required=false,
-     *         @OA\Schema(type="integer")
-     *     ),
      *     @OA\Response(
-     *         response="200", 
-     *         description="List of shops",
+     *         response=200,
+     *         description="Successful operation",
      *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(
-     *                 property="data",
-     *                 type="array",
-     *                 @OA\Items(ref="#/components/schemas/ShopResource")
-     *             ),
-     *             @OA\Property(property="links", type="object"),
-     *             @OA\Property(property="meta", type="object")
+     *             type="array",
+     *             @OA\Items(ref="#/components/schemas/ShopResource")
      *         )
-     *     ),
-     *     @OA\Response(
-     *         response=401,
-     *         description="Unauthenticated",
      *     )
      * )
      */
     public function index()
     {
-        $shops = Shop::with(['address', 'region'])->paginate(10);
+        $shops = Shop::all();
         return ShopResource::collection($shops);
     }
 
