@@ -2428,6 +2428,10 @@
             "description": "API Endpoints of Addresses"
         },
         {
+            "name": "Authentication",
+            "description": "API Endpoints of Authentication"
+        },
+        {
             "name": "Brands",
             "description": "API Endpoints of Brands"
         },
@@ -2442,10 +2446,6 @@
         {
             "name": "Regions",
             "description": "API Endpoints of Regions"
-        },
-        {
-            "name": "Authentication",
-            "description": "Authentication"
         },
         {
             "name": "Categories",
