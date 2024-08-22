@@ -23,6 +23,7 @@ class OrderController extends Controller
      *     path="/api/orders",
      *     summary="Create a new order from cart",
      *     tags={"Orders"},
+     *     security={{"sanctum":{}}},
      *     @OA\RequestBody(
      *         @OA\JsonContent(
      *             @OA\Property(property="shop_id", type="integer")
@@ -92,6 +93,7 @@ class OrderController extends Controller
      *     path="/api/orders",
      *     summary="Get user's orders",
      *     tags={"Orders"},
+     *     security={{"sanctum":{}}},
      *     @OA\Response(response="200", description="Successful operation"),
      *     security={{"bearerAuth": {}}}
      * )
@@ -112,6 +114,7 @@ class OrderController extends Controller
      *     path="/api/orders/{id}",
      *     summary="Get a specific order",
      *     tags={"Orders"},
+     *     security={{"sanctum":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",

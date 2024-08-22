@@ -20,6 +20,7 @@ class CompositionController extends Controller
      *     path="/api/compositions",
      *     summary="Get all compositions",
      *     tags={"Compositions"},
+     *     security={{"sanctum":{}}},
      *     @OA\Response(response="200", description="Successful operation")
      * )
      */
@@ -33,6 +34,7 @@ class CompositionController extends Controller
      *     path="/api/compositions",
      *     summary="Create a new composition",
      *     tags={"Compositions"},
+     *     security={{"sanctum":{}}},
      *     @OA\RequestBody(
      *         @OA\JsonContent(
      *             @OA\Property(property="name", type="string")
@@ -57,6 +59,7 @@ class CompositionController extends Controller
      *     path="/api/compositions/{id}",
      *     summary="Get a specific composition",
      *     tags={"Compositions"},
+     *     security={{"sanctum":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -77,6 +80,7 @@ class CompositionController extends Controller
      *     path="/api/compositions/{id}",
      *     summary="Update a composition",
      *     tags={"Compositions"},
+     *     security={{"sanctum":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -108,6 +112,7 @@ class CompositionController extends Controller
      *     path="/api/compositions/{id}",
      *     summary="Delete a composition",
      *     tags={"Compositions"},
+     *     security={{"sanctum":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",

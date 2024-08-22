@@ -23,6 +23,7 @@ class ProductController extends Controller
      *     path="/api/products",
      *     summary="Get all products",
      *     tags={"Products"},
+     *     security={{"sanctum":{}}},
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
@@ -48,6 +49,7 @@ class ProductController extends Controller
      *     path="/api/products/{id}",
      *     summary="Get a specific product",
      *     tags={"Products"},
+     *     security={{"sanctum":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -77,6 +79,7 @@ class ProductController extends Controller
      *     path="/api/products",
      *     summary="Create a new product",
      *     tags={"Products"},
+     *     security={{"sanctum":{}}},
      *     @OA\RequestBody(
      *         required=true,
     *         @OA\JsonContent(ref="#/components/schemas/ProductRequest")
@@ -155,6 +158,7 @@ class ProductController extends Controller
      *     path="/api/products/{id}",
      *     summary="Update an existing product",
      *     tags={"Products"},
+     *     security={{"sanctum":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -246,6 +250,7 @@ class ProductController extends Controller
      *     path="/api/products/{id}",
      *     summary="Delete a product",
      *     tags={"Products"},
+     *     security={{"sanctum":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -276,6 +281,7 @@ class ProductController extends Controller
      *     path="/api/product/search",
      *     summary="Search for products",
      *     tags={"Products"},
+     *     security={{"sanctum":{}}},
      *     @OA\Parameter(
      *         name="q",
      *         in="query",
@@ -321,6 +327,7 @@ class ProductController extends Controller
      *     path="/api/product/category/{category_id}",
      *     summary="Get products by category",
      *     tags={"Products"},
+     *     security={{"sanctum":{}}},
      *     @OA\Parameter(
      *         name="category_id",
      *         in="path",
@@ -355,6 +362,7 @@ class ProductController extends Controller
      *     path="/api/products/featured",
      *     summary="Get featured products",
      *     tags={"Products"},
+     *     security={{"sanctum":{}}},
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
@@ -380,6 +388,7 @@ class ProductController extends Controller
      *     path="/api/products/latest",
      *     summary="Get latest products",
      *     tags={"Products"},
+     *     security={{"sanctum":{}}},
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
@@ -405,6 +414,7 @@ class ProductController extends Controller
      *     path="/api/products/discounted",
      *     summary="Get discounted products",
      *     tags={"Products"},
+     *     security={{"sanctum":{}}},
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
@@ -430,6 +440,7 @@ class ProductController extends Controller
      *     path="/api/products/by-brand/{brand_id}",
      *     summary="Get products by brand",
      *     tags={"Products"},
+     *     security={{"sanctum":{}}},
      *     @OA\Parameter(
      *         name="brand_id",
      *         in="path",
@@ -462,6 +473,7 @@ class ProductController extends Controller
      *     path="/api/products/{id}/toggle-featured",
      *     summary="Toggle featured status of a product",
      *     tags={"Products"},
+     *     security={{"sanctum":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",

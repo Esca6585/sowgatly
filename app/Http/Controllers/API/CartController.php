@@ -21,6 +21,7 @@ class CartController extends Controller
      * @OA\Post(
      *     path="/api/cart/add",
      *     summary="Add product to cart",
+     *     security={{"sanctum":{}}},
      *     tags={"Cart"},
      *     @OA\RequestBody(
      *         @OA\JsonContent(
@@ -64,6 +65,7 @@ class CartController extends Controller
      * @OA\Get(
      *     path="/api/cart",
      *     summary="Get user's cart",
+     *     security={{"sanctum":{}}},
      *     tags={"Cart"},
      *     @OA\Response(response="200", description="Successful operation"),
      *     security={{"bearerAuth": {}}}
