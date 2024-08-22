@@ -9,8 +9,6 @@ class Shop extends Model
 {
     use HasFactory;
 
-    protected $table = 'shops';
-
     protected $fillable = [
         'name',
         'email',
@@ -21,13 +19,20 @@ class Shop extends Model
         'image',
         'user_id',
         'region_id',
-        'address_id',
     ];
 
+    protected $casts = [
+        'email' => 'string',
+        'mon_fri_open' => 'string',
+        'mon_fri_close' => 'string',
+        'sat_sun_open' => 'string',
+        'sat_sun_close' => 'string',
+        'image' => 'string',
+    ];
 
-    protected function fillableData()
+    public function user()
     {
-        return $this->fillable;
+        return $this->belongsTo(User::class);
     }
 
     public function products()
@@ -35,23 +40,13 @@ class Shop extends Model
         return $this->hasMany(Product::class);
     }
 
-    public function user()
+    public function address()
     {
-        return $this->belongsTo(User::class);
+        return $this->hasOne(Address::class);
     }
 
     public function region()
     {
         return $this->belongsTo(Region::class);
-    }
-
-    public function address()
-    {
-        return $this->belongsTo(Address::class);
-    }
-    
-    public function orders()
-    {
-        return $this->hasMany(Order::class);
     }
 }

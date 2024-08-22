@@ -3,13 +3,15 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\File;
 use App\Models\Shop;
+use App\Models\Address;
+use App\Models\Region;
 use Illuminate\Http\Request;
 use App\Http\Resources\ShopResource;
-use Str;
-use Auth;
-use Storage;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 /**
  * @OA\Tag(
@@ -22,19 +24,30 @@ use Storage;
  *     schema="ShopResource",
  *     @OA\Property(property="id", type="integer", example=1),
  *     @OA\Property(property="name", type="string", example="Modahouse"),
- *     @OA\Property(property="email", type="string", example="esca6585@gmail.com"),
- *     @OA\Property(
- *         property="image",
- *         type="string",
- *         format="binary",
- *         description="Image file"
- *     ),
- *     @OA\Property(property="address", type="integer", example="Oguzhan 123"),
- *     @OA\Property(property="mon_fri_open", type="integer", example="09:00"),
- *     @OA\Property(property="mon_fri_close", type="integer", example="18:00"),
- *     @OA\Property(property="sat_sun_open", type="integer", example="09:00"),
- *     @OA\Property(property="sat_sun_close", type="integer", example="13:00"),
+ *     @OA\Property(property="email", type="string", example="shop@example.com"),
+ *     @OA\Property(property="mon_fri_open", type="string", example="09:00"),
+ *     @OA\Property(property="mon_fri_close", type="string", example="18:00"),
+ *     @OA\Property(property="sat_sun_open", type="string", example="10:00"),
+ *     @OA\Property(property="sat_sun_close", type="string", example="16:00"),
+ *     @OA\Property(property="image", type="string", example="shop_images/abcdef1234.jpg"),
  *     @OA\Property(property="user_id", type="integer", example=1),
+ *     @OA\Property(property="region_id", type="integer", example=1),
+ *     @OA\Property(
+ *         property="address",
+ *         type="object",
+ *         @OA\Property(property="id", type="integer", example=1),
+ *         @OA\Property(property="address_1", type="string", example="123 Main St"),
+ *         @OA\Property(property="address_2", type="string", example="Apt 4B"),
+ *         @OA\Property(property="postal_code", type="string", example="12345"),
+ *     ),
+ *     @OA\Property(
+ *         property="region",
+ *         type="object",
+ *         @OA\Property(property="id", type="integer", example=1),
+ *         @OA\Property(property="name", type="string", example="New York"),
+ *         @OA\Property(property="type", type="string", example="city"),
+ *         @OA\Property(property="parent_id", type="integer", example=null),
+ *     ),
  * )
  */
 class ShopController extends Controller
@@ -44,6 +57,7 @@ class ShopController extends Controller
      *     path="/api/shops",
      *     tags={"Shops"},
      *     security={{"sanctum":{}}},
+     *     summary="Get list of shops",
      *     @OA\Parameter(
      *         name="page",
      *         in="query",
@@ -51,22 +65,30 @@ class ShopController extends Controller
      *         required=false,
      *         @OA\Schema(type="integer")
      *     ),
-     *     summary="Get list of shops",
-     *     @OA\Response(response="200", description="List of shops"),
+     *     @OA\Response(
+     *         response="200", 
+     *         description="List of shops",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="array",
+     *                 @OA\Items(ref="#/components/schemas/ShopResource")
+     *             ),
+     *             @OA\Property(property="links", type="object"),
+     *             @OA\Property(property="meta", type="object")
+     *         )
+     *     ),
      *     @OA\Response(
      *         response=401,
      *         description="Unauthenticated",
      *     )
      * )
      */
-    public function index(Request $request)
+    public function index()
     {
-        try {
-            $shops = Shop::with(['user', 'address', 'region'])->paginate(15);
-            return ShopResource::collection($shops);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'An error occurred while fetching shops'], 500);
-        }
+        $shops = Shop::with(['address', 'region'])->paginate(10);
+        return ShopResource::collection($shops);
     }
 
     /**
@@ -80,18 +102,16 @@ class ShopController extends Controller
      *             mediaType="multipart/form-data",
      *             @OA\Schema(
      *               @OA\Property(property="name", type="string", example="Modahouse"),
-     *               @OA\Property(property="email", type="string", example="esca6585@gmail.com"),
-     *               @OA\Property(
-     *                  property="image",
-     *                  type="string",
-     *                  format="binary",
-     *                  description="Image file"
-     *               ),
-     *               @OA\Property(property="address", type="integer", example="Oguzhan 123"),
-     *               @OA\Property(property="mon_fri_open", type="integer", example="09:00"),
-     *               @OA\Property(property="mon_fri_close", type="integer", example="18:00"),
-     *               @OA\Property(property="sat_sun_open", type="integer", example="09:00"),
-     *               @OA\Property(property="sat_sun_close", type="integer", example="13:00"),
+     *               @OA\Property(property="email", type="string", example="shop@example.com"),
+     *               @OA\Property(property="mon_fri_open", type="string", example="09:00"),
+     *               @OA\Property(property="mon_fri_close", type="string", example="18:00"),
+     *               @OA\Property(property="sat_sun_open", type="string", example="10:00"),
+     *               @OA\Property(property="sat_sun_close", type="string", example="16:00"),
+     *               @OA\Property(property="image", type="string", format="binary"),
+     *               @OA\Property(property="region_id", type="integer", example=1),
+     *               @OA\Property(property="address_1", type="string", example="123 Main St"),
+     *               @OA\Property(property="address_2", type="string", example="Apt 4B"),
+     *               @OA\Property(property="postal_code", type="string", example="12345"),
      *             )
      *         )
      *     ),
@@ -101,8 +121,8 @@ class ShopController extends Controller
      *         @OA\JsonContent(ref="#/components/schemas/ShopResource")
      *     ),
      *     @OA\Response(
-     *         response=401,
-     *         description="Unauthenticated",
+     *         response=422,
+     *         description="Validation Error",
      *     )
      * )
      */
@@ -110,48 +130,21 @@ class ShopController extends Controller
     {
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:shops,email',
-            'image' => 'sometimes|nullable|image|mimes:jpeg,png,jpg,gif|max:10240',
+            'email' => 'nullable|email|unique:shops,email',
             'mon_fri_open' => 'required|date_format:H:i',
             'mon_fri_close' => 'required|date_format:H:i|after:mon_fri_open',
             'sat_sun_open' => 'required|date_format:H:i',
             'sat_sun_close' => 'required|date_format:H:i|after:sat_sun_open',
-            'street' => 'required|string|max:255',
-            'settlement' => 'required|string|max:255',
-            'district' => 'required|string|max:255',
-            'province' => 'required|string|max:255',
-            'region' => 'required|string|max:255',
-            'country' => 'required|string|max:255',
+            'image' => 'nullable|image|max:2048',
+            'region_id' => 'required|exists:regions,id',
+            'address_1' => 'required|string|max:255',
+            'address_2' => 'nullable|string|max:255',
             'postal_code' => 'required|string|max:20',
         ]);
-
-        $user = Auth::user();
-        
-        if (!$user) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Unauthenticated',
-            ], 200);
-        }
 
         DB::beginTransaction();
 
         try {
-            // Create or get the region
-            $region = Region::firstOrCreate(['name' => $validatedData['region']]);
-
-            // Create the address
-            $address = Address::create([
-                'street' => $validatedData['street'],
-                'settlement' => $validatedData['settlement'],
-                'district' => $validatedData['district'],
-                'province' => $validatedData['province'],
-                'region' => $validatedData['region'],
-                'country' => $validatedData['country'],
-                'postal_code' => $validatedData['postal_code'],
-            ]);
-
-            // Create the shop
             $shop = Shop::create([
                 'name' => $validatedData['name'],
                 'email' => $validatedData['email'],
@@ -159,27 +152,28 @@ class ShopController extends Controller
                 'mon_fri_close' => $validatedData['mon_fri_close'],
                 'sat_sun_open' => $validatedData['sat_sun_open'],
                 'sat_sun_close' => $validatedData['sat_sun_close'],
-                'user_id' => $user->id,
-                'region_id' => $region->id,
-                'address_id' => $address->id,
+                'region_id' => $validatedData['region_id'],
+                'user_id' => Auth::id(),
             ]);
 
-            $this->uploadImage($shop, $request->file('image'));
+            if ($request->hasFile('image')) {
+                $imagePath = $request->file('image')->store('shop_images', 'public');
+                $shop->image = $imagePath;
+                $shop->save();
+            }
+
+            $shop->address()->create([
+                'address_1' => $validatedData['address_1'],
+                'address_2' => $validatedData['address_2'],
+                'postal_code' => $validatedData['postal_code'],
+            ]);
 
             DB::commit();
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Shop created successfully',
-                'shop' => new ShopResource($shop),
-            ], 201);
+            return new ShopResource($shop->load('address', 'region'));
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json([
-                'success' => false,
-                'message' => 'An error occurred while creating the shop',
-                'error' => $e->getMessage(),
-            ], 200);
+            return response()->json(['error' => 'An error occurred while creating the shop'], 500);
         }
     }
 
@@ -195,26 +189,30 @@ class ShopController extends Controller
      *         required=true,
      *         @OA\Schema(type="integer")
      *     ),
-     *     @OA\Response(response="200", description="Shop details"),
      *     @OA\Response(
-     *         response=401,
-     *         description="Unauthenticated",
+     *         response="200", 
+     *         description="Shop details",
+     *         @OA\JsonContent(ref="#/components/schemas/ShopResource")
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Shop not found",
      *     )
      * )
      */
     public function show(Shop $shop)
     {
-        return new ShopResource($shop->load(['user', 'address', 'region']));
+        return new ShopResource($shop->load('address', 'region'));
     }
 
     /**
      * @OA\Put(
-     *     path="/api/shops/{shop}",
+     *     path="/api/shops/{id}",
      *     tags={"Shops"},
      *     security={{"sanctum":{}}},
      *     summary="Update a shop",
      *     @OA\Parameter(
-     *         name="shop",
+     *         name="id",
      *         in="path",
      *         required=true,
      *         @OA\Schema(type="integer")
@@ -223,19 +221,17 @@ class ShopController extends Controller
      *         @OA\MediaType(
      *             mediaType="multipart/form-data",
      *             @OA\Schema(
-     *               @OA\Property(property="name", type="string", example="Modahouse"),
-     *               @OA\Property(property="email", type="string", example="esca6585@gmail.com"),
-     *               @OA\Property(
-     *                  property="image",
-     *                  type="string",
-     *                  format="binary",
-     *                  description="Image file (optional)"
-     *               ),
-     *               @OA\Property(property="address", type="string", example="Oguzhan 123"),
-     *               @OA\Property(property="mon_fri_open", type="string", example="09:00"),
-     *               @OA\Property(property="mon_fri_close", type="string", example="18:00"),
+     *               @OA\Property(property="name", type="string", example="Updated Modahouse"),
+     *               @OA\Property(property="email", type="string", example="updated@example.com"),
+     *               @OA\Property(property="mon_fri_open", type="string", example="08:00"),
+     *               @OA\Property(property="mon_fri_close", type="string", example="19:00"),
      *               @OA\Property(property="sat_sun_open", type="string", example="09:00"),
-     *               @OA\Property(property="sat_sun_close", type="string", example="13:00"),
+     *               @OA\Property(property="sat_sun_close", type="string", example="17:00"),
+     *               @OA\Property(property="image", type="string", format="binary"),
+     *               @OA\Property(property="region_id", type="integer", example=2),
+     *               @OA\Property(property="address_1", type="string", example="456 New St"),
+     *               @OA\Property(property="address_2", type="string", example="Suite 7C"),
+     *               @OA\Property(property="postal_code", type="string", example="54321"),
      *             )
      *         )
      *     ),
@@ -245,133 +241,65 @@ class ShopController extends Controller
      *         @OA\JsonContent(ref="#/components/schemas/ShopResource")
      *     ),
      *     @OA\Response(
-     *         response="403",
-     *         description="Forbidden"
+     *         response=404,
+     *         description="Shop not found",
      *     ),
      *     @OA\Response(
-     *         response="404",
-     *         description="Shop not found"
-     *     ),
-     *     @OA\Response(
-     *         response=401,
-     *         description="Unauthenticated",
+     *         response=422,
+     *         description="Validation Error",
      *     )
      * )
      */
     public function update(Request $request, Shop $shop)
     {
-        $user = Auth::user();
-
-        if ($shop->user_id !== $user->id) {
-            return response()->json([
-                'success' => false,
-                'message' => 'You do not have permission to update this shop',
-            ], 200);
-        }
-
         $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:shops,email,' . $shop->id,
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240',
-            'mon_fri_open' => 'required|date_format:H:i',
-            'mon_fri_close' => 'required|date_format:H:i|after:mon_fri_open',
-            'sat_sun_open' => 'required|date_format:H:i',
-            'sat_sun_close' => 'required|date_format:H:i|after:sat_sun_open',
-            'street' => 'required|string|max:255',
-            'settlement' => 'required|string|max:255',
-            'district' => 'required|string|max:255',
-            'province' => 'required|string|max:255',
-            'region' => 'required|string|max:255',
-            'country' => 'required|string|max:255',
-            'postal_code' => 'required|string|max:20',
+            'name' => 'sometimes|required|string|max:255',
+            'email' => 'sometimes|nullable|email|unique:shops,email,' . $shop->id,
+            'mon_fri_open' => 'sometimes|required|date_format:H:i',
+            'mon_fri_close' => 'sometimes|required|date_format:H:i|after:mon_fri_open',
+            'sat_sun_open' => 'sometimes|required|date_format:H:i',
+            'sat_sun_close' => 'sometimes|required|date_format:H:i|after:sat_sun_open',
+            'image' => 'nullable|image|max:2048',
+            'region_id' => 'sometimes|required|exists:regions,id',
+            'address_1' => 'sometimes|required|string|max:255',
+            'address_2' => 'nullable|string|max:255',
+            'postal_code' => 'sometimes|required|string|max:20',
         ]);
 
         DB::beginTransaction();
 
         try {
-            // Update or create the region
-            $region = Region::updateOrCreate(
-                ['name' => $validatedData['region']],
-                ['name' => $validatedData['region']]
-            );
-
-            // Update the address
-            $shop->address->update([
-                'street' => $validatedData['street'],
-                'settlement' => $validatedData['settlement'],
-                'district' => $validatedData['district'],
-                'province' => $validatedData['province'],
-                'region' => $validatedData['region'],
-                'country' => $validatedData['country'],
-                'postal_code' => $validatedData['postal_code'],
-            ]);
-
-            // Update the shop
-            $shop->update([
-                'name' => $validatedData['name'],
-                'email' => $validatedData['email'],
-                'mon_fri_open' => $validatedData['mon_fri_open'],
-                'mon_fri_close' => $validatedData['mon_fri_close'],
-                'sat_sun_open' => $validatedData['sat_sun_open'],
-                'sat_sun_close' => $validatedData['sat_sun_close'],
-                'region_id' => $region->id,
-            ]);
+            $shop->update($validatedData);
 
             if ($request->hasFile('image')) {
-                $this->uploadImage($shop, $request->file('image'));
+                if ($shop->image) {
+                    Storage::disk('public')->delete($shop->image);
+                }
+                $imagePath = $request->file('image')->store('shop_images', 'public');
+                $shop->image = $imagePath;
+                $shop->save();
+            }
+
+            if ($shop->address) {
+                $shop->address->update([
+                    'address_1' => $validatedData['address_1'] ?? $shop->address->address_1,
+                    'address_2' => $validatedData['address_2'] ?? $shop->address->address_2,
+                    'postal_code' => $validatedData['postal_code'] ?? $shop->address->postal_code,
+                ]);
+            } else {
+                $shop->address()->create([
+                    'address_1' => $validatedData['address_1'],
+                    'address_2' => $validatedData['address_2'] ?? null,
+                    'postal_code' => $validatedData['postal_code'],
+                ]);
             }
 
             DB::commit();
 
-            return new ShopResource($shop->load(['user', 'address', 'region']));
+            return new ShopResource($shop->load('address', 'region'));
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json([
-                'success' => false,
-                'message' => 'An error occurred while updating the shop',
-                'error' => $e->getMessage(),
-            ], 200);
-        }
-    }
-
-    /**
-     * Upload and save the shop image.
-     *
-     * @param Shop $shop
-     * @param \Illuminate\Http\UploadedFile|null $image
-     * @return void
-     */
-    protected function uploadImage(Shop $shop, $image)
-    {
-        if ($image) {
-            // Delete the old image first
-            $this->deleteImage($shop);
-
-            $date = date("d-m-Y H-i-s");
-            $fileRandName = Str::random(10);
-            $fileExt = $image->getClientOriginalExtension();
-
-            $fileName = $fileRandName . '.' . $fileExt;
-            
-            $path = 'shop/' . Str::slug($shop->name . '-' . $date) . '/';
-
-            // Ensure the directory exists
-            Storage::disk('public')->makeDirectory($path);
-
-            // Store the file
-            $image->storeAs('public/' . $path, $fileName);
-            
-            $originalImage = $path . $fileName;
-
-            $shop->image = $originalImage;
-            $shop->save();
-        }
-    }
-
-    protected function deleteImage(Shop $shop)
-    {
-        if ($shop->image) {
-            Storage::disk('public')->delete($shop->image);
+            return response()->json(['error' => 'An error occurred while updating the shop'], 500);
         }
     }
 
@@ -387,10 +315,9 @@ class ShopController extends Controller
      *         required=true,
      *         @OA\Schema(type="integer")
      *     ),
-     *     @OA\Response(response="204", description="Shop deleted"),
      *     @OA\Response(
-     *         response=401,
-     *         description="Unauthenticated",
+     *         response="204",
+     *         description="Shop deleted"
      *     ),
      *     @OA\Response(
      *         response=404,
@@ -398,12 +325,12 @@ class ShopController extends Controller
      *     )
      * )
      */
-    public function destroy(Shop $shop, $lang = null)
+    public function destroy(Shop $shop)
     {
-        $this->deleteImage($shop);
-
+        if ($shop->image) {
+            Storage::disk('public')->delete($shop->image);
+        }
         $shop->delete();
-
-        return response(null, 204);
+        return response()->json(null, 204);
     }
 }

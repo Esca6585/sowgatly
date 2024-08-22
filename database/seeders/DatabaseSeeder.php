@@ -17,9 +17,9 @@ class DatabaseSeeder extends Seeder
             AdminSeeder::class,
             CategorySeeder::class,
             UserSeeder::class,
-            AddressSeeder::class,
             RegionSeeder::class,
             ShopSeeder::class,
+            AddressSeeder::class,
             ProductSeeder::class,
         ]);
     }

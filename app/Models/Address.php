@@ -9,27 +9,25 @@ class Address extends Model
 {
     use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-    */
     protected $fillable = [
-        'street',
-        'settlement',
-        'district',
-        'province',
-        'region',
-        'country',
+        'shop_id',
+        'address_1',
+        'address_2',
         'postal_code',
     ];
 
+    protected $casts = [
+        'address_1' => 'string',
+        'address_2' => 'string',
+        'postal_code' => 'string',
+    ];
+
     /**
-     * Get the shop associated with the address.
+     * Get the shop that owns the address.
      */
     public function shop()
     {
-        return $this->hasOne(Shop::class);
+        return $this->belongsTo(Shop::class);
     }
 
     /**
@@ -40,12 +38,8 @@ class Address extends Model
     public function getFullAddressAttribute()
     {
         $parts = array_filter([
-            $this->street,
-            $this->settlement,
-            $this->district,
-            $this->province,
-            $this->region,
-            $this->country,
+            $this->address_1,
+            $this->address_2,
             $this->postal_code
         ]);
 

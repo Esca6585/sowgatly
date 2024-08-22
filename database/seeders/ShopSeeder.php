@@ -51,15 +51,6 @@ class ShopSeeder extends Seeder
                 'sat_sun_close' => '13:00',
                 'image' => 'shop/shop-seeder/modahouse-logo.jpg',
                 'user_id' => $this->getUserId(1),
-                'address' => [
-                    'street' => 'Oguzhan Köçe',
-                    'settlement' => 'Türkmenstandartlary',
-                    'district' => 'Ashgabat',
-                    'province' => 'Ahal',
-                    'region' => 'Central',
-                    'country' => 'Turkmenistan',
-                    'postal_code' => '744000'
-                ],
             ],
             [
                 'name' => 'Sowgatly',
@@ -70,32 +61,21 @@ class ShopSeeder extends Seeder
                 'sat_sun_close' => 'işlänok',
                 'image' => 'shop/shop-seeder/sowgatly-logo.png',
                 'user_id' => $this->getUserId(2),
-                'address' => [
-                    'street' => 'G.Kulyýew Köçe',
-                    'settlement' => 'Begler ýoly',
-                    'district' => 'Ashgabat',
-                    'province' => 'Ahal',
-                    'region' => 'Central',
-                    'country' => 'Turkmenistan',
-                    'postal_code' => '744000'
-                ],
             ],
         ];
 
         foreach ($shopsData as $shopData) {
-            $address = $this->createAddress($shopData['address']);
-            unset($shopData['address']);
-
-            Shop::firstOrCreate(
+            $shop = Shop::firstOrCreate(
                 [
                     'name' => $shopData['name'],
                     'email' => $shopData['email'],
                 ],
                 array_merge($shopData, [
                     'region_id' => $region->id,
-                    'address_id' => $address->id,
                 ])
             );
+
+            $this->createAddress($shop);
         }
     }
 
@@ -120,13 +100,19 @@ class ShopSeeder extends Seeder
     }
 
     /**
-     * Create an address.
+     * Create an address for a shop.
      *
-     * @param array $addressData
-     * @return Address
+     * @param Shop $shop
      */
-    private function createAddress(array $addressData): Address
+    private function createAddress(Shop $shop): void
     {
-        return Address::firstOrCreate($addressData);
+        Address::firstOrCreate(
+            ['shop_id' => $shop->id],
+            [
+                'address_1' => fake()->streetAddress,
+                'address_2' => fake()->optional(0.3)->secondaryAddress,
+                'postal_code' => fake()->postcode,
+            ]
+        );
     }
 }
