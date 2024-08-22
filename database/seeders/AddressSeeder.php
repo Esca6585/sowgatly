@@ -34,8 +34,7 @@ class AddressSeeder extends Seeder
         foreach ($shops as $shop) {
             Address::create([
                 'shop_id' => $shop->id,
-                'address_1' => $faker->streetAddress,
-                'address_2' => $faker->optional(0.3)->secondaryAddress,
+                'address_name' => $faker->streetAddress,
                 'postal_code' => $faker->postcode,
             ]);
         }

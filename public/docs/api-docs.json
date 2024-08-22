@@ -1328,7 +1328,7 @@
                                     },
                                     "email": {
                                         "type": "string",
-                                        "example": "shop@example.com"
+                                        "example": "modahouse@modahouse.top"
                                     },
                                     "mon_fri_open": {
                                         "type": "string",
@@ -1354,13 +1354,9 @@
                                         "type": "integer",
                                         "example": 1
                                     },
-                                    "address_1": {
+                                    "address_name": {
                                         "type": "string",
                                         "example": "123 Main St"
-                                    },
-                                    "address_2": {
-                                        "type": "string",
-                                        "example": "Apt 4B"
                                     },
                                     "postal_code": {
                                         "type": "string",
@@ -1485,13 +1481,9 @@
                                         "type": "integer",
                                         "example": 2
                                     },
-                                    "address_1": {
+                                    "address_name": {
                                         "type": "string",
                                         "example": "456 New St"
-                                    },
-                                    "address_2": {
-                                        "type": "string",
-                                        "example": "Suite 7C"
                                     },
                                     "postal_code": {
                                         "type": "string",
@@ -1908,7 +1900,7 @@
                     },
                     "email": {
                         "type": "string",
-                        "example": "shop@example.com"
+                        "example": "modahouse@modahouse.top"
                     },
                     "mon_fri_open": {
                         "type": "string",
@@ -1944,13 +1936,9 @@
                                 "type": "integer",
                                 "example": 1
                             },
-                            "address_1": {
+                            "address_name": {
                                 "type": "string",
                                 "example": "123 Main St"
-                            },
-                            "address_2": {
-                                "type": "string",
-                                "example": "Apt 4B"
                             },
                             "postal_code": {
                                 "type": "string",

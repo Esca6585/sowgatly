@@ -109,8 +109,7 @@ class ShopSeeder extends Seeder
         Address::firstOrCreate(
             ['shop_id' => $shop->id],
             [
-                'address_1' => fake()->streetAddress,
-                'address_2' => fake()->optional(0.3)->secondaryAddress,
+                'address_name' => fake()->streetAddress,
                 'postal_code' => fake()->postcode,
             ]
         );

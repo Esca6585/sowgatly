@@ -36,8 +36,7 @@ use Illuminate\Support\Facades\DB;
  *         property="address",
  *         type="object",
  *         @OA\Property(property="id", type="integer", example=1),
- *         @OA\Property(property="address_1", type="string", example="123 Main St"),
- *         @OA\Property(property="address_2", type="string", example="Apt 4B"),
+ *         @OA\Property(property="address_name", type="string", example="123 Main St"),
  *         @OA\Property(property="postal_code", type="string", example="12345"),
  *     ),
  *     @OA\Property(
@@ -109,8 +108,7 @@ class ShopController extends Controller
      *               @OA\Property(property="sat_sun_close", type="string", example="16:00"),
      *               @OA\Property(property="image", type="string", format="binary"),
      *               @OA\Property(property="region_id", type="integer", example=1),
-     *               @OA\Property(property="address_1", type="string", example="123 Main St"),
-     *               @OA\Property(property="address_2", type="string", example="Apt 4B"),
+     *               @OA\Property(property="address_name", type="string", example="123 Main St"),
      *               @OA\Property(property="postal_code", type="string", example="12345"),
      *             )
      *         )
@@ -137,8 +135,7 @@ class ShopController extends Controller
             'sat_sun_close' => 'required|date_format:H:i|after:sat_sun_open',
             'image' => 'nullable|image|max:2048',
             'region_id' => 'required|exists:regions,id',
-            'address_1' => 'required|string|max:255',
-            'address_2' => 'nullable|string|max:255',
+            'address_name' => 'required|string|max:255',
             'postal_code' => 'required|string|max:20',
         ]);
 
@@ -163,8 +160,7 @@ class ShopController extends Controller
             }
 
             $shop->address()->create([
-                'address_1' => $validatedData['address_1'],
-                'address_2' => $validatedData['address_2'],
+                'address_name' => $validatedData['address_name'],
                 'postal_code' => $validatedData['postal_code'],
             ]);
 
@@ -229,8 +225,7 @@ class ShopController extends Controller
      *               @OA\Property(property="sat_sun_close", type="string", example="17:00"),
      *               @OA\Property(property="image", type="string", format="binary"),
      *               @OA\Property(property="region_id", type="integer", example=2),
-     *               @OA\Property(property="address_1", type="string", example="456 New St"),
-     *               @OA\Property(property="address_2", type="string", example="Suite 7C"),
+     *               @OA\Property(property="address_name", type="string", example="456 New St"),
      *               @OA\Property(property="postal_code", type="string", example="54321"),
      *             )
      *         )
@@ -261,8 +256,7 @@ class ShopController extends Controller
             'sat_sun_close' => 'sometimes|required|date_format:H:i|after:sat_sun_open',
             'image' => 'nullable|image|max:2048',
             'region_id' => 'sometimes|required|exists:regions,id',
-            'address_1' => 'sometimes|required|string|max:255',
-            'address_2' => 'nullable|string|max:255',
+            'address_name' => 'sometimes|required|string|max:255',
             'postal_code' => 'sometimes|required|string|max:20',
         ]);
 
@@ -282,14 +276,12 @@ class ShopController extends Controller
 
             if ($shop->address) {
                 $shop->address->update([
-                    'address_1' => $validatedData['address_1'] ?? $shop->address->address_1,
-                    'address_2' => $validatedData['address_2'] ?? $shop->address->address_2,
+                    'address_name' => $validatedData['address_name'] ?? $shop->address->address_name,
                     'postal_code' => $validatedData['postal_code'] ?? $shop->address->postal_code,
                 ]);
             } else {
                 $shop->address()->create([
-                    'address_1' => $validatedData['address_1'],
-                    'address_2' => $validatedData['address_2'] ?? null,
+                    'address_name' => $validatedData['address_name'],
                     'postal_code' => $validatedData['postal_code'],
                 ]);
             }

@@ -11,14 +11,12 @@ class Address extends Model
 
     protected $fillable = [
         'shop_id',
-        'address_1',
-        'address_2',
+        'address_name',
         'postal_code',
     ];
 
     protected $casts = [
-        'address_1' => 'string',
-        'address_2' => 'string',
+        'address_name' => 'string',
         'postal_code' => 'string',
     ];
 
@@ -38,8 +36,7 @@ class Address extends Model
     public function getFullAddressAttribute()
     {
         $parts = array_filter([
-            $this->address_1,
-            $this->address_2,
+            $this->address_name,
             $this->postal_code
         ]);
 
