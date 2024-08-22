@@ -241,7 +241,7 @@ class AuthOtpController extends Controller
     public function registerWithOtp(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'phone_number' => ['required', new TurkmenistanPhoneNumber],
+            'phone_number' => ['required', new TurkmenistanPhoneNumber, 'unique:users'],
             'name' => 'required|string|max:255',
             'email' => 'nullable|string|email|max:255|unique:users',
         ]);
