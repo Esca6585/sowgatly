@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 
 /**
- * @OA\Info(
+ * @OA\Tag(
  *     title="Products API",
  *     version="1.0.0",
  * )
