@@ -9,6 +9,34 @@ use App\Http\Resources\ShopResource;
 use App\Http\Resources\BrandResource;
 use App\Http\Resources\CompositionResource;
 
+/**
+ * @OA\Schema(
+ *     schema="ProductResource",
+ *     type="object",
+ *     @OA\Property(property="id", type="integer"),
+ *     @OA\Property(property="name", type="string"),
+ *     @OA\Property(property="price", type="number"),
+ *     @OA\Property(property="discount", type="integer"),
+ *     @OA\Property(property="description", type="string"),
+ *     @OA\Property(property="gender", type="string"),
+ *     @OA\Property(property="sizes", type="string"),
+ *     @OA\Property(property="separated_sizes", type="string"),
+ *     @OA\Property(property="color", type="string"),
+ *     @OA\Property(property="manufacturer", type="string"),
+ *     @OA\Property(property="width", type="number"),
+ *     @OA\Property(property="height", type="number"),
+ *     @OA\Property(property="weight", type="number"),
+ *     @OA\Property(property="production_time", type="integer"),
+ *     @OA\Property(property="min_order", type="integer"),
+ *     @OA\Property(property="seller_status", type="boolean"),
+ *     @OA\Property(property="status", type="boolean"),
+ *     @OA\Property(property="shop_id", type="integer"),
+ *     @OA\Property(property="brand_id", type="integer"),
+ *     @OA\Property(property="category_id", type="integer"),
+ *     @OA\Property(property="created_at", type="string", format="date-time"),
+ *     @OA\Property(property="updated_at", type="string", format="date-time")
+ * )
+ */
 class ProductResource extends JsonResource
 {
     /**

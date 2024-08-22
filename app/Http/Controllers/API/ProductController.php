@@ -351,4 +351,141 @@ class ProductController extends Controller
 
         return ProductResource::collection($products);
     }
+    /**
+     * @OA\Get(
+     *     path="/api/products/featured",
+     *     summary="Get featured products",
+     *     tags={"Products"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(ref="#/components/schemas/ProductResource")
+     *         )
+     *     )
+     * )
+     */
+    public function featured()
+    {
+        $featuredProducts = Product::where('featured', true)
+            ->with(['images', 'brand', 'category', 'compositions'])
+            ->take(10)
+            ->get();
+
+        return ProductResource::collection($featuredProducts);
+    }
+
+    /**
+     * @OA\Get(
+     *     path="/api/products/latest",
+     *     summary="Get latest products",
+     *     tags={"Products"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(ref="#/components/schemas/ProductResource")
+     *         )
+     *     )
+     * )
+     */
+    public function latest()
+    {
+        $latestProducts = Product::latest()
+            ->with(['images', 'brand', 'category', 'compositions'])
+            ->take(10)
+            ->get();
+
+        return ProductResource::collection($latestProducts);
+    }
+
+    /**
+     * @OA\Get(
+     *     path="/api/products/discounted",
+     *     summary="Get discounted products",
+     *     tags={"Products"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(ref="#/components/schemas/ProductResource")
+     *         )
+     *     )
+     * )
+     */
+    public function discounted()
+    {
+        $discountedProducts = Product::where('discount', '>', 0)
+            ->with(['images', 'brand', 'category', 'compositions'])
+            ->take(10)
+            ->get();
+
+        return ProductResource::collection($discountedProducts);
+    }
+
+    /**
+     * @OA\Get(
+     *     path="/api/products/by-brand/{brand_id}",
+     *     summary="Get products by brand",
+     *     tags={"Products"},
+     *     @OA\Parameter(
+     *         name="brand_id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="data", type="array", @OA\Items(ref="#/components/schemas/ProductResource")),
+     *             @OA\Property(property="links", type="object"),
+     *             @OA\Property(property="meta", type="object")
+     *         )
+     *     )
+     * )
+     */
+    public function getByBrand($brand_id)
+    {
+        $products = Product::where('brand_id', $brand_id)
+            ->with(['images', 'brand', 'category', 'compositions'])
+            ->paginate(15);
+
+        return ProductResource::collection($products);
+    }
+
+    /**
+     * @OA\Post(
+     *     path="/api/products/{id}/toggle-featured",
+     *     summary="Toggle featured status of a product",
+     *     tags={"Products"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(ref="#/components/schemas/ProductResource")
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Product not found"
+     *     )
+     * )
+     */
+    public function toggleFeatured($id)
+    {
+        $product = Product::findOrFail($id);
+        $product->featured = !$product->featured;
+        $product->save();
+
+        return new ProductResource($product);
+    }
 }
