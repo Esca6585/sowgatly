@@ -25,7 +25,7 @@ Route::controller(App\Http\Controllers\Api\AuthOtpController::class)->group(func
     Route::post('register', 'registerWithOtp');
 
     // logout route
-    Route::post('logout', 'logout')->middleware(['auth:sanctum', 'check.token']);
+    Route::post('logout', 'logout');
 });
 
 Route::middleware(['auth:sanctum', 'check.token'])->group(function () {

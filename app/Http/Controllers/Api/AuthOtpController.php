@@ -330,7 +330,7 @@ class AuthOtpController extends Controller
      *     tags={"Authentication"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(
-     *         response=200,
+    *         response=200,
      *         description="Logout successful",
      *         @OA\JsonContent(
      *             @OA\Property(property="success", type="boolean"),
@@ -348,6 +348,7 @@ class AuthOtpController extends Controller
      */
     public function logout(Request $request)
     {
+        return $request->user()->tokens();
         try {
             // Check if the user is authenticated
             if (!$request->user()) {
