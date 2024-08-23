@@ -142,17 +142,36 @@ class ShopController extends Controller
      *     @OA\Response(
      *         response="200", 
      *         description="Shop details",
-     *         @OA\JsonContent(ref="#/components/schemas/ShopResource")
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean", example=true),
+     *             @OA\Property(property="data", ref="#/components/schemas/ShopResource")
+     *         )
      *     ),
      *     @OA\Response(
      *         response=404,
      *         description="Shop not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Shop not found")
+     *         )
      *     )
      * )
      */
-    public function show(Shop $shop)
+    public function show($id)
     {
-        return new ShopResource($shop->load('address', 'region'));
+        $shop = Shop::with('address', 'region')->find($id);
+
+        if (!$shop) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Shop not found'
+            ], 404);
+        }
+
+        return response()->json([
+            'status' => true,
+            'data' => new ShopResource($shop)
+        ], 200);
     }
 
     /**
@@ -263,21 +282,52 @@ class ShopController extends Controller
      *         @OA\Schema(type="integer")
      *     ),
      *     @OA\Response(
-     *         response="204",
-     *         description="Shop deleted"
+     *         response="200",
+     *         description="Shop deleted",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean"),
+     *             @OA\Property(property="message", type="string")
+     *         )
      *     ),
      *     @OA\Response(
      *         response=404,
      *         description="Shop not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean"),
+     *             @OA\Property(property="message", type="string")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated",
      *     )
      * )
      */
-    public function destroy(Shop $shop)
+    public function destroy($id)
     {
-        if ($shop->image) {
-            Storage::disk('public')->delete($shop->image);
+        $shop = Shop::find($id);
+
+        if (!$shop) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Shop not found'
+            ], 404);
         }
-        $shop->delete();
-        return response()->json(null, 204);
+
+        try {
+            if ($shop->image) {
+                Storage::disk('public')->delete($shop->image);
+            }
+            $shop->delete();
+            return response()->json([
+                'status' => true,
+                'message' => 'Shop deleted successfully'
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Failed to delete shop: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }

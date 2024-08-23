@@ -132,16 +132,46 @@ class UserController extends Controller
      *         required=true,
      *         @OA\Schema(type="integer")
      *     ),
-     *     @OA\Response(response="200", description="User details"),
+     *     @OA\Response(
+     *         response="200", 
+     *         description="User details",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean", example=true),
+     *             @OA\Property(
+     *                 property="data",
+     *                 ref="#/components/schemas/UserResource"
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="User not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="User not found")
+     *         )
+     *     ),
      *     @OA\Response(
      *         response=401,
      *         description="Unauthenticated",
      *     )
      * )
      */
-    public function show(User $user)
+    public function show($id)
     {
-        return new UserResource($user);
+        $user = User::find($id);
+
+        if (!$user) {
+            return response()->json([
+                'status' => false,
+                'message' => 'User not found'
+            ], 404);
+        }
+
+        return response()->json([
+            'status' => true,
+            'data' => new UserResource($user)
+        ], 200);
     }
 
     /**
@@ -278,39 +308,72 @@ class UserController extends Controller
      *         required=true,
      *         @OA\Schema(type="integer")
      *     ),
-     *     @OA\Response(response="204", description="User deleted"),
      *     @OA\Response(
-     *         response=401,
-     *         description="Unauthenticated",
+     *         response="200", 
+     *         description="User deleted",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean", example=true),
+     *             @OA\Property(property="message", type="string", example="User deleted successfully"),
+     *             @OA\Property(property="file_deleted", type="boolean", example=true)
+     *         )
      *     ),
      *     @OA\Response(
      *         response=404,
      *         description="User not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="User not found")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated",
      *     )
      * )
      */
-    public function destroy(User $user, $lang = null)
+    public function destroy($id, $lang = null)
     {
-        $this->deleteImage($user);
+        $user = User::find($id);
 
-        $user->delete();
+        if (!$user) {
+            return response()->json([
+                'status' => false,
+                'message' => 'User not found'
+            ], 404);
+        }
 
-        return response(null, 204);
+        $fileDeleted = $this->deleteImage($user);
+
+        try {
+            $user->delete();
+            return response()->json([
+                'status' => true,
+                'message' => 'User deleted successfully',
+                'user_image_is_deleted' => $fileDeleted
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Failed to delete user: ' . $e->getMessage(),
+                'user_image_is_deleted' => $fileDeleted
+            ], 500);
+        }
     }
 
     /**
      * Delete the image associated with the user.
      *
      * @param User $user
-     * @return void
+     * @return bool
      */
-    public function deleteImage(User $user)
+    private function deleteImage(User $user)
     {
         if ($user->image) {
             $imagePath = public_path($user->image);
             if (File::exists($imagePath)) {
-                File::delete($imagePath);
+                return File::delete($imagePath);
             }
         }
+        return false;
     }
 }
