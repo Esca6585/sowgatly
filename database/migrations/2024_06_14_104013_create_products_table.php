@@ -26,7 +26,9 @@ return new class extends Migration
             $table->integer('min_order')->nullable();
             $table->boolean('seller_status')->comment('Bu dukancy tarapyndan berilmeli status');
             $table->boolean('status')->comment('Bu administrator tarapyndan berilmeli status');
-            $table->foreignId('shop_id')->constrained();
+            
+            $table->foreignId('shop_id')->constrained()->onDelete('cascade');
+
             $table->foreignId('brand_id')->constrained();
             $table->foreignId('category_id')->constrained();
             $table->timestamps();
