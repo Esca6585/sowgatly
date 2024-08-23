@@ -20,8 +20,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  *     @OA\Property(property="region_id", type="integer"),
  *     @OA\Property(property="created_at", type="string", format="date-time"),
  *     @OA\Property(property="updated_at", type="string", format="date-time"),
- *     @OA\Property(property="address_name", type="string"),
- *     @OA\Property(property="postal_code", type="string")
+ *     @OA\Property(property="address_id", type="integer")
  * )
  */
 class ShopResource extends JsonResource
@@ -47,8 +46,7 @@ class ShopResource extends JsonResource
             'region_id' => $this->region_id,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'address_name' => $this->address_name,
-            'postal_code' => $this->postal_code,
+            'address_id' => $this->address->id,
         ];
     }
 }
