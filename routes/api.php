@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::controller(App\Http\Controllers\API\AuthOtpController::class)->group(function(){
+Route::controller(App\Http\Controllers\Api\AuthOtpController::class)->group(function(){
     // OTP Generate route
     Route::post('otp/generate', 'generate');
 
@@ -30,37 +30,37 @@ Route::controller(App\Http\Controllers\API\AuthOtpController::class)->group(func
 
 Route::middleware(['auth:sanctum', 'check.token'])->group(function () {
     // Products routes
-    Route::apiResource('products', App\Http\Controllers\API\ProductController::class);
-    Route::get('product/search', [App\Http\Controllers\API\ProductController::class , 'search']);
-    Route::get('product/category/{category_id}', [App\Http\Controllers\API\ProductController::class , 'getByCategory']);
+    Route::apiResource('products', App\Http\Controllers\Api\ProductController::class);
+    Route::get('product/search', [App\Http\Controllers\Api\ProductController::class , 'search']);
+    Route::get('product/category/{category_id}', [App\Http\Controllers\Api\ProductController::class , 'getByCategory']);
 
     // Compositions routes
-    Route::apiResource('compositions', App\Http\Controllers\API\CompositionController::class);
+    Route::apiResource('compositions', App\Http\Controllers\Api\CompositionController::class);
 
     // Categories routes
-    Route::apiResource('categories', App\Http\Controllers\API\CategoryController::class);
-    Route::get('/categories/{id}/subcategories', [App\Http\Controllers\API\CategoryController::class, 'getSubcategories']);
+    Route::apiResource('categories', App\Http\Controllers\Api\CategoryController::class);
+    Route::get('/categories/{id}/subcategories', [App\Http\Controllers\Api\CategoryController::class, 'getSubcategories']);
 
     // Users routes
-    Route::apiResource('users', App\Http\Controllers\API\UserController::class);
+    Route::apiResource('users', App\Http\Controllers\Api\UserController::class);
 
     // Shops routes
-    Route::apiResource('shops', App\Http\Controllers\API\ShopController::class);
+    Route::apiResource('shops', App\Http\Controllers\Api\ShopController::class);
 
     // Brand routes
-    Route::apiResource('brands', App\Http\Controllers\API\BrandController::class);
+    Route::apiResource('brands', App\Http\Controllers\Api\BrandController::class);
 
     // Carts routes
-    Route::post('cart/add', [App\Http\Controllers\API\CartController::class, 'addToCart']);
-    Route::get('cart', [App\Http\Controllers\API\CartController::class, 'getCart']);
+    Route::post('cart/add', [App\Http\Controllers\Api\CartController::class, 'addToCart']);
+    Route::get('cart', [App\Http\Controllers\Api\CartController::class, 'getCart']);
 
     // Order routes
-    Route::apiResource('orders', App\Http\Controllers\API\OrderController::class);
-    Route::get('user/orders', [App\Http\Controllers\API\OrderController::class, 'getUserOrders']);
+    Route::apiResource('orders', App\Http\Controllers\Api\OrderController::class);
+    Route::get('user/orders', [App\Http\Controllers\Api\OrderController::class, 'getUserOrders']);
 
     // Address routes
-    Route::apiResource('addresses', App\Http\Controllers\API\AddressController::class);
+    Route::apiResource('addresses', App\Http\Controllers\Api\AddressController::class);
 
     // Regions routes
-    Route::apiResource('regions', App\Http\Controllers\API\RegionController::class);
+    Route::apiResource('regions', App\Http\Controllers\Api\RegionController::class);
 });
