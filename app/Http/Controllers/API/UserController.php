@@ -7,7 +7,9 @@ use Illuminate\Support\Facades\File;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Resources\UserResource;
-use Str;
+use App\Rules\ImageOrBase64;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * @OA\Tag(
@@ -160,11 +162,14 @@ class UserController extends Controller
      *             @OA\Schema(
      *                 @OA\Property(property="name", type="string", example="Esca Meredoff"),
      *                 @OA\Property(
-     *                     property="image",
-     *                     type="string",
-     *                     format="binary",
-     *                     description="Image file"
+     *                      property="image",
+     *                      type="string",
+     *                      format="binary",
+     *                      description="Image file upload or base64 encoded image string"
      *                 ),
+     *                 @OA\Property(property="phone_number", type="string", example="65123456"),
+     *                 @OA\Property(property="email", type="string", example="user@example.com"),
+     *                 @OA\Property(property="status", type="boolean", example=true),
      *                 @OA\Property(property="_method", type="string", example="PUT"),
      *             )
      *         )
@@ -187,20 +192,24 @@ class UserController extends Controller
     {
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:10240',
+            'phone_number' => 'required|string|unique:users,phone_number,' . $user->id,
+            'email' => 'nullable|email|unique:users,email,' . $user->id,
+            'image' => ['sometimes', 'nullable', new ImageOrBase64(['jpeg', 'png', 'jpg', 'gif']), 'max:10240'],
+            'status' => 'boolean',
         ]);
 
         // Update user data
         $user->update($validatedData);
 
-        // Handle image upload
-        if ($request->hasFile('image')) {
-            $this->uploadImage($user, $request->file('image'));
+        // Handle image upload or base64 image
+        if ($request->has('image')) {
+            $this->uploadImage($user, $request->image);
         }
 
         return response()->json([
             'success' => true,
             'message' => 'User updated successfully',
+            'user' => $user
         ]);
     }
 
@@ -208,32 +217,53 @@ class UserController extends Controller
      * Upload and save the user image.
      *
      * @param User $user
-     * @param \Illuminate\Http\UploadedFile|null $image
+     * @param \Illuminate\Http\UploadedFile|string|null $image
      * @return void
      */
-    protected function uploadImage(User $user, $image)
+    private function uploadImage(User $user, $image)
     {
         if ($image) {
             $date = date("d-m-Y H-i-s");
             $fileRandName = Str::random(10);
-            $fileExt = $image->getClientOriginalExtension();
+            $path = 'user/' . Str::slug($user->name . '-' . $date) . '/';
 
-            $fileName = $fileRandName . '.' . $fileExt;
-            
-            $path = 'user/' . Str::slug($user->name . '-' . $date ) . '/';
+            if ($image instanceof \Illuminate\Http\UploadedFile) {
+                $fileExt = $image->getClientOriginalExtension();
+                $fileName = $fileRandName . '.' . $fileExt;
+                Storage::disk('public')->putFileAs($path, $image, $fileName);
+            } elseif (is_string($image) && strpos($image, 'base64') !== false) {
+                $fileExt = $this->getBase64Extension($image);
+                $fileName = $fileRandName . '.' . $fileExt;
+                $imageData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $image));
+                Storage::disk('public')->put($path . $fileName, $imageData);
+            } else {
+                throw new \InvalidArgumentException('Invalid image format');
+            }
 
-            $image->move(public_path($path), $fileName);
-            
             $originalImage = $path . $fileName;
 
             // Delete old image if exists
-            if ($user->image && file_exists(public_path($user->image))) {
-                unlink(public_path($user->image));
+            if ($user->image && Storage::disk('public')->exists($user->image)) {
+                Storage::disk('public')->delete($user->image);
             }
 
             $user->image = $originalImage;
             $user->save();
         }
+    }
+
+    /**
+     * Get file extension from base64 string.
+     *
+     * @param string $base64String
+     * @return string
+     */
+    private function getBase64Extension($base64String)
+    {
+        $data = explode(',', $base64String);
+        $mime = explode(';', $data[0]);
+        $mime = explode('/', $mime[0]);
+        return $mime[1] ?? 'png'; // Default to png if extension can't be determined
     }
 
     /**
