@@ -107,7 +107,7 @@ class UserController extends Controller
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'phone_number' => 'required|string|unique:users,phone_number|min:8',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:10240',
+            'image' => ['sometimes', 'nullable', new ImageOrBase64(['jpeg', 'png', 'jpg', 'gif']), 'max:10240'],
         ]);
 
         $user = User::create($validatedData);

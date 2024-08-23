@@ -2165,7 +2165,7 @@
                 ],
                 "requestBody": {
                     "content": {
-                        "multipart/form-data": {
+                        "application/json": {
                             "schema": {
                                 "properties": {
                                     "name": {
@@ -2194,19 +2194,11 @@
                                     },
                                     "image": {
                                         "type": "string",
-                                        "format": "binary"
+                                        "example": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACklEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg=="
                                     },
                                     "region_id": {
                                         "type": "integer",
                                         "example": 2
-                                    },
-                                    "address_name": {
-                                        "type": "string",
-                                        "example": "456 New St"
-                                    },
-                                    "postal_code": {
-                                        "type": "string",
-                                        "example": "744000"
                                     }
                                 },
                                 "type": "object"
@@ -2410,9 +2402,21 @@
                                         "example": "Esca Meredoff"
                                     },
                                     "image": {
-                                        "description": "Image file",
+                                        "description": "Image file upload or base64 encoded image string",
                                         "type": "string",
                                         "format": "binary"
+                                    },
+                                    "phone_number": {
+                                        "type": "string",
+                                        "example": "65123456"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "user@example.com"
+                                    },
+                                    "status": {
+                                        "type": "boolean",
+                                        "example": true
                                     },
                                     "_method": {
                                         "type": "string",

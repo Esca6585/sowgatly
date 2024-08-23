@@ -86,7 +86,7 @@ class ShopController extends Controller
             'mon_fri_close' => 'required|date_format:H:i|after:mon_fri_open',
             'sat_sun_open' => 'required|date_format:H:i',
             'sat_sun_close' => 'required|date_format:H:i|after:sat_sun_open',
-            'image' => 'nullable|image|max:2048',
+            'image' => ['sometimes', 'nullable', new ImageOrBase64(['jpeg', 'png', 'jpg', 'gif']), 'max:10240'],
             'region_id' => 'required|exists:regions,id',
             'address_name' => 'required|string|max:255',
             'postal_code' => 'required|string|max:20',
@@ -167,20 +167,15 @@ class ShopController extends Controller
      *         @OA\Schema(type="integer")
      *     ),
      *     @OA\RequestBody(
-     *         @OA\MediaType(
-     *             mediaType="multipart/form-data",
-     *             @OA\Schema(
-     *               @OA\Property(property="name", type="string", example="Updated Modahouse"),
-     *               @OA\Property(property="email", type="string", example="updated@example.com"),
-     *               @OA\Property(property="mon_fri_open", type="string", example="08:00"),
-     *               @OA\Property(property="mon_fri_close", type="string", example="19:00"),
-     *               @OA\Property(property="sat_sun_open", type="string", example="09:00"),
-     *               @OA\Property(property="sat_sun_close", type="string", example="17:00"),
-     *               @OA\Property(property="image", type="string", format="binary"),
-     *               @OA\Property(property="region_id", type="integer", example=2),
-     *               @OA\Property(property="address_name", type="string", example="456 New St"),
-     *               @OA\Property(property="postal_code", type="string", example="744000"),
-     *             )
+     *         @OA\JsonContent(
+     *             @OA\Property(property="name", type="string", example="Updated Modahouse"),
+     *             @OA\Property(property="email", type="string", example="updated@example.com"),
+     *             @OA\Property(property="mon_fri_open", type="string", example="08:00"),
+     *             @OA\Property(property="mon_fri_close", type="string", example="19:00"),
+     *             @OA\Property(property="sat_sun_open", type="string", example="09:00"),
+     *             @OA\Property(property="sat_sun_close", type="string", example="17:00"),
+     *             @OA\Property(property="image", type="string", example="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACklEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg=="),
+     *             @OA\Property(property="region_id", type="integer", example=2),
      *         )
      *     ),
      *     @OA\Response(
@@ -200,51 +195,57 @@ class ShopController extends Controller
      */
     public function update(Request $request, Shop $shop)
     {
-        $validatedData = $request->validate([
+        // Check if the authenticated user owns this shop
+        if ($request->user()->id !== $shop->user_id) {
+            return response()->json(['error' => 'You do not have permission to update this shop'], 403);
+        }
+
+        $validator = Validator::make($request->all(), [
             'name' => 'sometimes|required|string|max:255',
-            'email' => 'sometimes|nullable|email|unique:shops,email,' . $shop->id,
+            'email' => ['sometimes', 'nullable', 'email', Rule::unique('shops')->ignore($shop->id)],
             'mon_fri_open' => 'sometimes|required|date_format:H:i',
             'mon_fri_close' => 'sometimes|required|date_format:H:i|after:mon_fri_open',
             'sat_sun_open' => 'sometimes|required|date_format:H:i',
             'sat_sun_close' => 'sometimes|required|date_format:H:i|after:sat_sun_open',
-            'image' => 'nullable|image|max:2048',
-            'region_id' => 'sometimes|required|exists:regions,id',
-            'address_name' => 'sometimes|required|string|max:255',
-            'postal_code' => 'sometimes|required|string|max:20',
+            'image' => ['sometimes', 'nullable', new ImageOrBase64(['jpeg', 'png', 'jpg', 'gif']), 'max:10240'],
+            'region_id' => 'sometimes|nullable|exists:regions,id',
         ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        $validatedData = $validator->validated();
 
         DB::beginTransaction();
 
         try {
             $shop->update($validatedData);
 
-            if ($request->hasFile('image')) {
+            if (isset($validatedData['image']) && $validatedData['image'] !== null) {
+                // Handle base64 image
+                $image = $validatedData['image'];
+                $image_parts = explode(";base64,", $image);
+                $image_type_aux = explode("image/", $image_parts[0]);
+                $image_type = $image_type_aux[1];
+                $image_base64 = base64_decode($image_parts[1]);
+                $imageName = 'shop_' . time() . '.' . $image_type;
+                
                 if ($shop->image) {
                     Storage::disk('public')->delete($shop->image);
                 }
-                $imagePath = $request->file('image')->store('shop_images', 'public');
-                $shop->image = $imagePath;
+                
+                Storage::disk('public')->put('shop_images/' . $imageName, $image_base64);
+                $shop->image = 'shop_images/' . $imageName;
                 $shop->save();
-            }
-
-            if ($shop->address) {
-                $shop->address->update([
-                    'address_name' => $validatedData['address_name'] ?? $shop->address->address_name,
-                    'postal_code' => $validatedData['postal_code'] ?? $shop->address->postal_code,
-                ]);
-            } else {
-                $shop->address()->create([
-                    'address_name' => $validatedData['address_name'],
-                    'postal_code' => $validatedData['postal_code'],
-                ]);
             }
 
             DB::commit();
 
-            return new ShopResource($shop->load('address', 'region'));
+            return new ShopResource($shop->load('region'));
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json(['error' => 'An error occurred while updating the shop'], 500);
+            return response()->json(['error' => 'An error occurred while updating the shop: ' . $e->getMessage()], 500);
         }
     }
 
