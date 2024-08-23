@@ -2820,11 +2820,8 @@
                         "type": "string",
                         "format": "date-time"
                     },
-                    "address_name": {
-                        "type": "string"
-                    },
-                    "postal_code": {
-                        "type": "string"
+                    "address_id": {
+                        "type": "integer"
                     }
                 },
                 "type": "object"
