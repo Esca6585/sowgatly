@@ -4,6 +4,24 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @OA\Schema(
+ *     schema="UserResource",
+ *     @OA\Property(property="id", type="integer"),
+ *     @OA\Property(property="name", type="string"),
+ *     @OA\Property(property="phone_number", type="string"),
+ *     @OA\Property(property="image", type="string", nullable=true),
+ *     @OA\Property(property="status", type="string"),
+ *     @OA\Property(property="created_at", type="string", format="date-time"),
+ *     @OA\Property(property="updated_at", type="string", format="date-time"),
+ *     @OA\Property(
+ *         property="device_tokens",
+ *         type="array",
+ *         @OA\Items(type="string"),
+ *         nullable=true
+ *     )
+ * )
+ */
 class UserResource extends JsonResource
 {
     /**
