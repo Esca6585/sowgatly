@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Address;
+use App\Models\Shop;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class AddressFactory extends Factory
@@ -11,14 +12,20 @@ class AddressFactory extends Factory
 
     public function definition()
     {
+        $turkmenCities = [
+            'Ashgabat' => '744000',
+            'Turkmenabat' => '746100',
+            'Dashoguz' => '746000',
+            'Mary' => '745400',
+            'Balkanabat' => '745100',
+        ];
+
+        $city = $this->faker->randomElement(array_keys($turkmenCities));
+
         return [
-            'street' => $this->faker->streetAddress,
-            'settlement' => $this->faker->city,
-            'district' => $this->faker->citySuffix,
-            'province' => $this->faker->state,
-            'region' => $this->faker->stateAbbr,
-            'country' => $this->faker->country,
-            'postal_code' => $this->faker->postcode,
+            'shop_id' => Shop::factory(),
+            'address_name' => $this->faker->streetName . ', ' . $this->faker->buildingNumber,
+            'postal_code' => $turkmenCities[$city],
         ];
     }
 }

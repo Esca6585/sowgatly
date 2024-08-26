@@ -28,9 +28,11 @@ return new class extends Migration
             $table->boolean('status')->comment('Bu administrator tarapyndan berilmeli status');
             
             $table->foreignId('shop_id')->constrained()->onDelete('cascade');
-
-            $table->foreignId('brand_id')->constrained();
+            
             $table->foreignId('category_id')->constrained();
+
+            $table->text('brand_ids')->nullable()->comment('Brand id-ler bolmaly [1,2,3] gornushde');
+
             $table->timestamps();
         });
     }

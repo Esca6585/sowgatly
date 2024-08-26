@@ -122,16 +122,10 @@ class UserController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/api/users/{id}",
+     *     path="/api/users/me",
      *     tags={"Users"},
      *     security={{"sanctum":{}}},
-     *     summary="Get a user",
-     *     @OA\Parameter(
-     *         name="id",
-     *         in="path",
-     *         required=true,
-     *         @OA\Schema(type="integer")
-     *     ),
+     *     summary="Get authenticated user details",
      *     @OA\Response(
      *         response="200", 
      *         description="User details",
@@ -157,9 +151,9 @@ class UserController extends Controller
      *     )
      * )
      */
-    public function show($id)
+    public function show(Request $request)
     {
-        $user = User::find($id);
+        $user = $request->user();
 
         if (!$user) {
             return response()->json([

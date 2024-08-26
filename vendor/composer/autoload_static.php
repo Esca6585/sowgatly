@@ -868,6 +868,7 @@ class ComposerStaticInit2b6cc67ac0b4cf6a0f0344a2959cb018
         'App\\Providers\\EventServiceProvider' => __DIR__ . '/../..' . '/app/Providers/EventServiceProvider.php',
         'App\\Providers\\FortifyServiceProvider' => __DIR__ . '/../..' . '/app/Providers/FortifyServiceProvider.php',
         'App\\Providers\\RouteServiceProvider' => __DIR__ . '/../..' . '/app/Providers/RouteServiceProvider.php',
+        'App\\Rules\\ImageOrBase64' => __DIR__ . '/../..' . '/app/Rules/ImageOrBase64.php',
         'App\\Rules\\TurkmenistanPhoneNumber' => __DIR__ . '/../..' . '/app/Rules/TurkmenistanPhoneNumber.php',
         'Attribute' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
         'BaconQrCode\\Common\\BitArray' => __DIR__ . '/..' . '/bacon/bacon-qr-code/src/Common/BitArray.php',

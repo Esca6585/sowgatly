@@ -12,8 +12,8 @@ class Product extends Model
     protected $table = 'products';
 
     protected $fillable = [
-        'name', 'description', 'price', 'discount', 'attributes', 'code', 
-        'category_id', 'shop_id', 'brand_id', 'status',
+        'name', 'description', 'price', 'discount', 'code', 
+        'category_id', 'shop_id', 'brand_ids', 'status',
         'gender', 'sizes', 'separated_sizes', 'color', 'manufacturer',
         'width', 'height', 'weight', 'production_time', 'min_order',
         'seller_status'
@@ -22,7 +22,7 @@ class Product extends Model
     protected $casts = [
         'price' => 'decimal:2',
         'discount' => 'integer',
-        'attributes' => 'array',
+        'brand_ids' => 'array',
         'sizes' => 'array',
         'separated_sizes' => 'array',
         'width' => 'double',
@@ -45,9 +45,9 @@ class Product extends Model
         return $this->belongsTo(Shop::class);
     }
 
-    public function brand()
+    public function brands()
     {
-        return $this->belongsTo(Brand::class);
+        return $this->belongsToMany(Brand::class, 'product_brand');
     }
 
     public function images()
@@ -66,5 +66,11 @@ class Product extends Model
     public function getDiscountedPrice()
     {
         return $this->price - ($this->price * $this->discount / 100);
+    }
+
+    // Scope to filter products by brand
+    public function scopeWithBrand($query, $brandId)
+    {
+        return $query->whereJsonContains('brand_ids', $brandId);
     }
 }
