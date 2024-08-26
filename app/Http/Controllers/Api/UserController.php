@@ -122,49 +122,49 @@ class UserController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/api/users/me",
+     *     path="/api/users/{id}",
      *     tags={"Users"},
-     *     security={{"sanctum":{}}},
-     *     summary="Get authenticated user details",
+     *     summary="Get user details by ID",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="User ID",
+     *         @OA\Schema(type="integer")
+     *     ),
      *     @OA\Response(
      *         response="200", 
-     *         description="User details",
+     *         description="User details or not found response",
      *         @OA\JsonContent(
-     *             @OA\Property(property="status", type="boolean", example=true),
+     *             @OA\Property(property="status", type="boolean"),
      *             @OA\Property(
      *                 property="data",
-     *                 ref="#/components/schemas/UserResource"
-     *             )
+     *                 oneOf={
+     *                     @OA\Schema(ref="#/components/schemas/UserResource"),
+     *                     @OA\Schema(type="null")
+     *                 }
+     *             ),
+     *             @OA\Property(property="message", type="string", nullable=true)
      *         )
-     *     ),
-     *     @OA\Response(
-     *         response=404,
-     *         description="User not found",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="status", type="boolean", example=false),
-     *             @OA\Property(property="message", type="string", example="User not found")
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=401,
-     *         description="Unauthenticated",
      *     )
      * )
      */
-    public function show(Request $request)
+    public function show($id)
     {
-        $user = $request->user();
+        $user = User::find($id);
 
         if (!$user) {
             return response()->json([
                 'status' => false,
+                'data' => null,
                 'message' => 'User not found'
-            ], 404);
+            ], 200);
         }
 
         return response()->json([
             'status' => true,
-            'data' => new UserResource($user)
+            'data' => new UserResource($user),
+            'message' => null
         ], 200);
     }
 
