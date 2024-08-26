@@ -1,2 +1,2 @@
 * text=auto
-*.json text eol=lf
+*.php text eol=lf
