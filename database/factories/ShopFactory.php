@@ -3,6 +3,8 @@
 namespace Database\Factories;
 
 use App\Models\Shop;
+use App\Models\User;
+use App\Models\Region;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class ShopFactory extends Factory
@@ -18,10 +20,9 @@ class ShopFactory extends Factory
             'mon_fri_close' => $this->faker->time('H:i'),
             'sat_sun_open' => $this->faker->time('H:i'),
             'sat_sun_close' => $this->faker->time('H:i'),
-            'image' => 'shop/shop-seeder/et-logo.jpg',
-            'user_id' => \App\Models\User::factory(),
-            'region_id' => \App\Models\Region::factory(),
-            'address_id' => \App\Models\Address::factory(),
+            'image' => $this->faker->imageUrl(),
+            'user_id' => User::factory(),
+            'region_id' => Region::factory(),
         ];
     }
 }
