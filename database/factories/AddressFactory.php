@@ -24,7 +24,7 @@ class AddressFactory extends Factory
 
         return [
             'shop_id' => Shop::factory(),
-            'address_name' => $this->faker->streetName . ', ' . $this->faker->buildingNumber,
+            'address_name' => $this->faker->streetAddress,
             'postal_code' => $turkmenCities[$city],
         ];
     }
