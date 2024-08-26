@@ -222,12 +222,23 @@ class UserController extends Controller
             'status' => 'boolean',
         ]);
 
+        // Remove image from validatedData if it's null
+        if (array_key_exists('image', $validatedData) && is_null($validatedData['image'])) {
+            unset($validatedData['image']);
+        }
+
         // Update user data
         $user->update($validatedData);
 
-        // Handle image upload or base64 image
+        // Handle image upload, base64 image, or removal
         if ($request->has('image')) {
-            $this->uploadImage($user, $request->image);
+            if ($request->image === null) {
+                // Remove the existing image
+                $this->removeImage($user);
+            } else {
+                // Upload new image
+                $this->uploadImage($user, $request->image);
+            }
         }
 
         return response()->json([
@@ -235,6 +246,18 @@ class UserController extends Controller
             'message' => 'User updated successfully',
             'user' => $user
         ]);
+    }
+
+    // Add this method to your controller
+    private function removeImage(User $user)
+    {
+        if ($user->image) {
+            // Delete the file from storage
+            Storage::disk('public')->delete($user->image);
+            
+            // Remove the image path from the user record
+            $user->update(['image' => null]);
+        }
     }
 
     /**
