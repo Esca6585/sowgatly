@@ -156,13 +156,24 @@ class ProductController extends Controller
     public function show($id)
     {
         try {
-            $product = Product::with(['category', 'shop', 'brands', 'images', 'compositions'])->find($id);
+            $product = Product::with(['category', 'shop', 'images', 'compositions'])->find($id);
+
             if (!$product) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Product not found'
-                ], 200);
+                ], 404);
             }
+
+            // Decode the brand_ids JSON string to an array
+            $brandIds = json_decode($product->brand_ids, true);
+
+            // Fetch all brands that are associated with this product
+            $brands = Brand::whereIn('id', $brandIds)->get();
+
+            // Add the brands to the product
+            $product->brands = $brands;
+
             return response()->json([
                 'success' => true,
                 'data' => $product
@@ -172,7 +183,7 @@ class ProductController extends Controller
                 'success' => false,
                 'message' => 'An error occurred while fetching the product',
                 'error' => $e->getMessage()
-            ], 200);
+            ], 500);
         }
     }
 
@@ -292,55 +303,56 @@ class ProductController extends Controller
             ], 200);
         }
     }
+
     /**
-     * @OA\Get(
-     *     path="/api/product/search",
-     *     summary="Search for products",
-     *     tags={"Products"},
-     *     security={{"sanctum":{}}},
-     *     @OA\Parameter(
-     *         name="name",
-     *         in="query",
-     *         description="Search by product name",
-     *         required=false,
-     *         @OA\Schema(type="string")
-     *     ),
-     *     @OA\Parameter(
-     *         name="min_price",
-     *         in="query",
-     *         description="Minimum price",
-     *         required=false,
-     *         @OA\Schema(type="number")
-     *     ),
-     *     @OA\Parameter(
-     *         name="max_price",
-     *         in="query",
-     *         description="Maximum price",
-     *         required=false,
-     *         @OA\Schema(type="number")
-     *     ),
-     *     @OA\Parameter(
-     *         name="category_id",
-     *         in="query",
-     *         description="Category ID",
-     *         required=false,
-     *         @OA\Schema(type="integer")
-     *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="Successful operation",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="success", type="boolean"),
-     *             @OA\Property(property="data", type="object"),
-     *             @OA\Property(property="message", type="string")
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=500,
-     *         description="Server error"
-     *     )
-     * )
-     */
+    * @OA\Get(
+    *     path="/api/product/search",
+    *     summary="Search for products",
+    *     tags={"Products"},
+    *     security={{"sanctum":{}}},
+    *     @OA\Parameter(
+    *         name="name",
+    *         in="query",
+    *         description="Search by product name",
+    *         required=false,
+    *         @OA\Schema(type="string")
+    *     ),
+    *     @OA\Parameter(
+    *         name="min_price",
+    *         in="query",
+    *         description="Minimum price",
+    *         required=false,
+    *         @OA\Schema(type="number")
+    *     ),
+    *     @OA\Parameter(
+    *         name="max_price",
+    *         in="query",
+    *         description="Maximum price",
+    *         required=false,
+    *         @OA\Schema(type="number")
+    *     ),
+    *     @OA\Parameter(
+    *         name="category_id",
+    *         in="query",
+    *         description="Category ID",
+    *         required=false,
+    *         @OA\Schema(type="integer")
+    *     ),
+    *     @OA\Response(
+    *         response=200,
+    *         description="Successful operation",
+    *         @OA\JsonContent(
+    *             @OA\Property(property="success", type="boolean"),
+    *             @OA\Property(property="data", type="object"),
+    *             @OA\Property(property="message", type="string")
+    *         )
+    *     ),
+    *     @OA\Response(
+    *         response=500,
+    *         description="Server error"
+    *     )
+    * )
+    */
     public function search(Request $request)
     {
         try {
@@ -362,7 +374,19 @@ class ProductController extends Controller
                 $query->where('category_id', $request->input('category_id'));
             }
 
-            $products = $query->with(['category', 'shop', 'brands', 'images', 'compositions'])->paginate(10);
+            $products = $query->with(['category', 'shop', 'images', 'compositions'])->paginate(10);
+
+            // Fetch all brand IDs from the products
+            $brandIds = $products->pluck('brand_ids')->flatten()->unique()->filter();
+
+            // Fetch all brands that are associated with these products
+            $brands = Brand::whereIn('id', $brandIds)->get();
+
+            // Associate the brands with their respective products
+            $products->getCollection()->transform(function ($product) use ($brands) {
+                $product->brands = $brands->whereIn('id', $product->brand_ids);
+                return $product;
+            });
 
             return response()->json([
                 'success' => true,
@@ -423,8 +447,20 @@ class ProductController extends Controller
             }
 
             $products = Product::where('category_id', $category_id)
-                ->with(['category', 'shop', 'brands', 'images', 'compositions'])
+                ->with(['category', 'shop', 'images', 'compositions'])
                 ->paginate(10);
+
+            // Fetch all brand IDs from the products
+            $brandIds = $products->pluck('brand_ids')->flatten()->unique()->filter();
+
+            // Fetch all brands that are associated with these products
+            $brands = Brand::whereIn('id', $brandIds)->get();
+
+            // Associate the brands with their respective products
+            $products->getCollection()->transform(function ($product) use ($brands) {
+                $product->brands = $brands->whereIn('id', $product->brand_ids);
+                return $product;
+            });
 
             return response()->json([
                 'success' => true,
