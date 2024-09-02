@@ -14,7 +14,7 @@ return new class extends Migration
             $table->decimal('price', 10, 2);
             $table->integer('discount')->nullable();
             $table->text('description');
-            $table->string('gender')->nullable()->comment('Men, Women, Children bolup bilya');
+            $table->string('gender')->nullable()->comment('Men, Women, Children and etc');
             $table->text('sizes')->nullable()->comment('42, 43,...,50 yaly olcegler array gornushunde saklanmaly');
             $table->text('separated_sizes')->nullable()->comment('S, M, L yaly olcegler array gornushunde saklanmaly');
             $table->string('color')->nullable();
