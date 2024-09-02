@@ -1868,6 +1868,77 @@
                 ]
             }
         },
+        "/api/regions/parent/{parent_id}": {
+            "get": {
+                "tags": [
+                    "Regions"
+                ],
+                "summary": "Get regions by parent ID",
+                "operationId": "4b754c2879266a771dd3d21e3833fd36",
+                "parameters": [
+                    {
+                        "name": "parent_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer"
+                                            },
+                                            "name": {
+                                                "type": "string"
+                                            },
+                                            "type": {
+                                                "type": "string",
+                                                "enum": [
+                                                    "country",
+                                                    "province",
+                                                    "city",
+                                                    "village"
+                                                ]
+                                            },
+                                            "parent_id": {
+                                                "type": "integer",
+                                                "nullable": true
+                                            },
+                                            "created_at": {
+                                                "type": "string",
+                                                "format": "date-time"
+                                            },
+                                            "updated_at": {
+                                                "type": "string",
+                                                "format": "date-time"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No regions found for the given parent ID"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
         "/api/shops": {
             "get": {
                 "tags": [
