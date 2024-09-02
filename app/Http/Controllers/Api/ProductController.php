@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use App\Models\Category;
 use App\Models\Brand;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -165,14 +166,19 @@ class ProductController extends Controller
                 ], 404);
             }
 
-            // Decode the brand_ids JSON string to an array
-            $brandIds = json_decode($product->brand_ids, true);
+            // Check if brand_ids is already an array
+            $brandIds = is_array($product->brand_ids) ? $product->brand_ids : json_decode($product->brand_ids, true);
 
-            // Fetch all brands that are associated with this product
-            $brands = Brand::whereIn('id', $brandIds)->get();
+            // Ensure $brandIds is an array and not null
+            if (is_array($brandIds) && !empty($brandIds)) {
+                // Fetch all brands that are associated with this product
+                $brands = Brand::whereIn('id', $brandIds)->get();
 
-            // Add the brands to the product
-            $product->brands = $brands;
+                // Add the brands to the product
+                $product->brands = $brands;
+            } else {
+                $product->brands = [];
+            }
 
             return response()->json([
                 'success' => true,
