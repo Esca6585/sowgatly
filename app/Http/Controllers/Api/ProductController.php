@@ -157,27 +157,6 @@ class ProductController extends Controller
     }
 
     /**
-     * Save a base64 encoded image and return the file path.
-     *
-     * @param string $base64Image
-     * @return string
-     */
-    private function saveBase64Image($base64Image)
-    {
-        // Extract the image data from the base64 string
-        $imageData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $base64Image));
-
-        // Generate a unique filename
-        $filename = uniqid() . '.png';
-
-        // Save the image to the storage
-        Storage::disk('public')->put('product_images/' . $filename, $imageData);
-
-        // Return the file path
-        return 'product_images/' . $filename;
-    }
-
-    /**
      * @OA\Get(
      *     path="/api/products/{id}",
      *     summary="Get a specific product",
@@ -252,61 +231,71 @@ class ProductController extends Controller
      *     @OA\Response(response="422", description="Validation error")
      * )
      */
-    public function update(Request $request, $id)
+    public function update(ProductRequest $request, $id)
     {
         try {
-            $product = Product::find($id);
-            if (!$product) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Product not found'
-                ], 200);
+            $product = Product::findOrFail($id);
+
+            DB::beginTransaction();
+
+            // Update product details
+            $product->update($request->except('images'));
+
+            // Handle image updates
+            if ($request->has('images') && is_array($request->images)) {
+                // Remove old images
+                $product->images()->delete();
+
+                // Add new images
+                foreach ($request->images as $imageBase64) {
+                    if ($imageBase64) {
+                        $image = $this->saveBase64Image($imageBase64);
+                        $product->images()->create(['image_path' => $image]);
+                    }
+                }
             }
 
-            $validator = Validator::make($request->all(), [
-                'name' => 'sometimes|required|string|max:255',
-                'description' => 'sometimes|required|string',
-                'price' => 'sometimes|required|numeric|min:0',
-                'discount' => 'nullable|integer|min:0|max:100',
-                'category_id' => 'sometimes|required|exists:categories,id',
-                'shop_id' => 'sometimes|required|exists:shops,id',
-                'brand_ids' => 'nullable|array',
-                'brand_ids.*' => 'exists:brands,id',
-                'status' => 'sometimes|required|boolean',
-                'gender' => 'nullable|string',
-                'sizes' => 'nullable|array',
-                'separated_sizes' => 'nullable|array',
-                'color' => 'nullable|string',
-                'manufacturer' => 'nullable|string',
-                'width' => 'nullable|numeric',
-                'height' => 'nullable|numeric',
-                'weight' => 'nullable|numeric',
-                'production_time' => 'nullable|integer',
-                'min_order' => 'nullable|integer',
-                'seller_status' => 'sometimes|required|boolean',
-            ]);
+            DB::commit();
 
-            if ($validator->fails()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Validation error',
-                    'errors' => $validator->errors()
-                ], 200);
-            }
-
-            $product->update($request->all());
             return response()->json([
                 'success' => true,
                 'message' => 'Product updated successfully',
-                'data' => $product
+                'data' => $product->load('images')
             ], 200);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Product not found'
+            ], 404);
         } catch (\Exception $e) {
+            DB::rollBack();
             return response()->json([
                 'success' => false,
                 'message' => 'An error occurred while updating the product',
                 'error' => $e->getMessage()
-            ], 200);
+            ], 500);
         }
+    }
+
+    /**
+     * Save a base64 encoded image and return the file path.
+     *
+     * @param string $base64Image
+     * @return string
+     */
+    private function saveBase64Image($base64Image)
+    {
+        // Extract the image data from the base64 string
+        $imageData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $base64Image));
+
+        // Generate a unique filename
+        $filename = uniqid() . '.png';
+
+        // Save the image to the storage
+        Storage::disk('public')->put('product_images/' . $filename, $imageData);
+
+        // Return the file path
+        return 'product_images/' . $filename;
     }
 
     /**
