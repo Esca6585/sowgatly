@@ -112,6 +112,8 @@ class ProductController extends Controller
             'production_time' => 'nullable|integer',
             'min_order' => 'nullable|integer',
             'seller_status' => 'required|boolean',
+            'images' => 'nullable|array',
+            'images.*' => 'nullable|string|regex:/^data:image\/[a-z]+;base64,/',
         ]);
 
         if ($validator->fails()) {
@@ -119,23 +121,60 @@ class ProductController extends Controller
                 'success' => false,
                 'message' => 'Validation error',
                 'errors' => $validator->errors()
-            ], 200);
+            ], 422);
         }
 
         try {
-            $product = Product::create($request->all());
+            DB::beginTransaction();
+
+            $product = Product::create($request->except('images'));
+
+            // Process and save images if provided
+            if ($request->has('images') && is_array($request->images)) {
+                foreach ($request->images as $imageBase64) {
+                    if ($imageBase64) {
+                        $image = $this->saveBase64Image($imageBase64);
+                        $product->images()->create(['image_path' => $image]);
+                    }
+                }
+            }
+
+            DB::commit();
+
             return response()->json([
                 'success' => true,
                 'message' => 'Product created successfully',
-                'data' => $product
-            ], 200);
+                'data' => $product->load('images')
+            ], 201);
         } catch (\Exception $e) {
+            DB::rollBack();
             return response()->json([
                 'success' => false,
                 'message' => 'An error occurred while creating the product',
                 'error' => $e->getMessage()
-            ], 200);
+            ], 500);
         }
+    }
+
+    /**
+     * Save a base64 encoded image and return the file path.
+     *
+     * @param string $base64Image
+     * @return string
+     */
+    private function saveBase64Image($base64Image)
+    {
+        // Extract the image data from the base64 string
+        $imageData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $base64Image));
+
+        // Generate a unique filename
+        $filename = uniqid() . '.png';
+
+        // Save the image to the storage
+        Storage::disk('public')->put('product_images/' . $filename, $imageData);
+
+        // Return the file path
+        return 'product_images/' . $filename;
     }
 
     /**

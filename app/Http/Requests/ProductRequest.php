@@ -57,6 +57,8 @@ class ProductRequest extends FormRequest
             'shop_id' => 'required|integer',
             'brand_id' => 'required|integer',
             'category_id' => 'required|integer',
+            'images' => 'nullable|array',
+            'images.*' => 'nullable|string|regex:/^data:image\/[a-z]+;base64,/',
         ];
     }
 }
