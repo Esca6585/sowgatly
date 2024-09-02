@@ -211,4 +211,51 @@ class RegionController extends Controller
         $region->delete();
         return response()->noContent();
     }
+
+        /**
+     * @OA\Get(
+     *     path="/api/regions/parent/{parent_id}",
+     *     summary="Get regions by parent ID",
+     *     tags={"Regions"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="parent_id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(
+     *                 type="object",
+     *                 @OA\Property(property="id", type="integer"),
+     *                 @OA\Property(property="name", type="string"),
+     *                 @OA\Property(property="type", type="string", enum={"country", "province", "city", "village"}),
+     *                 @OA\Property(property="parent_id", type="integer", nullable=true),
+     *                 @OA\Property(property="created_at", type="string", format="date-time"),
+     *                 @OA\Property(property="updated_at", type="string", format="date-time")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="No regions found for the given parent ID"
+     *     )
+     * )
+     */
+    public function getByParentId($parent_id)
+    {
+        $regions = Region::where('parent_id', $parent_id)->get();
+
+        if ($regions->isEmpty()) {
+            return response()->json([
+                'message' => 'No regions found for the given parent ID'
+            ], 404);
+        }
+
+        return RegionResource::collection($regions);
+    }
 }

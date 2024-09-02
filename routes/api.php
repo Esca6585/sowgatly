@@ -63,4 +63,5 @@ Route::middleware(['auth:sanctum', 'check.token'])->group(function () {
 
     // Regions routes
     Route::apiResource('regions', App\Http\Controllers\Api\RegionController::class);
+    Route::get('/regions/parent/{parent_id}', [RegionController::class, 'getByParentId']);
 });
