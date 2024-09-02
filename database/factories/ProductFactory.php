@@ -6,6 +6,7 @@ use App\Models\Product;
 use App\Models\Shop;
 use App\Models\Category;
 use App\Models\Brand;
+use App\Models\Image;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class ProductFactory extends Factory
@@ -37,5 +38,12 @@ class ProductFactory extends Factory
                 return Brand::inRandomOrder()->limit($this->faker->numberBetween(1, 3))->pluck('id')->toArray();
             },
         ];
+    }
+
+    public function configure()
+    {
+        return $this->afterCreating(function (Product $product) {
+            Image::factory()->count(3)->forProduct($product)->create();
+        });
     }
 }

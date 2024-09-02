@@ -18,8 +18,6 @@ class DatabaseSeeder extends Seeder
             CategorySeeder::class,
             UserSeeder::class,
             RegionSeeder::class,
-            // ShopSeeder::class,
-            // AddressSeeder::class,
             ShopAddressSeeder::class,
             BrandSeeder::class,
             ProductSeeder::class,

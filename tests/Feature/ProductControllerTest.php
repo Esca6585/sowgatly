@@ -2,211 +2,225 @@
 
 namespace Tests\Feature;
 
-use App\Models\Category;
 use App\Models\Product;
+use App\Models\Category;
 use App\Models\Shop;
-use App\Models\User;
-use App\Models\Image;
+use App\Models\Brand;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class ProductControllerTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 
-    protected $user;
-    protected $shop;
     protected $category;
+    protected $shop;
+    protected $brand;
 
-    protected function setUp(): void
+    public function setUp(): void
     {
         parent::setUp();
 
-        $this->user = User::factory()->create();
-        $this->shop = Shop::factory()->create();
+        // Create necessary related models
         $this->category = Category::factory()->create();
+        $this->shop = Shop::factory()->create();
+        $this->brand = Brand::factory()->create();
     }
 
-    public function test_index_returns_paginated_products()
+    /** @test */
+    public function it_can_list_products()
     {
-        Product::factory()->count(15)->create([
-            'shop_id' => $this->shop->id,
-            'category_id' => $this->category->id,
-        ]);
+        $products = Product::factory()->count(3)->create();
 
-        $response = $this->actingAs($this->user)->getJson('/api/products');
+        $response = $this->getJson('/api/products');
 
         $response->assertStatus(200)
-            ->assertJsonStructure([
-                'data' => [
-                    '*' => ['id', 'name', 'description', 'price', 'discount', 'attributes', 'code', 'category_id', 'shop_id', 'status']
-                ],
-                'links',
-                'meta'
-            ]);
-
-        $this->assertCount(10, $response->json('data')); // Assuming default pagination is 10
-        
-        // Add this line to debug the response
-        $this->assertTrue(isset($response->json('data')[0]['shop_id']), "shop_id is missing from the response");
+            ->assertJson([
+                'success' => true,
+            ])
+            ->assertJsonCount(3, 'data');
     }
 
-    public function test_store_creates_new_product()
+    /** @test */
+    public function it_can_create_a_product()
     {
-        Storage::fake('public');
-
-        $data = [
+        $productData = [
             'name' => $this->faker->word,
             'description' => $this->faker->sentence,
             'price' => $this->faker->randomFloat(2, 10, 100),
-            'discount' => $this->faker->randomFloat(2, 0, 50),
-            'attributes' => json_encode(['color' => 'red', 'size' => 'M']),
+            'discount' => $this->faker->numberBetween(0, 50),
             'category_id' => $this->category->id,
             'shop_id' => $this->shop->id,
-            'images' => [
-                UploadedFile::fake()->image('product1.jpg'),
-                UploadedFile::fake()->image('product2.jpg'),
-            ],
+            'brand_ids' => [$this->brand->id],
+            'status' => true,
+            'gender' => 'Men',
+            'sizes' => ['S', 'M', 'L'],
+            'separated_sizes' => ['XS', 'XL'],
+            'color' => $this->faker->colorName,
+            'manufacturer' => $this->faker->company,
+            'width' => $this->faker->randomFloat(2, 1, 100),
+            'height' => $this->faker->randomFloat(2, 1, 100),
+            'weight' => $this->faker->randomFloat(2, 0.1, 10),
+            'production_time' => $this->faker->numberBetween(1, 30),
+            'min_order' => $this->faker->numberBetween(1, 10),
+            'seller_status' => true,
         ];
 
-        $response = $this->actingAs($this->user)->postJson('/api/products', $data);
+        $response = $this->postJson('/api/products', $productData);
 
         $response->assertStatus(200)
             ->assertJson([
                 'success' => true,
                 'message' => 'Product created successfully',
+            ])
+            ->assertJsonStructure([
+                'success',
+                'message',
+                'data' => [
+                    'id',
+                    'name',
+                    'description',
+                    'price',
+                    'discount',
+                    'category_id',
+                    'shop_id',
+                    'status',
+                    'gender',
+                    'sizes',
+                    'separated_sizes',
+                    'color',
+                    'manufacturer',
+                    'width',
+                    'height',
+                    'weight',
+                    'production_time',
+                    'min_order',
+                    'seller_status',
+                    'created_at',
+                    'updated_at',
+                ],
             ]);
 
         $this->assertDatabaseHas('products', [
-            'name' => $data['name'],
-            'description' => $data['description'],
-            'price' => $data['price'],
-            'discount' => $data['discount'],
-            'attributes' => $data['attributes'],
-            'category_id' => $data['category_id'],
-            'shop_id' => $data['shop_id'],
+            'name' => $productData['name'],
+            'description' => $productData['description'],
         ]);
-
-        $product = Product::where('name', $data['name'])->first();
-        $this->assertCount(2, $product->images);
     }
 
-    public function test_show_returns_specific_product()
+    /** @test */
+    public function it_can_show_a_product()
     {
         $product = Product::factory()->create();
 
-        $response = $this->actingAs($this->user)->getJson("/api/products/{$product->id}");
+        $response = $this->getJson("/api/products/{$product->id}");
 
         $response->assertStatus(200)
-            ->assertJsonStructure([
-                'data' => ['id', 'name', 'description', 'price', 'discount', 'attributes', 'code', 'category_id', 'shop_id', 'status']
+            ->assertJson([
+                'success' => true,
+                'data' => [
+                    'id' => $product->id,
+                    'name' => $product->name,
+                    'description' => $product->description,
+                ],
             ]);
     }
 
-    public function test_update_modifies_existing_product()
+    /** @test */
+    public function it_returns_product_not_found_for_invalid_id()
+    {
+        $response = $this->getJson("/api/products/999");
+
+        $response->assertStatus(200)
+            ->assertJson([
+                'success' => false,
+                'message' => 'Product not found',
+            ]);
+    }
+
+    /** @test */
+    public function it_can_update_a_product()
     {
         $product = Product::factory()->create();
 
-        $data = [
+        $updatedData = [
             'name' => 'Updated Product Name',
-            'description' => 'Updated Product Description',
-            'price' => 129.99,
-            'discount' => 15.00,
-            'attributes' => json_encode(['color' => 'blue', 'size' => 'medium']),
-            'category_id' => $this->category->id,
-            'shop_id' => $this->shop->id,
-            '_method' => 'PUT',
-            'images' => [
-                UploadedFile::fake()->image('new_product.jpg'),
-            ],
+            'description' => 'Updated product description',
+            'price' => 99.99,
         ];
 
-        $response = $this->actingAs($this->user)->postJson("/api/products/{$product->id}", $data);
+        $response = $this->putJson("/api/products/{$product->id}", $updatedData);
 
         $response->assertStatus(200)
             ->assertJson([
                 'success' => true,
                 'message' => 'Product updated successfully',
+                'data' => [
+                    'id' => $product->id,
+                    'name' => 'Updated Product Name',
+                    'description' => 'Updated product description',
+                    'price' => 99.99,
+                ],
             ]);
 
         $this->assertDatabaseHas('products', [
             'id' => $product->id,
-            'name' => $data['name'],
-            'description' => $data['description'],
-            'price' => $data['price'],
-            'discount' => $data['discount'],
-            'attributes' => $data['attributes'],
-            'category_id' => $data['category_id'],
-            'shop_id' => $data['shop_id'],
+            'name' => 'Updated Product Name',
+            'description' => 'Updated product description',
+            'price' => 99.99,
         ]);
     }
 
-    public function test_destroy_deletes_product_and_associated_images()
+    /** @test */
+    public function it_can_delete_a_product()
     {
-        $product = Product::factory()->create([
-            'shop_id' => $this->shop->id,
-            'category_id' => $this->category->id,
-        ]);
-        $image = Image::factory()->create(['product_id' => $product->id]);
+        $product = Product::factory()->create();
 
-        $response = $this->actingAs($this->user)->deleteJson("/api/products/{$product->id}");
+        $response = $this->deleteJson("/api/products/{$product->id}");
 
-        $response->assertStatus(204);
+        $response->assertStatus(200)
+            ->assertJson([
+                'success' => true,
+                'message' => 'Product deleted successfully',
+            ]);
 
         $this->assertDatabaseMissing('products', ['id' => $product->id]);
-        $this->assertDatabaseMissing('images', ['id' => $image->id]);
     }
 
-    public function test_search_returns_matching_products()
+    /** @test */
+    public function it_validates_required_fields_when_creating_a_product()
     {
-        $product1 = Product::factory()->create(['name' => 'Test Product']);
-        $product2 = Product::factory()->create(['name' => 'Another Product']);
-
-        $response = $this->actingAs($this->user)->getJson('/api/product/search?query=Test');
+        $response = $this->postJson('/api/products', []);
 
         $response->assertStatus(200)
-            ->assertJsonFragment(['name' => 'Test Product'])
-            ->assertJsonMissing(['name' => 'Another Product']);
+            ->assertJson([
+                'success' => false,
+                'message' => 'Validation error',
+            ])
+            ->assertJsonValidationErrors(['name', 'description', 'price', 'category_id', 'shop_id', 'status', 'seller_status']);
     }
 
-    public function test_search_returns_empty_when_no_matches()
+    /** @test */
+    public function it_validates_numeric_fields_when_creating_a_product()
     {
-        Product::factory()->create(['name' => 'Sample Product']);
+        $invalidData = [
+            'name' => 'Test Product',
+            'description' => 'Test description',
+            'price' => 'not a number',
+            'discount' => 'not a number',
+            'category_id' => $this->category->id,
+            'shop_id' => $this->shop->id,
+            'status' => true,
+            'seller_status' => true,
+        ];
 
-        $response = $this->actingAs($this->user)->getJson('/api/product/search?query=Nonexistent');
+        $response = $this->postJson('/api/products', $invalidData);
 
         $response->assertStatus(200)
-            ->assertJsonCount(0, 'data');
-    }
-
-    public function test_get_by_category_returns_products_in_category()
-    {
-        $category1 = Category::factory()->create();
-        $category2 = Category::factory()->create();
-
-        $product1 = Product::factory()->create(['category_id' => $category1->id]);
-        $product2 = Product::factory()->create(['category_id' => $category1->id]);
-        $product3 = Product::factory()->create(['category_id' => $category2->id]);
-
-        $response = $this->actingAs($this->user)->getJson("/api/product/category/{$category1->id}");
-
-        $response->assertStatus(200)
-            ->assertJsonCount(2, 'data')
-            ->assertJsonFragment(['id' => $product1->id])
-            ->assertJsonFragment(['id' => $product2->id])
-            ->assertJsonMissing(['id' => $product3->id]);
-    }
-
-    public function test_get_by_category_returns_empty_for_category_with_no_products()
-    {
-        $category = Category::factory()->create();
-
-        $response = $this->actingAs($this->user)->getJson("/api/product/category/{$category->id}");
-
-        $response->assertStatus(200)
-            ->assertJsonCount(0, 'data');
+            ->assertJson([
+                'success' => false,
+                'message' => 'Validation error',
+            ])
+            ->assertJsonValidationErrors(['price', 'discount']);
     }
 }

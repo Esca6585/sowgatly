@@ -346,6 +346,7 @@ return array(
     'Database\\Seeders\\DatabaseSeeder' => $baseDir . '/database/seeders/DatabaseSeeder.php',
     'Database\\Seeders\\ProductSeeder' => $baseDir . '/database/seeders/ProductSeeder.php',
     'Database\\Seeders\\RegionSeeder' => $baseDir . '/database/seeders/RegionSeeder.php',
+    'Database\\Seeders\\ShopAddressSeeder' => $baseDir . '/database/seeders/ShopAddressSeeder.php',
     'Database\\Seeders\\ShopSeeder' => $baseDir . '/database/seeders/ShopSeeder.php',
     'Database\\Seeders\\UserSeeder' => $baseDir . '/database/seeders/UserSeeder.php',
     'DateError' => $vendorDir . '/symfony/polyfill-php83/Resources/stubs/DateError.php',
