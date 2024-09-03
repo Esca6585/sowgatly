@@ -102,7 +102,7 @@ class ProductController extends Controller
      *                 @OA\Property(property="description", type="string", example="A comfortable and stylish t-shirt for everyday wear."),
      *                 @OA\Property(property="gender", type="string", description="Men, Women, Children and etc", example="Unisex"),
      *                 @OA\Property(property="sizes", type="string", description="JSON string: 42, 43,...,50 yaly olcegler", example="[42, 43, 44, 45]"),
-     *                 @OA\Property(property="separated_sizes", type="string", description="JSON string: S, M, L yaly olcegler", example="[\"S\", \"M\", \"L\", \"XL\"]"),
+     *                 @OA\Property(property="separated_sizes", type="string", description="JSON string: S, M, L yaly olcegler", example="[\'S\', \'M\', \'L\', \'XL\']"),
      *                 @OA\Property(property="color", type="string", example="Blue"),
      *                 @OA\Property(property="manufacturer", type="string", description="Cykarylan yurdy", example="FashionCo"),
      *                 @OA\Property(property="width", type="number", format="float", example=30.5),

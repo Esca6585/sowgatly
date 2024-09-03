@@ -151,7 +151,6 @@ class AuthOtpController extends Controller
      *             @OA\Property(property="success", type="boolean", example=true),
      *             @OA\Property(property="message", type="string", example="Login successful"),
      *             @OA\Property(property="access_token", type="string", example="1|MADVetcOYwHT7yYmWWQB9PLK6T1lQyvoBYI8Pqc559492981"),
-     *             @OA\Property(property="bearer_token", type="string", example="Bearer 1|MADVetcOYwHT7yYmWWQB9PLK6T1lQyvoBYI8Pqc559492981"),
      *             @OA\Property(property="token_type", type="string", example="bearer"),
      *             @OA\Property(
      *                 property="user",
@@ -259,7 +258,6 @@ class AuthOtpController extends Controller
      *             @OA\Property(property="success", type="boolean", example=true),
      *             @OA\Property(property="message", type="string", example="Registration successful"),
      *             @OA\Property(property="access_token", type="string", example="1|MADVetcOYwHT7yYmWWQB9PLK6T1lQyvoBYI8Pqc559492981"),
-     *             @OA\Property(property="bearer_token", type="string", example="Bearer 1|MADVetcOYwHT7yYmWWQB9PLK6T1lQyvoBYI8Pqc559492981"),
      *             @OA\Property(property="token_type", type="string", example="bearer"),
      *             @OA\Property(property="otp", type="string", example="123456"),
      *             @OA\Property(

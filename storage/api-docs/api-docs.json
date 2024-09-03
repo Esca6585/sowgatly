@@ -299,10 +299,6 @@
                                             "type": "string",
                                             "example": "1|MADVetcOYwHT7yYmWWQB9PLK6T1lQyvoBYI8Pqc559492981"
                                         },
-                                        "bearer_token": {
-                                            "type": "string",
-                                            "example": "Bearer 1|MADVetcOYwHT7yYmWWQB9PLK6T1lQyvoBYI8Pqc559492981"
-                                        },
                                         "token_type": {
                                             "type": "string",
                                             "example": "bearer"
@@ -417,10 +413,6 @@
                                         "access_token": {
                                             "type": "string",
                                             "example": "1|MADVetcOYwHT7yYmWWQB9PLK6T1lQyvoBYI8Pqc559492981"
-                                        },
-                                        "bearer_token": {
-                                            "type": "string",
-                                            "example": "Bearer 1|MADVetcOYwHT7yYmWWQB9PLK6T1lQyvoBYI8Pqc559492981"
                                         },
                                         "token_type": {
                                             "type": "string",
@@ -1403,74 +1395,93 @@
                                 ],
                                 "properties": {
                                     "name": {
-                                        "type": "string"
+                                        "type": "string",
+                                        "example": "Stylish T-Shirt"
                                     },
                                     "price": {
                                         "type": "number",
-                                        "format": "float"
+                                        "format": "float",
+                                        "example": 29.99
                                     },
                                     "discount": {
-                                        "type": "integer"
+                                        "type": "integer",
+                                        "example": 10
                                     },
                                     "description": {
-                                        "type": "string"
+                                        "type": "string",
+                                        "example": "A comfortable and stylish t-shirt for everyday wear."
                                     },
                                     "gender": {
                                         "description": "Men, Women, Children and etc",
-                                        "type": "string"
+                                        "type": "string",
+                                        "example": "Unisex"
                                     },
                                     "sizes": {
                                         "description": "JSON string: 42, 43,...,50 yaly olcegler",
-                                        "type": "string"
+                                        "type": "string",
+                                        "example": "[42, 43, 44, 45]"
                                     },
                                     "separated_sizes": {
                                         "description": "JSON string: S, M, L yaly olcegler",
-                                        "type": "string"
+                                        "type": "string",
+                                        "example": "[\\'S\\', \\'M\\', \\'L\\', \\'XL\\']"
                                     },
                                     "color": {
-                                        "type": "string"
+                                        "type": "string",
+                                        "example": "Blue"
                                     },
                                     "manufacturer": {
                                         "description": "Cykarylan yurdy",
-                                        "type": "string"
+                                        "type": "string",
+                                        "example": "FashionCo"
                                     },
                                     "width": {
                                         "type": "number",
-                                        "format": "float"
+                                        "format": "float",
+                                        "example": 30.5
                                     },
                                     "height": {
                                         "type": "number",
-                                        "format": "float"
+                                        "format": "float",
+                                        "example": 50
                                     },
                                     "weight": {
                                         "description": "Hemmesi gram gorunusinde bellenmeli",
                                         "type": "number",
-                                        "format": "float"
+                                        "format": "float",
+                                        "example": 200
                                     },
                                     "production_time": {
                                         "description": "Hemme product time minutda gorkeziler",
-                                        "type": "integer"
+                                        "type": "integer",
+                                        "example": 300
                                     },
                                     "min_order": {
-                                        "type": "integer"
+                                        "type": "integer",
+                                        "example": 1
                                     },
                                     "seller_status": {
                                         "description": "Bu dukancy tarapyndan berilmeli status",
-                                        "type": "boolean"
+                                        "type": "boolean",
+                                        "example": true
                                     },
                                     "status": {
                                         "description": "Bu administrator tarapyndan berilmeli status",
-                                        "type": "boolean"
+                                        "type": "boolean",
+                                        "example": true
                                     },
                                     "shop_id": {
-                                        "type": "integer"
+                                        "type": "integer",
+                                        "example": 1
                                     },
                                     "category_id": {
-                                        "type": "integer"
+                                        "type": "integer",
+                                        "example": 3
                                     },
                                     "brand_ids": {
                                         "description": "JSON string: Brand id-ler",
-                                        "type": "string"
+                                        "type": "string",
+                                        "example": "[1, 2]"
                                     },
                                     "images[]": {
                                         "description": "Product images",
@@ -1517,7 +1528,12 @@
                                             "example": "The given data was invalid."
                                         },
                                         "errors": {
-                                            "type": "object"
+                                            "type": "object",
+                                            "example": {
+                                                "name": [
+                                                    "The name field is required."
+                                                ]
+                                            }
                                         }
                                     },
                                     "type": "object"
@@ -3316,10 +3332,9 @@
         },
         "securitySchemes": {
             "sanctum": {
-                "type": "apiKey",
-                "description": "Enter token in format (Bearer <token>)",
-                "name": "Authorization",
-                "in": "header"
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
             }
         }
     },
@@ -3367,6 +3382,11 @@
         {
             "name": "Users",
             "description": "Users"
+        }
+    ],
+    "security": [
+        {
+            "sanctum": []
         }
     ]
 }

@@ -170,10 +170,9 @@ return [
                  * Examples of Security schemes
                 */
                 'sanctum' => [
-                    'type' => 'apiKey',
-                    'description' => 'Enter token in format (Bearer <token>)',
-                    'name' => 'Authorization',
-                    'in' => 'header',
+                    'type' => 'http',
+                    'scheme' => 'bearer',
+                    'bearerFormat' => 'JWT',
                 ],
                 /*
                 'api_key_security_example' => [ // Unique name of security
@@ -216,6 +215,9 @@ return [
                 /*
                  * Examples of Securities
                 */
+                [
+                    'sanctum' => [],
+                ],
                 [
                     /*
                     'oauth2_security_example' => [
@@ -316,5 +318,23 @@ return [
             'url' => 'https://sowgatly.app/api/v1',
             'description' => 'Sowgatly API Server',
         ],
+    ],
+    'swagger_ui_config' => [
+        "persistAuthorization" => true,
+        "defaultModelsExpandDepth" => -1,
+        "defaultModelExpandDepth" => 1,
+        "defaultModelRendering" => "model",
+        "displayRequestDuration" => true,
+        "docExpansion" => "none",
+        "filter" => true,
+        "operationsSorter" => "alpha",
+        "showExtensions" => true,
+        "showCommonExtensions" => true,
+        "tagsSorter" => "alpha",
+        "oauth2RedirectUrl" => "/api/oauth2-callback",
+        "requestInterceptor" => "function(request) {
+            request.headers['Authorization'] = 'Bearer 1|MADVetcOYwHT7yYmWWQB9PLK6T1lQyvoBYI8Pqc559492981';
+            return request;
+        }",
     ],
 ];
