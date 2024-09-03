@@ -197,6 +197,7 @@ class ShopController extends Controller
      *                 @OA\Property(property="sat_sun_close", type="string", example="17:00"),
      *                 @OA\Property(property="image", type="file"),
      *                 @OA\Property(property="region_id", type="integer", example=2),
+     *                 @OA\Property(property="_method", type="string", example="PUT"),
      *             )
      *         )
      *     ),
