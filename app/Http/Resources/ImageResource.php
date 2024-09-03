@@ -6,9 +6,9 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
  * @OA\Schema(
- *     schema="Image",
+ *     schema="ImageResource",
  *     title="Image",
- *     description="Image model",
+ *     description="Image Resource",
  *     @OA\Property(property="id", type="integer"),
  *     @OA\Property(property="url", type="string", nullable=true),
  *     @OA\Property(property="product_id", type="integer", nullable=true),
