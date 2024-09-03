@@ -217,20 +217,59 @@ class ProductController extends Controller
      * @OA\Put(
      *     path="/api/products/{id}",
      *     summary="Update a product",
+     *     description="Update an existing product with new information",
+     *     operationId="updateProduct",
      *     tags={"Products"},
      *     security={{"sanctum":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
      *         required=true,
-     *         @OA\Schema(type="integer")
+     *         description="ID of the product to update",
+     *         @OA\Schema(type="integer", format="int64")
      *     ),
      *     @OA\RequestBody(
+     *         required=true,
+     *         description="Product information",
      *         @OA\JsonContent(ref="#/components/schemas/ProductRequest")
      *     ),
-     *     @OA\Response(response="200", description="Product updated successfully"),
-     *     @OA\Response(response="404", description="Product not found"),
-     *     @OA\Response(response="422", description="Validation error")
+     *     @OA\Response(
+     *         response=200,
+     *         description="Product updated successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Product updated successfully"),
+     *             @OA\Property(property="data", ref="#/components/schemas/Product")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Product not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Product not found")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="The given data was invalid."),
+     *             @OA\Property(
+     *                 property="errors",
+     *                 type="object",
+     *                 @OA\AdditionalProperties(
+     *                     type="array",
+     *                     @OA\Items(type="string")
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+     *         )
+     *     )
      * )
      */
     public function update(ProductRequest $request, $id)

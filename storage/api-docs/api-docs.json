@@ -2934,22 +2934,29 @@
                 "type": "object"
             },
             "UserResource": {
+                "title": "User Resource",
+                "description": "User resource",
                 "properties": {
                     "id": {
-                        "type": "integer"
+                        "type": "integer",
+                        "example": 1
                     },
                     "name": {
-                        "type": "string"
+                        "type": "string",
+                        "example": "John Doe"
                     },
                     "phone_number": {
-                        "type": "string"
+                        "type": "string",
+                        "example": "+1234567890"
                     },
                     "image": {
                         "type": "string",
+                        "example": "https://example.com/image.jpg",
                         "nullable": true
                     },
                     "status": {
-                        "type": "string"
+                        "type": "string",
+                        "example": "active"
                     },
                     "created_at": {
                         "type": "string",
@@ -2964,6 +2971,14 @@
                         "items": {
                             "type": "string"
                         },
+                        "nullable": true
+                    },
+                    "shop": {
+                        "oneOf": [
+                            {
+                                "$ref": "#/components/schemas/ShopResource"
+                            }
+                        ],
                         "nullable": true
                     }
                 },
