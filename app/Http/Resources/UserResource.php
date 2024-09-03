@@ -7,17 +7,24 @@ use Illuminate\Http\Resources\Json\JsonResource;
 /**
  * @OA\Schema(
  *     schema="UserResource",
- *     @OA\Property(property="id", type="integer"),
- *     @OA\Property(property="name", type="string"),
- *     @OA\Property(property="phone_number", type="string"),
- *     @OA\Property(property="image", type="string", nullable=true),
- *     @OA\Property(property="status", type="string"),
+ *     title="User Resource",
+ *     description="User resource",
+ *     @OA\Property(property="id", type="integer", example=1),
+ *     @OA\Property(property="name", type="string", example="John Doe"),
+ *     @OA\Property(property="phone_number", type="string", example="+1234567890"),
+ *     @OA\Property(property="image", type="string", nullable=true, example="https://example.com/image.jpg"),
+ *     @OA\Property(property="status", type="string", example="active"),
  *     @OA\Property(property="created_at", type="string", format="date-time"),
  *     @OA\Property(property="updated_at", type="string", format="date-time"),
  *     @OA\Property(
  *         property="device_tokens",
  *         type="array",
  *         @OA\Items(type="string"),
+ *         nullable=true
+ *     ),
+ *     @OA\Property(
+ *         property="shop",
+ *         ref="#/components/schemas/ShopResource",
  *         nullable=true
  *     )
  * )
