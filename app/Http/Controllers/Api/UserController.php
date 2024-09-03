@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
+use Illuminate\Http\JsonResponse;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -38,7 +39,7 @@ class UserController extends Controller
      *         )
      *     ),
      *     @OA\Response(
-     *         response="201",
+     *         response="200",
      *         description="User creation response",
      *         @OA\JsonContent(
      *             @OA\Property(property="success", type="boolean"),
@@ -79,7 +80,7 @@ class UserController extends Controller
             'success' => true,
             'message' => 'User created successfully',
             'user' => new UserResource($user)
-        ], 201);
+        ], 200);
     }
 
     /**
@@ -193,24 +194,25 @@ class UserController extends Controller
      *             @OA\Property(property="message", type="string"),
      *             @OA\Property(property="user", ref="#/components/schemas/UserResource")
      *         )
+     *     ),
+     *     @OA\Response(
+     *         response="404",
+     *         description="User not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean"),
+     *             @OA\Property(property="message", type="string")
+     *         )
      *     )
      * )
      */
-    public function show($id)
+    public function show($id): JsonResponse
     {
-        $user = User::with('shop')->find($id);
-
-        if (!$user) {
-            return response()->json([
-                'success' => false,
-                'message' => 'User not found'
-            ], 200);
-        }
+        $user = User::with('shop')->findOrFail($id);
 
         return response()->json([
             'success' => true,
             'message' => 'User retrieved successfully',
             'user' => new UserResource($user)
-        ], 200);
+        ]);
     }
 }

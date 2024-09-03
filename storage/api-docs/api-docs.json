@@ -2647,7 +2647,7 @@
                     }
                 },
                 "responses": {
-                    "200": {
+                    "201": {
                         "description": "User creation response",
                         "content": {
                             "application/json": {
@@ -2661,6 +2661,24 @@
                                         },
                                         "user": {
                                             "$ref": "#/components/schemas/UserResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "errors": {
+                                            "type": "object"
                                         }
                                     },
                                     "type": "object"
@@ -2763,10 +2781,6 @@
                                         "description": "Image file",
                                         "type": "string",
                                         "format": "binary"
-                                    },
-                                    "_method": {
-                                        "type": "string",
-                                        "example": "PUT"
                                     }
                                 },
                                 "type": "object"
@@ -2789,6 +2803,42 @@
                                         },
                                         "user": {
                                             "$ref": "#/components/schemas/UserResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "User not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "errors": {
+                                            "type": "object"
                                         }
                                     },
                                     "type": "object"
