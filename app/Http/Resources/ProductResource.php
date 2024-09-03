@@ -37,7 +37,6 @@ use Illuminate\Http\Resources\Json\JsonResource;
  *         @OA\Items(ref="#/components/schemas/ImageResource"),
  *         description="Associated images"
  *     )
- *     @OA\Property(property="_method", type="string", example="PUT"),
  * )
  */
 class ProductResource extends JsonResource
