@@ -21,7 +21,6 @@ use Illuminate\Http\Resources\Json\JsonResource;
  *     @OA\Property(property="created_at", type="string", format="date-time"),
  *     @OA\Property(property="updated_at", type="string", format="date-time"),
  *     @OA\Property(property="address_id", type="integer")
- *     @OA\Property(property="_method", type="string", example="PUT"),
  * )
  */
 class ShopResource extends JsonResource
