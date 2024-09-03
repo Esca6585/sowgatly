@@ -54,6 +54,6 @@ namespace App\OpenApi\Schemas;
  *     )
  * )
  */
-class ProductSchema
+class ProductResource
 {
 }
