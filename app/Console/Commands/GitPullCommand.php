@@ -39,7 +39,7 @@ class GitPullCommand extends Command
             }
         }
 
-        // $this->info('Generating Swagger documentation...');
-        // $this->call('swagger:generate');
+        $this->info('Generating Swagger documentation...');
+        $this->call('swagger:generate');
     }
 }
