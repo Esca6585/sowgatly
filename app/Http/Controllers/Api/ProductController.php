@@ -215,41 +215,8 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        try {
-            $product = Product::with(['category', 'shop', 'images', 'compositions'])->find($id);
-
-            if (!$product) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Product not found'
-                ], 404);
-            }
-
-            // Check if brand_ids is already an array
-            $brandIds = is_array($product->brand_ids) ? $product->brand_ids : json_decode($product->brand_ids, true);
-
-            // Ensure $brandIds is an array and not null
-            if (is_array($brandIds) && !empty($brandIds)) {
-                // Fetch all brands that are associated with this product
-                $brands = Brand::whereIn('id', $brandIds)->get();
-
-                // Add the brands to the product
-                $product->brands = $brands;
-            } else {
-                $product->brands = [];
-            }
-
-            return response()->json([
-                'success' => true,
-                'data' => $product
-            ], 200);
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'An error occurred while fetching the product',
-                'error' => $e->getMessage()
-            ], 500);
-        }
+        $product = Product::with('images')->findOrFail($id);
+        return new ProductResource($product);
     }
 
     /**

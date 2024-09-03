@@ -28,12 +28,10 @@ class ImageResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'image' => $this->image,
+            'url' => $this->url,
             'product_id' => $this->product_id,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            // You can include related data if needed, for example:
-            // 'product' => new ProductResource($this->whenLoaded('product')),
         ];
     }
 }
