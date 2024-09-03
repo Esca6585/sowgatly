@@ -33,7 +33,7 @@ class ProductController extends Controller
      *             @OA\Property(
      *                 property="data",
      *                 type="array",
-     *                 @OA\Items(ref="#/components/schemas/ProductRequest")
+     *                 @OA\Items(ref="#/components/schemas/ProductResource")
      *             )
      *         )
      *     ),
@@ -117,7 +117,7 @@ class ProductController extends Controller
      *         description="Product created successfully",
      *         @OA\JsonContent(
      *             @OA\Property(property="message", type="string", example="Product created successfully"),
-     *             @OA\Property(property="product", ref="#/components/schemas/ProductRequest")
+     *             @OA\Property(property="product", ref="#/components/schemas/ProductResource")
      *         )
      *     ),
      *     @OA\Response(
@@ -270,14 +270,14 @@ class ProductController extends Controller
      *     @OA\RequestBody(
      *         required=true,
      *         description="Product information",
-     *         @OA\JsonContent(ref="#/components/schemas/ProductRequest")
+     *         @OA\JsonContent(ref="#/components/schemas/ProductResource")
      *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Product updated successfully",
      *         @OA\JsonContent(
      *             @OA\Property(property="message", type="string", example="Product updated successfully"),
-     *             @OA\Property(property="data", ref="#/components/schemas/ProductRequest")
+     *             @OA\Property(property="data", ref="#/components/schemas/ProductResource")
      *         )
      *     ),
      *     @OA\Response(

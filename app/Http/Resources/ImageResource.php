@@ -4,6 +4,18 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @OA\Schema(
+ *     schema="Image",
+ *     title="Image",
+ *     description="Image model",
+ *     @OA\Property(property="id", type="integer"),
+ *     @OA\Property(property="url", type="string", nullable=true),
+ *     @OA\Property(property="product_id", type="integer", nullable=true),
+ *     @OA\Property(property="created_at", type="string", format="date-time"),
+ *     @OA\Property(property="updated_at", type="string", format="date-time")
+ * )
+ */
 class ImageResource extends JsonResource
 {
     /**

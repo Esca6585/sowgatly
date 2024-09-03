@@ -72,6 +72,7 @@ class ProductResource extends JsonResource
             'brand_ids' => json_decode($this->brand_ids),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
+            'images' => ImageResource::collection($this->whenLoaded('images')),
         ];
     }
 }
