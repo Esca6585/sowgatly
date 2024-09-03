@@ -55,29 +55,37 @@ class ShopController extends Controller
      *         @OA\MediaType(
      *             mediaType="multipart/form-data",
      *             @OA\Schema(
-     *               @OA\Property(property="name", type="string", example="Modahouse"),
-     *               @OA\Property(property="email", type="string", example="modahouse@modahouse.top", nullable=true),
-     *               @OA\Property(property="mon_fri_open", type="string", example="09:00"),
-     *               @OA\Property(property="mon_fri_close", type="string", example="18:00"),
-     *               @OA\Property(property="sat_sun_open", type="string", example="10:00"),
-     *               @OA\Property(property="sat_sun_close", type="string", example="16:00"),
-     *               @OA\Property(property="image", type="string", format="binary", nullable=true),
-     *               @OA\Property(property="region_id", type="integer", example=1, nullable=true),
+     *                 required={"name", "mon_fri_open", "mon_fri_close", "sat_sun_open", "sat_sun_close"},
+     *                 @OA\Property(property="name", type="string", example="Modahouse"),
+     *                 @OA\Property(property="email", type="string", example="modahouse@modahouse.top", nullable=true),
+     *                 @OA\Property(property="mon_fri_open", type="string", format="time", example="09:00"),
+     *                 @OA\Property(property="mon_fri_close", type="string", format="time", example="18:00"),
+     *                 @OA\Property(property="sat_sun_open", type="string", format="time", example="10:00"),
+     *                 @OA\Property(property="sat_sun_close", type="string", format="time", example="16:00"),
+     *                 @OA\Property(property="image", type="string", format="binary", nullable=true),
+     *                 @OA\Property(property="region_id", type="integer", example=1, nullable=true),
      *             )
      *         )
      *     ),
      *     @OA\Response(
-     *         response="201", 
-     *         description="Shop created",
+     *         response=201,
+     *         description="Shop created successfully",
      *         @OA\JsonContent(ref="#/components/schemas/ShopResource")
      *     ),
      *     @OA\Response(
      *         response=422,
-     *         description="Validation Error",
+     *         description="Validation error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="The given data was invalid."),
+     *             @OA\Property(property="errors", type="object")
+     *         )
      *     ),
      *     @OA\Response(
      *         response=500,
-     *         description="Server Error",
+     *         description="Server error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="error", type="string", example="An error occurred while creating the shop.")
+     *         )
      *     )
      * )
      */
@@ -107,7 +115,9 @@ class ShopController extends Controller
 
             DB::commit();
 
-            return new ShopResource($shop->load('region'));
+            $shop = $shop->fresh('region');
+
+            return new ShopResource($shop);
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json(['error' => 'An error occurred while creating the shop: ' . $e->getMessage()], 500);

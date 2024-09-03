@@ -41,12 +41,12 @@ class ShopResource extends JsonResource
             'mon_fri_close' => $this->mon_fri_close,
             'sat_sun_open' => $this->sat_sun_open,
             'sat_sun_close' => $this->sat_sun_close,
-            'image' => $this->image,
-            'user_id' => $this->user_id,
-            'region_id' => $this->region_id,
+            'image' => $this->image ? asset('storage/' . $this->image) : null,
+            'region' => $this->when($this->region, function () {
+                return new RegionResource($this->region);
+            }),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'address_id' => $this->address->id,
         ];
     }
 }
