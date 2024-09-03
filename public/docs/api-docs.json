@@ -1390,19 +1390,140 @@
                 "operationId": "785644b7d7dd38af4b51dafd0fbc1b6d",
                 "requestBody": {
                     "content": {
-                        "application/json": {
+                        "multipart/form-data": {
                             "schema": {
-                                "$ref": "#/components/schemas/ProductRequest"
+                                "required": [
+                                    "name",
+                                    "price",
+                                    "description",
+                                    "seller_status",
+                                    "status",
+                                    "shop_id",
+                                    "category_id"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "price": {
+                                        "type": "number",
+                                        "format": "float"
+                                    },
+                                    "discount": {
+                                        "type": "integer"
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    },
+                                    "gender": {
+                                        "description": "Men, Women, Children and etc",
+                                        "type": "string"
+                                    },
+                                    "sizes": {
+                                        "description": "JSON string: 42, 43,...,50 yaly olcegler",
+                                        "type": "string"
+                                    },
+                                    "separated_sizes": {
+                                        "description": "JSON string: S, M, L yaly olcegler",
+                                        "type": "string"
+                                    },
+                                    "color": {
+                                        "type": "string"
+                                    },
+                                    "manufacturer": {
+                                        "description": "Cykarylan yurdy",
+                                        "type": "string"
+                                    },
+                                    "width": {
+                                        "type": "number",
+                                        "format": "float"
+                                    },
+                                    "height": {
+                                        "type": "number",
+                                        "format": "float"
+                                    },
+                                    "weight": {
+                                        "description": "Hemmesi gram gorunusinde bellenmeli",
+                                        "type": "number",
+                                        "format": "float"
+                                    },
+                                    "production_time": {
+                                        "description": "Hemme product time minutda gorkeziler",
+                                        "type": "integer"
+                                    },
+                                    "min_order": {
+                                        "type": "integer"
+                                    },
+                                    "seller_status": {
+                                        "description": "Bu dukancy tarapyndan berilmeli status",
+                                        "type": "boolean"
+                                    },
+                                    "status": {
+                                        "description": "Bu administrator tarapyndan berilmeli status",
+                                        "type": "boolean"
+                                    },
+                                    "shop_id": {
+                                        "type": "integer"
+                                    },
+                                    "category_id": {
+                                        "type": "integer"
+                                    },
+                                    "brand_ids": {
+                                        "description": "JSON string: Brand id-ler",
+                                        "type": "string"
+                                    },
+                                    "images[]": {
+                                        "description": "Product images",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "binary"
+                                        }
+                                    }
+                                },
+                                "type": "object"
                             }
                         }
                     }
                 },
                 "responses": {
-                    "200": {
-                        "description": "Product created successfully"
+                    "201": {
+                        "description": "Product created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Product created successfully"
+                                        },
+                                        "product": {
+                                            "$ref": "#/components/schemas/ProductRequest"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "422": {
-                        "description": "Validation error"
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The given data was invalid."
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [

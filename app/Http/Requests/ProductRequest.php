@@ -6,29 +6,37 @@ use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * @OA\Schema(
- *     schema="ProductRequest",
- *     title="Product Request",
- *     description="Product request body data",
- *     required={"name", "price", "description", "seller_status", "status", "shop_id", "category_id"},
+ *     schema="Product",
+ *     title="Product",
+ *     description="Product model",
+ *     @OA\Property(property="id", type="integer"),
  *     @OA\Property(property="name", type="string"),
  *     @OA\Property(property="price", type="number", format="float"),
  *     @OA\Property(property="discount", type="integer", nullable=true),
  *     @OA\Property(property="description", type="string"),
- *     @OA\Property(property="gender", type="string", nullable=true, description="Men, Women, Children and etc"),
- *     @OA\Property(property="sizes", type="array", @OA\Items(type="string"), nullable=true, description="42, 43,...,50 yaly olcegler"),
- *     @OA\Property(property="separated_sizes", type="array", @OA\Items(type="string"), nullable=true, description="S, M, L yaly olcegler"),
+ *     @OA\Property(property="gender", type="string", nullable=true),
+ *     @OA\Property(property="sizes", type="array", @OA\Items(type="string"), nullable=true),
+ *     @OA\Property(property="separated_sizes", type="array", @OA\Items(type="string"), nullable=true),
  *     @OA\Property(property="color", type="string", nullable=true),
- *     @OA\Property(property="manufacturer", type="string", nullable=true, description="Cykarylan yurdy"),
+ *     @OA\Property(property="manufacturer", type="string", nullable=true),
  *     @OA\Property(property="width", type="number", format="float", nullable=true),
  *     @OA\Property(property="height", type="number", format="float", nullable=true),
- *     @OA\Property(property="weight", type="number", format="float", nullable=true, description="Hemmesi gram gorunusinde bellenmeli"),
- *     @OA\Property(property="production_time", type="integer", nullable=true, description="Hemme product time minutda gorkeziler"),
+ *     @OA\Property(property="weight", type="number", format="float", nullable=true),
+ *     @OA\Property(property="production_time", type="integer", nullable=true),
  *     @OA\Property(property="min_order", type="integer", nullable=true),
- *     @OA\Property(property="seller_status", type="boolean", description="Bu dukancy tarapyndan berilmeli status"),
- *     @OA\Property(property="status", type="boolean", description="Bu administrator tarapyndan berilmeli status"),
+ *     @OA\Property(property="seller_status", type="boolean"),
+ *     @OA\Property(property="status", type="boolean"),
  *     @OA\Property(property="shop_id", type="integer"),
  *     @OA\Property(property="category_id", type="integer"),
- *     @OA\Property(property="brand_ids", type="array", @OA\Items(type="integer"), nullable=true, description="Brand id-ler")
+ *     @OA\Property(property="brand_ids", type="array", @OA\Items(type="integer"), nullable=true),
+ *     @OA\Property(property="created_at", type="string", format="date-time"),
+ *     @OA\Property(property="updated_at", type="string", format="date-time"),
+ *     @OA\Property(
+ *         property="images",
+ *         type="array",
+ *         @OA\Items(ref="#/components/schemas/Image"),
+ *         description="Associated images"
+ *     )
  * )
  */
 class ProductRequest extends FormRequest
@@ -70,6 +78,12 @@ class ProductRequest extends FormRequest
             'shop_id' => 'required|exists:shops,id',
             'category_id' => 'required|exists:categories,id',
             'brand_ids' => 'nullable|json',
+            'images' => 'nullable|array',
+            'images.*' => [
+                'required',
+                'string',
+                'regex:/^data:image\/(\w+);base64,/',
+            ],
         ];
     }
 }
