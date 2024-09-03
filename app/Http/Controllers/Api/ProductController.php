@@ -117,7 +117,7 @@ class ProductController extends Controller
      *         description="Product created successfully",
      *         @OA\JsonContent(
      *             @OA\Property(property="message", type="string", example="Product created successfully"),
-     *             @OA\Property(property="product", ref="#/components/schemas/Product")
+     *             @OA\Property(property="product", ref="#/components/schemas/ProductRequest")
      *         )
      *     ),
      *     @OA\Response(
