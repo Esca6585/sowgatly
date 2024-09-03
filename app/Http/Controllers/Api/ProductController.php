@@ -11,6 +11,13 @@ use App\Http\Requests\ProductRequest;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 
+use App\OpenApi\Schemas\ProductResource;
+use App\OpenApi\Schemas\CategoryResource;
+use App\OpenApi\Schemas\ShopResource;
+use App\OpenApi\Schemas\ImageResource;
+use App\OpenApi\Schemas\CompositionResource;
+use App\OpenApi\Schemas\BrandResource;
+
 /**
  * @OA\Tag(
  *     name="Products",
