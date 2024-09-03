@@ -34,7 +34,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  *     @OA\Property(
  *         property="images",
  *         type="array",
- *         @OA\Items(ref="#/components/schemas/Image"),
+ *         @OA\Items(ref="#/components/schemas/ImageResource"),
  *         description="Associated images"
  *     )
  * )
