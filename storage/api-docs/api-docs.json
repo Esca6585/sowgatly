@@ -2327,7 +2327,8 @@
                                     },
                                     "email": {
                                         "type": "string",
-                                        "example": "modahouse@modahouse.top"
+                                        "example": "modahouse@modahouse.top",
+                                        "nullable": true
                                     },
                                     "mon_fri_open": {
                                         "type": "string",
@@ -2347,19 +2348,13 @@
                                     },
                                     "image": {
                                         "type": "string",
-                                        "format": "binary"
+                                        "format": "binary",
+                                        "nullable": true
                                     },
                                     "region_id": {
                                         "type": "integer",
-                                        "example": 1
-                                    },
-                                    "address_name": {
-                                        "type": "string",
-                                        "example": "123 Main St"
-                                    },
-                                    "postal_code": {
-                                        "type": "string",
-                                        "example": "744000"
+                                        "example": 1,
+                                        "nullable": true
                                     }
                                 },
                                 "type": "object"
@@ -2380,6 +2375,9 @@
                     },
                     "422": {
                         "description": "Validation Error"
+                    },
+                    "500": {
+                        "description": "Server Error"
                     }
                 },
                 "security": [

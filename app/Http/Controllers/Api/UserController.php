@@ -113,6 +113,7 @@ class UserController extends Controller
      *                     format="binary",
      *                     description="Image file"
      *                 ),
+     *                 @OA\Property(property="_method", type="string", example="PUT"),
      *             )
      *         )
      *     ),

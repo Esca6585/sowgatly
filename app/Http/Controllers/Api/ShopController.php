@@ -56,15 +56,13 @@ class ShopController extends Controller
      *             mediaType="multipart/form-data",
      *             @OA\Schema(
      *               @OA\Property(property="name", type="string", example="Modahouse"),
-     *               @OA\Property(property="email", type="string", example="modahouse@modahouse.top"),
+     *               @OA\Property(property="email", type="string", example="modahouse@modahouse.top", nullable=true),
      *               @OA\Property(property="mon_fri_open", type="string", example="09:00"),
      *               @OA\Property(property="mon_fri_close", type="string", example="18:00"),
      *               @OA\Property(property="sat_sun_open", type="string", example="10:00"),
      *               @OA\Property(property="sat_sun_close", type="string", example="16:00"),
-     *               @OA\Property(property="image", type="string", format="binary"),
-     *               @OA\Property(property="region_id", type="integer", example=1),
-     *               @OA\Property(property="address_name", type="string", example="123 Main St"),
-     *               @OA\Property(property="postal_code", type="string", example="744000"),
+     *               @OA\Property(property="image", type="string", format="binary", nullable=true),
+     *               @OA\Property(property="region_id", type="integer", example=1, nullable=true),
      *             )
      *         )
      *     ),
@@ -76,35 +74,28 @@ class ShopController extends Controller
      *     @OA\Response(
      *         response=422,
      *         description="Validation Error",
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server Error",
      *     )
      * )
      */
     public function store(ShopRequest $request)
     {
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'nullable|email|unique:shops,email',
-            'mon_fri_open' => 'required|date_format:H:i',
-            'mon_fri_close' => 'required|date_format:H:i|after:mon_fri_open',
-            'sat_sun_open' => 'required|date_format:H:i',
-            'sat_sun_close' => 'required|date_format:H:i|after:sat_sun_open',
-            'image' => ['sometimes', 'nullable', new ImageOrBase64(['jpeg', 'png', 'jpg', 'gif']), 'max:10240'],
-            'region_id' => 'required|exists:regions,id',
-            'address_name' => 'required|string|max:255',
-            'postal_code' => 'required|string|max:20',
-        ]);
-
         DB::beginTransaction();
 
         try {
+            $validatedData = $request->validated();
+
             $shop = Shop::create([
                 'name' => $validatedData['name'],
-                'email' => $validatedData['email'],
+                'email' => $validatedData['email'] ?? null,
                 'mon_fri_open' => $validatedData['mon_fri_open'],
                 'mon_fri_close' => $validatedData['mon_fri_close'],
                 'sat_sun_open' => $validatedData['sat_sun_open'],
                 'sat_sun_close' => $validatedData['sat_sun_close'],
-                'region_id' => $validatedData['region_id'],
+                'region_id' => $validatedData['region_id'] ?? null,
                 'user_id' => Auth::id(),
             ]);
 
@@ -114,20 +105,14 @@ class ShopController extends Controller
                 $shop->save();
             }
 
-            $shop->address()->create([
-                'address_name' => $validatedData['address_name'],
-                'postal_code' => $validatedData['postal_code'],
-            ]);
-
             DB::commit();
 
-            return new ShopResource($shop->load('address', 'region'));
+            return new ShopResource($shop->load('region'));
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json(['error' => 'An error occurred while creating the shop'], 500);
+            return response()->json(['error' => 'An error occurred while creating the shop: ' . $e->getMessage()], 500);
         }
     }
-
     /**
      * @OA\Get(
      *     path="/api/shops/{id}",
@@ -232,27 +217,10 @@ class ShopController extends Controller
             return response()->json(['error' => 'You do not have permission to update this shop'], 403);
         }
 
-        $validator = Validator::make($request->all(), [
-            'name' => 'sometimes|required|string|max:255',
-            'email' => ['sometimes', 'nullable', 'email', Rule::unique('shops')->ignore($shop->id)],
-            'mon_fri_open' => 'sometimes|required|date_format:H:i',
-            'mon_fri_close' => 'sometimes|required|date_format:H:i|after:mon_fri_open',
-            'sat_sun_open' => 'sometimes|required|date_format:H:i',
-            'sat_sun_close' => 'sometimes|required|date_format:H:i|after:sat_sun_open',
-            'image' => 'sometimes|nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'region_id' => 'sometimes|nullable|exists:regions,id',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
-
-        $validatedData = $validator->validated();
-
         DB::beginTransaction();
 
         try {
-            $shop->update($validatedData);
+            $shop->update($request->validated());
 
             if ($request->hasFile('image')) {
                 $this->handleImageUpload($shop, $request->file('image'));
