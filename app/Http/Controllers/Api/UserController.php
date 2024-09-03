@@ -105,7 +105,7 @@ class UserController extends Controller
      *                 @OA\Property(property="name", type="string", example="Esen"),
      *                 @OA\Property(property="phone_number", type="string", example="65123456"),
      *                 @OA\Property(property="email", type="string", example="info@tds.gov.tm"),
-     *                 @OA\Property(property="password", type="string", example="newpassword"),
+     *                 @OA\Property(property="password", type="string", example="passwordupdated"),
      *                 @OA\Property(
      *                     property="image",
      *                     type="string",
