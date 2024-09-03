@@ -210,7 +210,7 @@
                 "operationId": "21f7452be8597d704b5a0d575eaf49e5",
                 "requestBody": {
                     "content": {
-                        "application/json": {
+                        "application/x-www-form-urlencoded": {
                             "schema": {
                                 "required": [
                                     "phone_number"
@@ -228,16 +228,18 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "OTP generated successfully",
+                        "description": "OTP generation response",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "success": {
-                                            "type": "boolean"
+                                            "type": "boolean",
+                                            "example": true
                                         },
                                         "message": {
-                                            "type": "string"
+                                            "type": "string",
+                                            "example": "OTP generated successfully"
                                         }
                                     },
                                     "type": "object"
@@ -257,7 +259,7 @@
                 "operationId": "66abb7e56698406da81ec2b79b9905ad",
                 "requestBody": {
                     "content": {
-                        "application/json": {
+                        "application/x-www-form-urlencoded": {
                             "schema": {
                                 "required": [
                                     "phone_number",
@@ -280,26 +282,79 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Login successful",
+                        "description": "Login response",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "success": {
-                                            "type": "boolean"
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Login successful"
                                         },
                                         "access_token": {
-                                            "type": "string"
+                                            "type": "string",
+                                            "example": "1|MADVetcOYwHT7yYmWWQB9PLK6T1lQyvoBYI8Pqc559492981"
+                                        },
+                                        "bearer_token": {
+                                            "type": "string",
+                                            "example": "Bearer 1|MADVetcOYwHT7yYmWWQB9PLK6T1lQyvoBYI8Pqc559492981"
                                         },
                                         "token_type": {
-                                            "type": "string"
+                                            "type": "string",
+                                            "example": "bearer"
                                         },
                                         "user": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "John Doe"
+                                                },
+                                                "phone_number": {
+                                                    "type": "string",
+                                                    "example": "65656585"
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    "example": "tds@sanly.tm"
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                }
+                                            },
                                             "type": "object"
                                         },
                                         "shops": {
                                             "type": "array",
-                                            "items": {}
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "My Shop"
+                                                    },
+                                                    "description": {
+                                                        "type": "string",
+                                                        "example": "A great shop"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
                                         }
                                     },
                                     "type": "object"
@@ -319,7 +374,7 @@
                 "operationId": "0bf132e13ca714d80c509bc24c437cee",
                 "requestBody": {
                     "content": {
-                        "application/json": {
+                        "application/x-www-form-urlencoded": {
                             "schema": {
                                 "required": [
                                     "phone_number",
@@ -352,25 +407,102 @@
                                 "schema": {
                                     "properties": {
                                         "success": {
-                                            "type": "boolean"
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Registration successful"
                                         },
                                         "access_token": {
-                                            "type": "string"
+                                            "type": "string",
+                                            "example": "1|MADVetcOYwHT7yYmWWQB9PLK6T1lQyvoBYI8Pqc559492981"
+                                        },
+                                        "bearer_token": {
+                                            "type": "string",
+                                            "example": "Bearer 1|MADVetcOYwHT7yYmWWQB9PLK6T1lQyvoBYI8Pqc559492981"
                                         },
                                         "token_type": {
-                                            "type": "string"
+                                            "type": "string",
+                                            "example": "bearer"
                                         },
                                         "otp": {
-                                            "type": "string"
+                                            "type": "string",
+                                            "example": "123456"
                                         },
                                         "user": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "Esen Meredow"
+                                                },
+                                                "phone_number": {
+                                                    "type": "string",
+                                                    "example": "65656565"
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    "example": "esca6585@modahouse.top"
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                }
+                                            },
                                             "type": "object"
                                         },
                                         "shops": {
                                             "type": "array",
-                                            "items": {}
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "description": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
                                         },
                                         "device": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "user_id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "device_id": {
+                                                    "type": "string",
+                                                    "example": "device_unique_id"
+                                                },
+                                                "device_type": {
+                                                    "type": "string",
+                                                    "example": "android"
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                }
+                                            },
                                             "type": "object"
                                         }
                                     },
@@ -397,10 +529,12 @@
                                 "schema": {
                                     "properties": {
                                         "success": {
-                                            "type": "boolean"
+                                            "type": "boolean",
+                                            "example": true
                                         },
                                         "message": {
-                                            "type": "string"
+                                            "type": "string",
+                                            "example": "Successfully logged out"
                                         }
                                     },
                                     "type": "object"
@@ -2258,37 +2392,6 @@
             }
         },
         "/api/users": {
-            "get": {
-                "tags": [
-                    "Users"
-                ],
-                "summary": "Get list of users",
-                "operationId": "566aed8efb436ca506e0ef51a032ecd9",
-                "parameters": [
-                    {
-                        "name": "page",
-                        "in": "query",
-                        "description": "Page number",
-                        "required": false,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "List of users"
-                    },
-                    "401": {
-                        "description": "Unauthenticated"
-                    }
-                },
-                "security": [
-                    {
-                        "sanctum": []
-                    }
-                ]
-            },
             "post": {
                 "tags": [
                     "Users"
@@ -2302,11 +2405,19 @@
                                 "properties": {
                                     "name": {
                                         "type": "string",
-                                        "example": "Esen Meredow"
+                                        "example": "Esen"
                                     },
                                     "phone_number": {
-                                        "type": "integer",
-                                        "example": "65656585"
+                                        "type": "string",
+                                        "example": "65123456"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "info@tds.gov.tm"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "password"
                                     },
                                     "image": {
                                         "description": "Image file",
@@ -2320,18 +2431,26 @@
                     }
                 },
                 "responses": {
-                    "201": {
-                        "description": "User created",
+                    "200": {
+                        "description": "User creation response",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/UserRequest"
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "user": {
+                                            "$ref": "#/components/schemas/UserResource"
+                                        }
+                                    },
+                                    "type": "object"
                                 }
                             }
                         }
-                    },
-                    "401": {
-                        "description": "Unauthenticated"
                     }
                 },
                 "security": [
@@ -2346,13 +2465,12 @@
                 "tags": [
                     "Users"
                 ],
-                "summary": "Get user details by ID",
+                "summary": "Get user by ID",
                 "operationId": "6f51bd5fa2dddcd25e44cfa53dcbd10a",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "User ID",
                         "required": true,
                         "schema": {
                             "type": "integer"
@@ -2361,27 +2479,19 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "User details or not found response",
+                        "description": "User details response",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "status": {
+                                        "success": {
                                             "type": "boolean"
                                         },
-                                        "data": {
-                                            "oneOf": [
-                                                {
-                                                    "$ref": "#/components/schemas/UserResource"
-                                                },
-                                                {
-                                                    "type": "null"
-                                                }
-                                            ]
-                                        },
                                         "message": {
-                                            "type": "string",
-                                            "nullable": true
+                                            "type": "string"
+                                        },
+                                        "user": {
+                                            "$ref": "#/components/schemas/UserResource"
                                         }
                                     },
                                     "type": "object"
@@ -2389,14 +2499,19 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
             },
-            "post": {
+            "put": {
                 "tags": [
                     "Users"
                 ],
-                "summary": "Update a user",
-                "operationId": "6d6370298731666449ca1968f58a11f8",
+                "summary": "Update an existing user",
+                "operationId": "070e37fc9aff78ae73860751bc990ed3",
                 "parameters": [
                     {
                         "name": "id",
@@ -2414,12 +2529,7 @@
                                 "properties": {
                                     "name": {
                                         "type": "string",
-                                        "example": "Esca Meredoff"
-                                    },
-                                    "image": {
-                                        "description": "Image file upload or base64 encoded image string",
-                                        "type": "string",
-                                        "format": "binary"
+                                        "example": "Esen"
                                     },
                                     "phone_number": {
                                         "type": "string",
@@ -2427,15 +2537,16 @@
                                     },
                                     "email": {
                                         "type": "string",
-                                        "example": "user@example.com"
+                                        "example": "info@tds.gov.tm"
                                     },
-                                    "status": {
-                                        "type": "boolean",
-                                        "example": true
-                                    },
-                                    "_method": {
+                                    "password": {
                                         "type": "string",
-                                        "example": "PUT"
+                                        "example": "newpassword"
+                                    },
+                                    "image": {
+                                        "description": "Image file",
+                                        "type": "string",
+                                        "format": "binary"
                                     }
                                 },
                                 "type": "object"
@@ -2445,84 +2556,25 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "User updated"
-                    },
-                    "404": {
-                        "description": "User not found"
-                    },
-                    "401": {
-                        "description": "Unauthenticated"
-                    }
-                },
-                "security": [
-                    {
-                        "sanctum": []
-                    }
-                ]
-            },
-            "delete": {
-                "tags": [
-                    "Users"
-                ],
-                "summary": "Delete a user",
-                "operationId": "0b4133ed462528a5e648b88ead11e929",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "User deleted",
+                        "description": "User update response",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "status": {
-                                            "type": "boolean",
-                                            "example": true
+                                        "success": {
+                                            "type": "boolean"
                                         },
                                         "message": {
-                                            "type": "string",
-                                            "example": "User deleted successfully"
+                                            "type": "string"
                                         },
-                                        "file_deleted": {
-                                            "type": "boolean",
-                                            "example": true
+                                        "user": {
+                                            "$ref": "#/components/schemas/UserResource"
                                         }
                                     },
                                     "type": "object"
                                 }
                             }
                         }
-                    },
-                    "404": {
-                        "description": "User not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "status": {
-                                            "type": "boolean",
-                                            "example": false
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "User not found"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthenticated"
                     }
                 },
                 "security": [
@@ -2560,28 +2612,6 @@
                     "image_url": {
                         "type": "string",
                         "example": "http://localhost:8000/category/category-seeder/other_fancy_flowers.png"
-                    }
-                },
-                "type": "object"
-            },
-            "UserRequest": {
-                "properties": {
-                    "id": {
-                        "type": "integer",
-                        "example": 1
-                    },
-                    "name": {
-                        "type": "string",
-                        "example": "Esen Meredow"
-                    },
-                    "phone_number": {
-                        "type": "integer",
-                        "example": "65656585"
-                    },
-                    "image": {
-                        "description": "Image file",
-                        "type": "string",
-                        "format": "binary"
                     }
                 },
                 "type": "object"

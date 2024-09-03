@@ -31,17 +31,20 @@ class AuthOtpController extends Controller
      *     summary="Generate OTP",
      *     tags={"Authentication"},
      *     @OA\RequestBody(
-     *         @OA\JsonContent(
-     *             required={"phone_number"},
-     *             @OA\Property(property="phone_number", type="string", example="65656585")
+     *         @OA\MediaType(
+     *             mediaType="application/x-www-form-urlencoded",
+     *             @OA\Schema(
+     *                 required={"phone_number"},
+     *                 @OA\Property(property="phone_number", type="string", example="65656585")
+     *             )
      *         )
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="OTP generated successfully",
+     *         description="OTP generation response",
      *         @OA\JsonContent(
-     *             @OA\Property(property="success", type="boolean"),
-     *             @OA\Property(property="message", type="string")
+     *             @OA\Property(property="success", type="boolean", example=true),
+     *             @OA\Property(property="message", type="string", example="OTP generated successfully"),
      *         )
      *     )
      * )
@@ -132,21 +135,44 @@ class AuthOtpController extends Controller
      *     summary="Login with OTP",
      *     tags={"Authentication"},
      *     @OA\RequestBody(
-     *         @OA\JsonContent(
-     *             required={"phone_number", "otp"},
-     *             @OA\Property(property="phone_number", type="string", example="65656585"),
-     *             @OA\Property(property="otp", type="string", example="0000")
+     *         @OA\MediaType(
+     *             mediaType="application/x-www-form-urlencoded",
+     *             @OA\Schema(
+     *                 required={"phone_number", "otp"},
+     *                 @OA\Property(property="phone_number", type="string", example="65656585"),
+     *                 @OA\Property(property="otp", type="string", example="0000")
+     *             )
      *         )
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="Login successful",
+     *         description="Login response",
      *         @OA\JsonContent(
-     *             @OA\Property(property="success", type="boolean"),
-     *             @OA\Property(property="access_token", type="string"),
-     *             @OA\Property(property="token_type", type="string"),
-     *             @OA\Property(property="user", type="object"),
-     *             @OA\Property(property="shops", type="array", @OA\Items())
+     *             @OA\Property(property="success", type="boolean", example=true),
+     *             @OA\Property(property="message", type="string", example="Login successful"),
+     *             @OA\Property(property="access_token", type="string", example="1|MADVetcOYwHT7yYmWWQB9PLK6T1lQyvoBYI8Pqc559492981"),
+     *             @OA\Property(property="bearer_token", type="string", example="Bearer 1|MADVetcOYwHT7yYmWWQB9PLK6T1lQyvoBYI8Pqc559492981"),
+     *             @OA\Property(property="token_type", type="string", example="bearer"),
+     *             @OA\Property(
+     *                 property="user",
+     *                 type="object",
+     *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="name", type="string", example="John Doe"),
+     *                 @OA\Property(property="phone_number", type="string", example="65656585"),
+     *                 @OA\Property(property="email", type="string", example="tds@sanly.tm"),
+     *                 @OA\Property(property="created_at", type="string", format="date-time"),
+     *                 @OA\Property(property="updated_at", type="string", format="date-time")
+     *             ),
+     *             @OA\Property(
+     *                 property="shops",
+     *                 type="array",
+     *                 @OA\Items(
+     *                     type="object",
+     *                     @OA\Property(property="id", type="integer", example=1),
+     *                     @OA\Property(property="name", type="string", example="My Shop"),
+     *                     @OA\Property(property="description", type="string", example="A great shop")
+     *                 )
+     *             )
      *         )
      *     )
      * )
@@ -216,24 +242,56 @@ class AuthOtpController extends Controller
      *     summary="Register with OTP",
      *     tags={"Authentication"},
      *     @OA\RequestBody(
-     *         @OA\JsonContent(
-     *             required={"phone_number", "name"},
-     *             @OA\Property(property="phone_number", type="string", example="65656565"),
-     *             @OA\Property(property="name", type="string", example="Esen Meredow"),
-     *             @OA\Property(property="email", type="string", example="esca6585@modahouse.top")
+     *         @OA\MediaType(
+     *             mediaType="application/x-www-form-urlencoded",
+     *             @OA\Schema(
+     *                 required={"phone_number", "name"},
+     *                 @OA\Property(property="phone_number", type="string", example="65656565"),
+     *                 @OA\Property(property="name", type="string", example="Esen Meredow"),
+     *                 @OA\Property(property="email", type="string", example="esca6585@modahouse.top")
+     *             )
      *         )
      *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Registration successful",
      *         @OA\JsonContent(
-     *             @OA\Property(property="success", type="boolean"),
-     *             @OA\Property(property="access_token", type="string"),
-     *             @OA\Property(property="token_type", type="string"),
-     *             @OA\Property(property="otp", type="string"),
-     *             @OA\Property(property="user", type="object"),
-     *             @OA\Property(property="shops", type="array", @OA\Items()),
-     *             @OA\Property(property="device", type="object")
+     *             @OA\Property(property="success", type="boolean", example=true),
+     *             @OA\Property(property="message", type="string", example="Registration successful"),
+     *             @OA\Property(property="access_token", type="string", example="1|MADVetcOYwHT7yYmWWQB9PLK6T1lQyvoBYI8Pqc559492981"),
+     *             @OA\Property(property="bearer_token", type="string", example="Bearer 1|MADVetcOYwHT7yYmWWQB9PLK6T1lQyvoBYI8Pqc559492981"),
+     *             @OA\Property(property="token_type", type="string", example="bearer"),
+     *             @OA\Property(property="otp", type="string", example="123456"),
+     *             @OA\Property(
+     *                 property="user",
+     *                 type="object",
+     *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="name", type="string", example="Esen Meredow"),
+     *                 @OA\Property(property="phone_number", type="string", example="65656565"),
+     *                 @OA\Property(property="email", type="string", example="esca6585@modahouse.top"),
+     *                 @OA\Property(property="created_at", type="string", format="date-time"),
+     *                 @OA\Property(property="updated_at", type="string", format="date-time")
+     *             ),
+     *             @OA\Property(
+     *                 property="shops",
+     *                 type="array",
+     *                 @OA\Items(
+     *                     type="object",
+     *                     @OA\Property(property="id", type="integer"),
+     *                     @OA\Property(property="name", type="string"),
+     *                     @OA\Property(property="description", type="string")
+     *                 )
+     *             ),
+     *             @OA\Property(
+     *                 property="device",
+     *                 type="object",
+     *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="user_id", type="integer", example=1),
+     *                 @OA\Property(property="device_id", type="string", example="device_unique_id"),
+     *                 @OA\Property(property="device_type", type="string", example="android"),
+     *                 @OA\Property(property="created_at", type="string", format="date-time"),
+     *                 @OA\Property(property="updated_at", type="string", format="date-time")
+     *             )
      *         )
      *     )
      * )
@@ -322,19 +380,18 @@ class AuthOtpController extends Controller
             return 'web';
         }
     }
-
-    /**
+     /**
      * @OA\Post(
      *     path="/api/logout",
      *     summary="Logout",
      *     tags={"Authentication"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(
-    *         response=200,
+     *         response=200,
      *         description="Logout successful",
      *         @OA\JsonContent(
-     *             @OA\Property(property="success", type="boolean"),
-     *             @OA\Property(property="message", type="string")
+     *             @OA\Property(property="success", type="boolean", example=true),
+     *             @OA\Property(property="message", type="string", example="Successfully logged out")
      *         )
      *     ),
      *     @OA\Response(
@@ -355,7 +412,7 @@ class AuthOtpController extends Controller
                 return response()->json([
                     'success' => false,
                     'message' => 'User not authenticated',
-                ], 401);
+                ], 200);
             }
 
             // Attempt to revoke the token
@@ -369,7 +426,7 @@ class AuthOtpController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Logout failed: ' . $e->getMessage(),
-            ], 500);
+            ], 200);
         }
     }
 }
