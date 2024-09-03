@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -164,9 +165,9 @@ class UserController extends Controller
         if ($request->hasFile('image')) {
             $image = $request->file('image');
             $imageName = uniqid() . '.' . $image->getClientOriginalExtension();
-            $imagePath = 'F:\sowgatly\public\user\\' . date('d-m-Y-H-i-s') . '\\' . $imageName;
+            $fullPath = 'user/' . Str::slug($user->name . '-' . $user->id) . date('-d-m-Y-H-i-s') . $imageName;
             $image->move(dirname($imagePath), $imageName);
-            $user->image = str_replace('F:\sowgatly\public\\', '', $imagePath);
+            $user->image = str_replace($imagePath);
         }
 
         $user->save();

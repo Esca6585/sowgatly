@@ -189,7 +189,7 @@ class ProductController extends Controller
             $images = $request->file('images');
 
             foreach($images as $image){
-                $date = date("d-m-Y H-i-s");
+                $date = date("d-m-Y-H-i-s");
 
                 $fileRandName = Str::random(10);
                 $fileExt = $image->getClientOriginalExtension();

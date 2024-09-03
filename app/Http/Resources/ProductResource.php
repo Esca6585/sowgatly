@@ -3,36 +3,32 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-use App\Http\Resources\ImageResource;
-use App\Http\Resources\CategoryResource;
-use App\Http\Resources\ShopResource;
-use App\Http\Resources\BrandResource;
-use App\Http\Resources\CompositionResource;
 
 /**
  * @OA\Schema(
  *     schema="ProductResource",
- *     type="object",
- *     @OA\Property(property="id", type="integer"),
+ *     title="Product Resource",
+ *     description="Product resource",
+ *     @OA\Property(property="id", type="integer", format="int64"),
  *     @OA\Property(property="name", type="string"),
- *     @OA\Property(property="price", type="number"),
- *     @OA\Property(property="discount", type="integer"),
+ *     @OA\Property(property="price", type="number", format="float"),
+ *     @OA\Property(property="discount", type="integer", nullable=true),
  *     @OA\Property(property="description", type="string"),
- *     @OA\Property(property="gender", type="string"),
- *     @OA\Property(property="sizes", type="string"),
- *     @OA\Property(property="separated_sizes", type="string"),
- *     @OA\Property(property="color", type="string"),
- *     @OA\Property(property="manufacturer", type="string"),
- *     @OA\Property(property="width", type="number"),
- *     @OA\Property(property="height", type="number"),
- *     @OA\Property(property="weight", type="number"),
- *     @OA\Property(property="production_time", type="integer"),
- *     @OA\Property(property="min_order", type="integer"),
- *     @OA\Property(property="seller_status", type="boolean"),
- *     @OA\Property(property="status", type="boolean"),
+ *     @OA\Property(property="gender", type="string", nullable=true, description="Men, Women, Children and etc"),
+ *     @OA\Property(property="sizes", type="array", @OA\Items(type="string"), nullable=true, description="42, 43,...,50 yaly olcegler"),
+ *     @OA\Property(property="separated_sizes", type="array", @OA\Items(type="string"), nullable=true, description="S, M, L yaly olcegler"),
+ *     @OA\Property(property="color", type="string", nullable=true),
+ *     @OA\Property(property="manufacturer", type="string", nullable=true, description="Cykarylan yurdy"),
+ *     @OA\Property(property="width", type="number", format="float", nullable=true),
+ *     @OA\Property(property="height", type="number", format="float", nullable=true),
+ *     @OA\Property(property="weight", type="number", format="float", nullable=true, description="Hemmesi gram gorunusinde bellenmeli"),
+ *     @OA\Property(property="production_time", type="integer", nullable=true, description="Hemme product time minutda gorkeziler"),
+ *     @OA\Property(property="min_order", type="integer", nullable=true),
+ *     @OA\Property(property="seller_status", type="boolean", description="Bu dukancy tarapyndan berilmeli status"),
+ *     @OA\Property(property="status", type="boolean", description="Bu administrator tarapyndan berilmeli status"),
  *     @OA\Property(property="shop_id", type="integer"),
- *     @OA\Property(property="brand_id", type="integer"),
  *     @OA\Property(property="category_id", type="integer"),
+ *     @OA\Property(property="brand_ids", type="array", @OA\Items(type="integer"), nullable=true, description="Brand id-ler"),
  *     @OA\Property(property="created_at", type="string", format="date-time"),
  *     @OA\Property(property="updated_at", type="string", format="date-time")
  * )
@@ -50,19 +46,12 @@ class ProductResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'description' => $this->description,
             'price' => $this->price,
             'discount' => $this->discount,
-            'discountedPrice' => $this->getDiscountedPrice(),
-            'attributes' => $this->attributes,
-            'code' => $this->code,
-            'category_id' => $this->category_id,
-            'shop_id' => $this->shop_id,
-            'brand_id' => $this->brand_id,
-            'status' => $this->status,
+            'description' => $this->description,
             'gender' => $this->gender,
-            'sizes' => $this->sizes,
-            'separated_sizes' => $this->separated_sizes,
+            'sizes' => json_decode($this->sizes),
+            'separated_sizes' => json_decode($this->separated_sizes),
             'color' => $this->color,
             'manufacturer' => $this->manufacturer,
             'width' => $this->width,
@@ -71,11 +60,10 @@ class ProductResource extends JsonResource
             'production_time' => $this->production_time,
             'min_order' => $this->min_order,
             'seller_status' => $this->seller_status,
-            'images' => ImageResource::collection($this->whenLoaded('images')),
-            'category' => new CategoryResource($this->whenLoaded('category')),
-            'shop' => new ShopResource($this->whenLoaded('shop')),
-            'brand' => new BrandResource($this->whenLoaded('brand')),
-            'compositions' => CompositionResource::collection($this->whenLoaded('compositions')),
+            'status' => $this->status,
+            'shop_id' => $this->shop_id,
+            'category_id' => $this->category_id,
+            'brand_ids' => json_decode($this->brand_ids),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
