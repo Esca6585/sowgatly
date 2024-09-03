@@ -8,12 +8,9 @@ class GitPullCommand extends Command
 {
     protected $signature = 'git:pull';
     protected $description = 'Reset local changes and pull from the Git repository';
-    
+
     public function handle()
     {
-        $this->info('Generating Swagger documentation...');
-        $this->call('swagger:generate');
-
         $this->info('Resetting local changes...');
         exec('git reset --hard', $resetOutput, $resetReturnCode);
 
@@ -41,5 +38,8 @@ class GitPullCommand extends Command
                 $this->error($line);
             }
         }
+
+        $this->info('Generating Swagger documentation...');
+        $this->call('swagger:generate');
     }
 }
