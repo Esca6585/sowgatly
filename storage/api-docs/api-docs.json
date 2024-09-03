@@ -2763,6 +2763,10 @@
                                         "description": "Image file",
                                         "type": "string",
                                         "format": "binary"
+                                    },
+                                    "_method": {
+                                        "type": "string",
+                                        "example": "PUT"
                                     }
                                 },
                                 "type": "object"

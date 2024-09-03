@@ -7,8 +7,10 @@ use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\DB;
+use App\Http\Requests\UserUpdateRequest;
+use App\Http\Requests\UserStoreRequest;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
@@ -36,55 +38,48 @@ class UserController extends Controller
      *         )
      *     ),
      *     @OA\Response(
-     *         response="200",
+     *         response="201",
      *         description="User creation response",
      *         @OA\JsonContent(
      *             @OA\Property(property="success", type="boolean"),
      *             @OA\Property(property="message", type="string"),
      *             @OA\Property(property="user", ref="#/components/schemas/UserResource")
      *         )
+     *     ),
+     *     @OA\Response(
+     *         response="422",
+     *         description="Validation error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string"),
+     *             @OA\Property(property="errors", type="object")
+     *         )
      *     )
      * )
      */
-    public function store(Request $request)
+    public function store(UserStoreRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'phone_number' => 'required|string|unique:users',
-            'email' => 'nullable|email|unique:users',
-            'password' => 'required|string|min:6',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
+        $validatedData = $request->validated();
 
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Validation error',
-                'errors' => $validator->errors()
-            ], 200);
-        }
-
-        $user = new User();
-        $user->name = $request->name;
-        $user->phone_number = $request->phone_number;
-        $user->email = $request->email;
-        $user->password = Hash::make($request->password);
+        $validatedData['password'] = Hash::make($validatedData['password']);
 
         if ($request->hasFile('image')) {
             $image = $request->file('image');
             $imageName = uniqid() . '.' . $image->getClientOriginalExtension();
-            $imagePath = 'F:\sowgatly\public\user\\' . date('d-m-Y-H-i-s') . '\\' . $imageName;
-            $image->move(dirname($imagePath), $imageName);
-            $user->image = str_replace('F:\sowgatly\public\\', '', $imagePath);
+            $imagePath = 'user/' . Str::slug($validatedData['name']) . '-' . date('d-m-Y-H-i-s') . '-' . $imageName;
+            
+            // Store the image
+            Storage::disk('public')->put($imagePath, file_get_contents($image));
+            
+            $validatedData['image'] = $imagePath;
         }
 
-        $user->save();
+        $user = User::create($validatedData);
 
         return response()->json([
             'success' => true,
             'message' => 'User created successfully',
             'user' => new UserResource($user)
-        ], 200);
+        ], 201);
     }
 
     /**
@@ -113,7 +108,6 @@ class UserController extends Controller
      *                     format="binary",
      *                     description="Image file"
      *                 ),
-     *                 @OA\Property(property="_method", type="string", example="PUT"),
      *             )
      *         )
      *     ),
@@ -125,53 +119,52 @@ class UserController extends Controller
      *             @OA\Property(property="message", type="string"),
      *             @OA\Property(property="user", ref="#/components/schemas/UserResource")
      *         )
+     *     ),
+     *     @OA\Response(
+     *         response="404",
+     *         description="User not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean"),
+     *             @OA\Property(property="message", type="string")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="422",
+     *         description="Validation error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string"),
+     *             @OA\Property(property="errors", type="object")
+     *         )
      *     )
      * )
      */
-    public function update(Request $request, $id)
+    public function update(UserUpdateRequest $request, $id)
     {
-        $user = User::find($id);
+        $user = User::findOrFail($id);
 
-        if (!$user) {
-            return response()->json([
-                'success' => false,
-                'message' => 'User not found'
-            ], 200);
-        }
+        $validatedData = $request->validated();
 
-        $validator = Validator::make($request->all(), [
-            'name' => 'sometimes|required|string|max:255',
-            'phone_number' => 'sometimes|required|string|unique:users,phone_number,' . $user->id,
-            'email' => 'nullable|email|unique:users,email,' . $user->id,
-            'password' => 'sometimes|required|string|min:6',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Validation error',
-                'errors' => $validator->errors()
-            ], 200);
-        }
-
-        $user->name = $request->name ?? $user->name;
-        $user->phone_number = $request->phone_number ?? $user->phone_number;
-        $user->email = $request->email ?? $user->email;
-        
-        if ($request->has('password')) {
-            $user->password = Hash::make($request->password);
+        if (isset($validatedData['password'])) {
+            $validatedData['password'] = Hash::make($validatedData['password']);
         }
 
         if ($request->hasFile('image')) {
             $image = $request->file('image');
             $imageName = uniqid() . '.' . $image->getClientOriginalExtension();
-            $fullPath = 'user/' . Str::slug($user->name . '-' . $user->id) . date('-d-m-Y-H-i-s') . $imageName;
-            $image->move(dirname($imagePath), $imageName);
-            $user->image = str_replace($imagePath);
+            $imagePath = 'user/' . Str::slug($user->name . '-' . $user->id) . '-' . date('d-m-Y-H-i-s') . '-' . $imageName;
+            
+            // Store the image
+            Storage::disk('public')->put($imagePath, file_get_contents($image));
+            
+            // Delete old image if exists
+            if ($user->image) {
+                Storage::disk('public')->delete($user->image);
+            }
+            
+            $validatedData['image'] = $imagePath;
         }
 
-        $user->save();
+        $user->update($validatedData);
 
         return response()->json([
             'success' => true,
