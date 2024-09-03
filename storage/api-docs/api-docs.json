@@ -1448,18 +1448,23 @@
                     "Products"
                 ],
                 "summary": "Update a product",
-                "operationId": "416e4959a3919547eb609d87e3db9135",
+                "description": "Update an existing product with new information",
+                "operationId": "updateProduct",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
+                        "description": "ID of the product to update",
                         "required": true,
                         "schema": {
-                            "type": "integer"
+                            "type": "integer",
+                            "format": "int64"
                         }
                     }
                 ],
                 "requestBody": {
+                    "description": "Product information",
+                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
@@ -1470,13 +1475,80 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Product updated successfully"
+                        "description": "Product updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Product updated successfully"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/ProductRequest"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "404": {
-                        "description": "Product not found"
+                        "description": "Product not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Product not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "422": {
-                        "description": "Validation error"
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The given data was invalid."
+                                        },
+                                        "errors": {
+                                            "type": "object",
+                                            "additionalProperties": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -2639,105 +2711,108 @@
                 "type": "object"
             },
             "ProductRequest": {
+                "title": "Product Request",
+                "description": "Product request body data",
                 "required": [
                     "name",
-                    "description",
                     "price",
+                    "description",
+                    "seller_status",
+                    "status",
+                    "shop_id",
                     "category_id"
                 ],
                 "properties": {
                     "name": {
-                        "type": "string",
-                        "example": "Cool T-Shirt"
-                    },
-                    "description": {
-                        "type": "string",
-                        "example": "A comfortable and stylish t-shirt"
+                        "type": "string"
                     },
                     "price": {
                         "type": "number",
-                        "format": "float",
-                        "example": 29.99
+                        "format": "float"
                     },
                     "discount": {
-                        "type": "number",
-                        "format": "float",
-                        "example": 5
-                    },
-                    "category_id": {
                         "type": "integer",
-                        "example": 1
+                        "nullable": true
                     },
-                    "shop_id": {
-                        "type": "integer",
-                        "example": 1
-                    },
-                    "status": {
-                        "type": "boolean",
-                        "example": true
+                    "description": {
+                        "type": "string"
                     },
                     "gender": {
+                        "description": "Men, Women, Children and etc",
                         "type": "string",
-                        "example": "unisex"
+                        "nullable": true
                     },
                     "sizes": {
+                        "description": "42, 43,...,50 yaly olcegler",
                         "type": "array",
                         "items": {
                             "type": "string"
                         },
-                        "example": [
-                            "S",
-                            "M",
-                            "L",
-                            "XL"
-                        ]
+                        "nullable": true
                     },
                     "separated_sizes": {
+                        "description": "S, M, L yaly olcegler",
                         "type": "array",
                         "items": {
                             "type": "string"
                         },
-                        "example": [
-                            "S",
-                            "M",
-                            "L",
-                            "XL"
-                        ]
+                        "nullable": true
                     },
                     "color": {
                         "type": "string",
-                        "example": "Blue"
+                        "nullable": true
                     },
                     "manufacturer": {
+                        "description": "Cykarylan yurdy",
                         "type": "string",
-                        "example": "FashionCo"
+                        "nullable": true
                     },
                     "width": {
                         "type": "number",
                         "format": "float",
-                        "example": 30.5
+                        "nullable": true
                     },
                     "height": {
                         "type": "number",
                         "format": "float",
-                        "example": 50
+                        "nullable": true
                     },
                     "weight": {
+                        "description": "Hemmesi gram gorunusinde bellenmeli",
                         "type": "number",
                         "format": "float",
-                        "example": 0.2
+                        "nullable": true
                     },
                     "production_time": {
+                        "description": "Hemme product time minutda gorkeziler",
                         "type": "integer",
-                        "example": 3
+                        "nullable": true
                     },
                     "min_order": {
                         "type": "integer",
-                        "example": 1
+                        "nullable": true
                     },
                     "seller_status": {
-                        "type": "boolean",
-                        "example": true
+                        "description": "Bu dukancy tarapyndan berilmeli status",
+                        "type": "boolean"
+                    },
+                    "status": {
+                        "description": "Bu administrator tarapyndan berilmeli status",
+                        "type": "boolean"
+                    },
+                    "shop_id": {
+                        "type": "integer"
+                    },
+                    "category_id": {
+                        "type": "integer"
+                    },
+                    "brand_ids": {
+                        "description": "Brand id-ler",
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        },
+                        "nullable": true
                     }
                 },
                 "type": "object"
@@ -2814,66 +2889,103 @@
                 "type": "object"
             },
             "ProductResource": {
+                "title": "Product Resource",
+                "description": "Product resource",
                 "properties": {
                     "id": {
-                        "type": "integer"
+                        "type": "integer",
+                        "format": "int64"
                     },
                     "name": {
                         "type": "string"
                     },
                     "price": {
-                        "type": "number"
+                        "type": "number",
+                        "format": "float"
                     },
                     "discount": {
-                        "type": "integer"
+                        "type": "integer",
+                        "nullable": true
                     },
                     "description": {
                         "type": "string"
                     },
                     "gender": {
-                        "type": "string"
+                        "description": "Men, Women, Children and etc",
+                        "type": "string",
+                        "nullable": true
                     },
                     "sizes": {
-                        "type": "string"
+                        "description": "42, 43,...,50 yaly olcegler",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "nullable": true
                     },
                     "separated_sizes": {
-                        "type": "string"
+                        "description": "S, M, L yaly olcegler",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "nullable": true
                     },
                     "color": {
-                        "type": "string"
+                        "type": "string",
+                        "nullable": true
                     },
                     "manufacturer": {
-                        "type": "string"
+                        "description": "Cykarylan yurdy",
+                        "type": "string",
+                        "nullable": true
                     },
                     "width": {
-                        "type": "number"
+                        "type": "number",
+                        "format": "float",
+                        "nullable": true
                     },
                     "height": {
-                        "type": "number"
+                        "type": "number",
+                        "format": "float",
+                        "nullable": true
                     },
                     "weight": {
-                        "type": "number"
+                        "description": "Hemmesi gram gorunusinde bellenmeli",
+                        "type": "number",
+                        "format": "float",
+                        "nullable": true
                     },
                     "production_time": {
-                        "type": "integer"
+                        "description": "Hemme product time minutda gorkeziler",
+                        "type": "integer",
+                        "nullable": true
                     },
                     "min_order": {
-                        "type": "integer"
+                        "type": "integer",
+                        "nullable": true
                     },
                     "seller_status": {
+                        "description": "Bu dukancy tarapyndan berilmeli status",
                         "type": "boolean"
                     },
                     "status": {
+                        "description": "Bu administrator tarapyndan berilmeli status",
                         "type": "boolean"
                     },
                     "shop_id": {
                         "type": "integer"
                     },
-                    "brand_id": {
-                        "type": "integer"
-                    },
                     "category_id": {
                         "type": "integer"
+                    },
+                    "brand_ids": {
+                        "description": "Brand id-ler",
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        },
+                        "nullable": true
                     },
                     "created_at": {
                         "type": "string",

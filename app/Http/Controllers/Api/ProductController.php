@@ -85,10 +85,49 @@ class ProductController extends Controller
      *     tags={"Products"},
      *     security={{"sanctum":{}}},
      *     @OA\RequestBody(
-     *         @OA\JsonContent(ref="#/components/schemas/ProductRequest")
+     *         @OA\MediaType(
+     *             mediaType="multipart/form-data",
+     *             @OA\Schema(
+     *                 required={"name", "price", "description", "seller_status", "status", "shop_id", "category_id"},
+     *                 @OA\Property(property="name", type="string"),
+     *                 @OA\Property(property="price", type="number", format="float"),
+     *                 @OA\Property(property="discount", type="integer"),
+     *                 @OA\Property(property="description", type="string"),
+     *                 @OA\Property(property="gender", type="string", description="Men, Women, Children and etc"),
+     *                 @OA\Property(property="sizes", type="string", description="JSON string: 42, 43,...,50 yaly olcegler"),
+     *                 @OA\Property(property="separated_sizes", type="string", description="JSON string: S, M, L yaly olcegler"),
+     *                 @OA\Property(property="color", type="string"),
+     *                 @OA\Property(property="manufacturer", type="string", description="Cykarylan yurdy"),
+     *                 @OA\Property(property="width", type="number", format="float"),
+     *                 @OA\Property(property="height", type="number", format="float"),
+     *                 @OA\Property(property="weight", type="number", format="float", description="Hemmesi gram gorunusinde bellenmeli"),
+     *                 @OA\Property(property="production_time", type="integer", description="Hemme product time minutda gorkeziler"),
+     *                 @OA\Property(property="min_order", type="integer"),
+     *                 @OA\Property(property="seller_status", type="boolean", description="Bu dukancy tarapyndan berilmeli status"),
+     *                 @OA\Property(property="status", type="boolean", description="Bu administrator tarapyndan berilmeli status"),
+     *                 @OA\Property(property="shop_id", type="integer"),
+     *                 @OA\Property(property="category_id", type="integer"),
+     *                 @OA\Property(property="brand_ids", type="string", description="JSON string: Brand id-ler"),
+     *                 @OA\Property(property="images[]", type="array", @OA\Items(type="string", format="binary"), description="Product images")
+     *             )
+     *         )
      *     ),
-     *     @OA\Response(response="200", description="Product created successfully"),
-     *     @OA\Response(response="422", description="Validation error")
+     *     @OA\Response(
+     *         response="201", 
+     *         description="Product created successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Product created successfully"),
+     *             @OA\Property(property="product", ref="#/components/schemas/Product")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="422", 
+     *         description="Validation error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="The given data was invalid."),
+     *             @OA\Property(property="errors", type="object")
+     *         )
+     *     )
      * )
      */
     public function store(Request $request)
