@@ -2954,24 +2954,30 @@
                 "description": "Product model",
                 "properties": {
                     "id": {
-                        "type": "integer"
+                        "type": "integer",
+                        "example": 1
                     },
                     "name": {
-                        "type": "string"
+                        "type": "string",
+                        "example": "Stylish T-Shirt"
                     },
                     "price": {
                         "type": "number",
-                        "format": "float"
+                        "format": "float",
+                        "example": 29.99
                     },
                     "discount": {
                         "type": "integer",
+                        "example": 10,
                         "nullable": true
                     },
                     "description": {
-                        "type": "string"
+                        "type": "string",
+                        "example": "A comfortable and stylish t-shirt for everyday wear."
                     },
                     "gender": {
                         "type": "string",
+                        "example": "Unisex",
                         "nullable": true
                     },
                     "sizes": {
@@ -2979,6 +2985,12 @@
                         "items": {
                             "type": "string"
                         },
+                        "example": [
+                            "S",
+                            "M",
+                            "L",
+                            "XL"
+                        ],
                         "nullable": true
                     },
                     "separated_sizes": {
@@ -2986,65 +2998,88 @@
                         "items": {
                             "type": "string"
                         },
+                        "example": [
+                            "S",
+                            "M",
+                            "L",
+                            "XL"
+                        ],
                         "nullable": true
                     },
                     "color": {
                         "type": "string",
+                        "example": "Blue",
                         "nullable": true
                     },
                     "manufacturer": {
                         "type": "string",
+                        "example": "FashionCo",
                         "nullable": true
                     },
                     "width": {
                         "type": "number",
                         "format": "float",
+                        "example": 30.5,
                         "nullable": true
                     },
                     "height": {
                         "type": "number",
                         "format": "float",
+                        "example": 50,
                         "nullable": true
                     },
                     "weight": {
                         "type": "number",
                         "format": "float",
+                        "example": 0.2,
                         "nullable": true
                     },
                     "production_time": {
                         "type": "integer",
+                        "example": 5,
                         "nullable": true
                     },
                     "min_order": {
                         "type": "integer",
+                        "example": 1,
                         "nullable": true
                     },
                     "seller_status": {
-                        "type": "boolean"
+                        "type": "boolean",
+                        "example": true
                     },
                     "status": {
-                        "type": "boolean"
+                        "type": "boolean",
+                        "example": true
                     },
                     "shop_id": {
-                        "type": "integer"
+                        "type": "integer",
+                        "example": 1
                     },
                     "category_id": {
-                        "type": "integer"
+                        "type": "integer",
+                        "example": 3
                     },
                     "brand_ids": {
                         "type": "array",
                         "items": {
                             "type": "integer"
                         },
+                        "example": [
+                            1,
+                            2
+                        ],
                         "nullable": true
                     },
                     "created_at": {
                         "type": "string",
-                        "format": "date-time"
+                        "format": "date-time",
+                        "example": "2023-06-15T12:00:00Z"
                     },
                     "updated_at": {
                         "type": "string",
-                        "format": "date-time"
+                        "format": "date-time",
+                        "example": "2023-06-15T12:00:00Z"
                     },
                     "images": {
                         "description": "Associated images",

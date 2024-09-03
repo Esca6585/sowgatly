@@ -96,25 +96,25 @@ class ProductController extends Controller
      *             mediaType="multipart/form-data",
      *             @OA\Schema(
      *                 required={"name", "price", "description", "seller_status", "status", "shop_id", "category_id"},
-     *                 @OA\Property(property="name", type="string"),
-     *                 @OA\Property(property="price", type="number", format="float"),
-     *                 @OA\Property(property="discount", type="integer"),
-     *                 @OA\Property(property="description", type="string"),
-     *                 @OA\Property(property="gender", type="string", description="Men, Women, Children and etc"),
-     *                 @OA\Property(property="sizes", type="string", description="JSON string: 42, 43,...,50 yaly olcegler"),
-     *                 @OA\Property(property="separated_sizes", type="string", description="JSON string: S, M, L yaly olcegler"),
-     *                 @OA\Property(property="color", type="string"),
-     *                 @OA\Property(property="manufacturer", type="string", description="Cykarylan yurdy"),
-     *                 @OA\Property(property="width", type="number", format="float"),
-     *                 @OA\Property(property="height", type="number", format="float"),
-     *                 @OA\Property(property="weight", type="number", format="float", description="Hemmesi gram gorunusinde bellenmeli"),
-     *                 @OA\Property(property="production_time", type="integer", description="Hemme product time minutda gorkeziler"),
-     *                 @OA\Property(property="min_order", type="integer"),
-     *                 @OA\Property(property="seller_status", type="boolean", description="Bu dukancy tarapyndan berilmeli status"),
-     *                 @OA\Property(property="status", type="boolean", description="Bu administrator tarapyndan berilmeli status"),
-     *                 @OA\Property(property="shop_id", type="integer"),
-     *                 @OA\Property(property="category_id", type="integer"),
-     *                 @OA\Property(property="brand_ids", type="string", description="JSON string: Brand id-ler"),
+     *                 @OA\Property(property="name", type="string", example="Stylish T-Shirt"),
+     *                 @OA\Property(property="price", type="number", format="float", example=29.99),
+     *                 @OA\Property(property="discount", type="integer", example=10),
+     *                 @OA\Property(property="description", type="string", example="A comfortable and stylish t-shirt for everyday wear."),
+     *                 @OA\Property(property="gender", type="string", description="Men, Women, Children and etc", example="Unisex"),
+     *                 @OA\Property(property="sizes", type="string", description="JSON string: 42, 43,...,50 yaly olcegler", example="[42, 43, 44, 45]"),
+     *                 @OA\Property(property="separated_sizes", type="string", description="JSON string: S, M, L yaly olcegler", example="[\"S\", \"M\", \"L\", \"XL\"]"),
+     *                 @OA\Property(property="color", type="string", example="Blue"),
+     *                 @OA\Property(property="manufacturer", type="string", description="Cykarylan yurdy", example="FashionCo"),
+     *                 @OA\Property(property="width", type="number", format="float", example=30.5),
+     *                 @OA\Property(property="height", type="number", format="float", example=50.0),
+     *                 @OA\Property(property="weight", type="number", format="float", description="Hemmesi gram gorunusinde bellenmeli", example=200),
+     *                 @OA\Property(property="production_time", type="integer", description="Hemme product time minutda gorkeziler", example=300),
+     *                 @OA\Property(property="min_order", type="integer", example=1),
+     *                 @OA\Property(property="seller_status", type="boolean", description="Bu dukancy tarapyndan berilmeli status", example=true),
+     *                 @OA\Property(property="status", type="boolean", description="Bu administrator tarapyndan berilmeli status", example=true),
+     *                 @OA\Property(property="shop_id", type="integer", example=1),
+     *                 @OA\Property(property="category_id", type="integer", example=3),
+     *                 @OA\Property(property="brand_ids", type="string", description="JSON string: Brand id-ler", example="[1, 2]"),
      *                 @OA\Property(property="images[]", type="array", @OA\Items(type="string", format="binary"), description="Product images")
      *             )
      *         )
@@ -132,7 +132,7 @@ class ProductController extends Controller
      *         description="Validation error",
      *         @OA\JsonContent(
      *             @OA\Property(property="message", type="string", example="The given data was invalid."),
-     *             @OA\Property(property="errors", type="object")
+     *             @OA\Property(property="errors", type="object", example={"name": {"The name field is required."}})
      *         )
      *     )
      * )
