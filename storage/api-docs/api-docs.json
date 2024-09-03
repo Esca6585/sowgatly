@@ -1344,7 +1344,7 @@
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/components/schemas/ProductRequest"
+                                                "$ref": "#/components/schemas/ProductResource"
                                             }
                                         }
                                     },
@@ -1498,7 +1498,7 @@
                                             "example": "Product created successfully"
                                         },
                                         "product": {
-                                            "$ref": "#/components/schemas/ProductRequest"
+                                            "$ref": "#/components/schemas/ProductResource"
                                         }
                                     },
                                     "type": "object"
@@ -1589,7 +1589,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/ProductRequest"
+                                "$ref": "#/components/schemas/ProductResource"
                             }
                         }
                     }
@@ -1606,7 +1606,7 @@
                                             "example": "Product updated successfully"
                                         },
                                         "data": {
-                                            "$ref": "#/components/schemas/ProductRequest"
+                                            "$ref": "#/components/schemas/ProductResource"
                                         }
                                     },
                                     "type": "object"
@@ -2831,113 +2831,6 @@
                 },
                 "type": "object"
             },
-            "ProductRequest": {
-                "title": "Product Request",
-                "description": "Product request body data",
-                "required": [
-                    "name",
-                    "price",
-                    "description",
-                    "seller_status",
-                    "status",
-                    "shop_id",
-                    "category_id"
-                ],
-                "properties": {
-                    "name": {
-                        "type": "string"
-                    },
-                    "price": {
-                        "type": "number",
-                        "format": "float"
-                    },
-                    "discount": {
-                        "type": "integer",
-                        "nullable": true
-                    },
-                    "description": {
-                        "type": "string"
-                    },
-                    "gender": {
-                        "description": "Men, Women, Children and etc",
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "sizes": {
-                        "description": "42, 43,...,50 yaly olcegler",
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        },
-                        "nullable": true
-                    },
-                    "separated_sizes": {
-                        "description": "S, M, L yaly olcegler",
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        },
-                        "nullable": true
-                    },
-                    "color": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "manufacturer": {
-                        "description": "Cykarylan yurdy",
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "width": {
-                        "type": "number",
-                        "format": "float",
-                        "nullable": true
-                    },
-                    "height": {
-                        "type": "number",
-                        "format": "float",
-                        "nullable": true
-                    },
-                    "weight": {
-                        "description": "Hemmesi gram gorunusinde bellenmeli",
-                        "type": "number",
-                        "format": "float",
-                        "nullable": true
-                    },
-                    "production_time": {
-                        "description": "Hemme product time minutda gorkeziler",
-                        "type": "integer",
-                        "nullable": true
-                    },
-                    "min_order": {
-                        "type": "integer",
-                        "nullable": true
-                    },
-                    "seller_status": {
-                        "description": "Bu dukancy tarapyndan berilmeli status",
-                        "type": "boolean"
-                    },
-                    "status": {
-                        "description": "Bu administrator tarapyndan berilmeli status",
-                        "type": "boolean"
-                    },
-                    "shop_id": {
-                        "type": "integer"
-                    },
-                    "category_id": {
-                        "type": "integer"
-                    },
-                    "brand_ids": {
-                        "description": "Brand id-ler",
-                        "type": "array",
-                        "items": {
-                            "type": "integer"
-                        },
-                        "nullable": true
-                    }
-                },
-                "type": "object"
-            },
             "AddressResource": {
                 "title": "Address Resource",
                 "description": "Address resource",
@@ -3009,13 +2902,59 @@
                 },
                 "type": "object"
             },
-            "ProductResource": {
-                "title": "Product Resource",
-                "description": "Product resource",
+            "CompositionResource": {
+                "title": "Composition Resource",
+                "description": "Composition resource",
                 "properties": {
                     "id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "ImageResource": {
+                "title": "Image",
+                "description": "Image Resource",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "url": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "product_id": {
                         "type": "integer",
-                        "format": "int64"
+                        "nullable": true
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "Product": {
+                "title": "Product",
+                "description": "Product model",
+                "properties": {
+                    "id": {
+                        "type": "integer"
                     },
                     "name": {
                         "type": "string"
@@ -3032,12 +2971,10 @@
                         "type": "string"
                     },
                     "gender": {
-                        "description": "Men, Women, Children and etc",
                         "type": "string",
                         "nullable": true
                     },
                     "sizes": {
-                        "description": "42, 43,...,50 yaly olcegler",
                         "type": "array",
                         "items": {
                             "type": "string"
@@ -3045,7 +2982,6 @@
                         "nullable": true
                     },
                     "separated_sizes": {
-                        "description": "S, M, L yaly olcegler",
                         "type": "array",
                         "items": {
                             "type": "string"
@@ -3057,7 +2993,6 @@
                         "nullable": true
                     },
                     "manufacturer": {
-                        "description": "Cykarylan yurdy",
                         "type": "string",
                         "nullable": true
                     },
@@ -3072,13 +3007,11 @@
                         "nullable": true
                     },
                     "weight": {
-                        "description": "Hemmesi gram gorunusinde bellenmeli",
                         "type": "number",
                         "format": "float",
                         "nullable": true
                     },
                     "production_time": {
-                        "description": "Hemme product time minutda gorkeziler",
                         "type": "integer",
                         "nullable": true
                     },
@@ -3087,11 +3020,9 @@
                         "nullable": true
                     },
                     "seller_status": {
-                        "description": "Bu dukancy tarapyndan berilmeli status",
                         "type": "boolean"
                     },
                     "status": {
-                        "description": "Bu administrator tarapyndan berilmeli status",
                         "type": "boolean"
                     },
                     "shop_id": {
@@ -3101,7 +3032,6 @@
                         "type": "integer"
                     },
                     "brand_ids": {
-                        "description": "Brand id-ler",
                         "type": "array",
                         "items": {
                             "type": "integer"
@@ -3115,6 +3045,13 @@
                     "updated_at": {
                         "type": "string",
                         "format": "date-time"
+                    },
+                    "images": {
+                        "description": "Associated images",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ImageResource"
+                        }
                     }
                 },
                 "type": "object"
@@ -3213,6 +3150,130 @@
                             }
                         ],
                         "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "ProductResource": {
+                "title": "Product Resource",
+                "description": "Product resource",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "price": {
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "discount": {
+                        "type": "integer",
+                        "nullable": true
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "gender": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "sizes": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "nullable": true
+                    },
+                    "separated_sizes": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "nullable": true
+                    },
+                    "color": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "manufacturer": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "width": {
+                        "type": "number",
+                        "format": "float",
+                        "nullable": true
+                    },
+                    "height": {
+                        "type": "number",
+                        "format": "float",
+                        "nullable": true
+                    },
+                    "weight": {
+                        "type": "number",
+                        "format": "float",
+                        "nullable": true
+                    },
+                    "production_time": {
+                        "type": "integer",
+                        "nullable": true
+                    },
+                    "min_order": {
+                        "type": "integer",
+                        "nullable": true
+                    },
+                    "seller_status": {
+                        "type": "boolean"
+                    },
+                    "status": {
+                        "type": "boolean"
+                    },
+                    "shop_id": {
+                        "type": "integer"
+                    },
+                    "category_id": {
+                        "type": "integer"
+                    },
+                    "brand_ids": {
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        },
+                        "nullable": true
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "category": {
+                        "$ref": "#/components/schemas/CategoryResource"
+                    },
+                    "shop": {
+                        "$ref": "#/components/schemas/ShopResource"
+                    },
+                    "images": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ImageResource"
+                        }
+                    },
+                    "compositions": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/CompositionResource"
+                        }
+                    },
+                    "brands": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/BrandResource"
+                        }
                     }
                 },
                 "type": "object"
