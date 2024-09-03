@@ -8,6 +8,7 @@ use App\Models\Address;
 use App\Models\Region;
 use Illuminate\Http\Request;
 use App\Http\Resources\ShopResource;
+use App\Http\Requests\ShopRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -78,7 +79,7 @@ class ShopController extends Controller
      *     )
      * )
      */
-    public function store(Request $request)
+    public function store(ShopRequest $request)
     {
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
@@ -224,7 +225,7 @@ class ShopController extends Controller
      *     )
      * )
      */
-    public function update(Request $request, Shop $shop)
+    public function update(ShopRequest $request, Shop $shop)
     {
         // Check if the authenticated user owns this shop
         if ($request->user()->id !== $shop->user_id) {

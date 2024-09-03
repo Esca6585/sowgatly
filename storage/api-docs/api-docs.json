@@ -2504,6 +2504,10 @@
                                     "region_id": {
                                         "type": "integer",
                                         "example": 2
+                                    },
+                                    "_method": {
+                                        "type": "string",
+                                        "example": "PUT"
                                     }
                                 },
                                 "type": "object"
