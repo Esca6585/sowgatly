@@ -64,6 +64,8 @@ class UserController extends Controller
         $validatedData['password'] = Hash::make($validatedData['password']);
 
         if ($request->hasFile('image')) {
+            $image = $request->file('image');
+
             $date = date("d-m-Y-H-i-s");
 
             $fileRandName = Str::random(10);
@@ -71,7 +73,7 @@ class UserController extends Controller
 
             $fileName = $fileRandName . '.' . $fileExt;
             
-            $path = 'user/' . Str::slug($request->name . '-' . $date ) . '/';
+            $path = 'product/' . Str::slug($validatedData['name'] . '-' . $date ) . '/';
 
             $image->move($path, $fileName);
             
@@ -158,18 +160,21 @@ class UserController extends Controller
 
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
-                $imageName = Str::uuid() . '.' . $image->getClientOriginalExtension();
-                $imagePath = 'users/' . $user->id . '/' . $imageName;
                 
-                // Store the new image
-                Storage::disk('public')->put($imagePath, file_get_contents($image));
+                $date = date("d-m-Y-H-i-s");
+
+                $fileRandName = Str::random(10);
+                $fileExt = $image->getClientOriginalExtension();
+
+                $fileName = $fileRandName . '.' . $fileExt;
                 
-                // Delete old image if exists
-                if ($user->image) {
-                    Storage::disk('public')->delete($user->image);
-                }
+                $path = 'product/' . Str::slug($validatedData['name'] . '-' . $date ) . '/';
+
+                $image->move($path, $fileName);
                 
-                $validatedData['image'] = $imagePath;
+                $originalImage = $path . $fileName;
+
+                $validatedData['image'] = $originalImage;
             }
 
             $user->update($validatedData);
