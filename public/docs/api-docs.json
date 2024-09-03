@@ -2647,7 +2647,7 @@
                     }
                 },
                 "responses": {
-                    "201": {
+                    "200": {
                         "description": "User creation response",
                         "content": {
                             "application/json": {
@@ -2726,6 +2726,24 @@
                                         },
                                         "user": {
                                             "$ref": "#/components/schemas/UserResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "User not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "message": {
+                                            "type": "string"
                                         }
                                     },
                                     "type": "object"

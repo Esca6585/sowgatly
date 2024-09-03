@@ -10,10 +10,9 @@ class UserUpdateRequest extends FormRequest
     /**
      * Determine if the user is authorized to make this request.
      */
-    public function authorize(): bool
+    public function authorize()
     {
-        // You might want to add authorization logic here
-        return true;
+        return $this->user()->id == $this->route('user');
     }
 
     /**
@@ -61,5 +60,10 @@ class UserUpdateRequest extends FormRequest
             'image.mimes' => 'The image must be a file of type: jpeg, png, jpg, gif.',
             'image.max' => 'The image may not be greater than 2048 kilobytes.',
         ];
+    }
+
+    public function update(User $user, User $model)
+    {
+        return $user->id === $model->id;
     }
 }

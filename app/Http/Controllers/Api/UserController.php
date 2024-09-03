@@ -141,37 +141,51 @@ class UserController extends Controller
      */
     public function update(UserUpdateRequest $request, $id)
     {
-        $user = User::findOrFail($id);
+        try {
+            $user = User::findOrFail($id);
 
-        $validatedData = $request->validated();
+            $validatedData = $request->validated();
 
-        if (isset($validatedData['password'])) {
-            $validatedData['password'] = Hash::make($validatedData['password']);
-        }
-
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $imageName = uniqid() . '.' . $image->getClientOriginalExtension();
-            $imagePath = 'user/' . Str::slug($user->name . '-' . $user->id) . '-' . date('d-m-Y-H-i-s') . '-' . $imageName;
-            
-            // Store the image
-            Storage::disk('public')->put($imagePath, file_get_contents($image));
-            
-            // Delete old image if exists
-            if ($user->image) {
-                Storage::disk('public')->delete($user->image);
+            if (isset($validatedData['password'])) {
+                $validatedData['password'] = Hash::make($validatedData['password']);
             }
-            
-            $validatedData['image'] = $imagePath;
+
+            if ($request->hasFile('image')) {
+                $image = $request->file('image');
+                $imageName = Str::uuid() . '.' . $image->getClientOriginalExtension();
+                $imagePath = 'users/' . $user->id . '/' . $imageName;
+                
+                // Store the new image
+                Storage::disk('public')->put($imagePath, file_get_contents($image));
+                
+                // Delete old image if exists
+                if ($user->image) {
+                    Storage::disk('public')->delete($user->image);
+                }
+                
+                $validatedData['image'] = $imagePath;
+            }
+
+            $user->update($validatedData);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'User updated successfully',
+                'user' => new UserResource($user)
+            ], 200);
+
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'User not found'
+            ], 404);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred while updating the user',
+                'error' => $e->getMessage()
+            ], 500);
         }
-
-        $user->update($validatedData);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'User updated successfully',
-            'user' => new UserResource($user)
-        ], 200);
     }
 
     /**
