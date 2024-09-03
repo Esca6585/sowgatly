@@ -2453,12 +2453,12 @@
                     }
                 ]
             },
-            "put": {
+            "post": {
                 "tags": [
                     "Shops"
                 ],
                 "summary": "Update a shop",
-                "operationId": "9202b1b4a330a9232b6f393acba6362c",
+                "operationId": "81b02d0992644e9767892bc8c272e045",
                 "parameters": [
                     {
                         "name": "id",
@@ -2471,7 +2471,7 @@
                 ],
                 "requestBody": {
                     "content": {
-                        "application/json": {
+                        "multipart/form-data": {
                             "schema": {
                                 "properties": {
                                     "name": {
@@ -2499,8 +2499,7 @@
                                         "example": "17:00"
                                     },
                                     "image": {
-                                        "type": "string",
-                                        "example": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACklEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg=="
+                                        "type": "file"
                                     },
                                     "region_id": {
                                         "type": "integer",
@@ -2523,11 +2522,17 @@
                             }
                         }
                     },
+                    "403": {
+                        "description": "Unauthorized action"
+                    },
                     "404": {
                         "description": "Shop not found"
                     },
                     "422": {
                         "description": "Validation Error"
+                    },
+                    "500": {
+                        "description": "Server Error"
                     }
                 },
                 "security": [
