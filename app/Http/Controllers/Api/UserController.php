@@ -64,14 +64,20 @@ class UserController extends Controller
         $validatedData['password'] = Hash::make($validatedData['password']);
 
         if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $imageName = uniqid() . '.' . $image->getClientOriginalExtension();
-            $imagePath = 'user/' . Str::slug($validatedData['name']) . '-' . date('d-m-Y-H-i-s') . '-' . $imageName;
+            $date = date("d-m-Y-H-i-s");
+
+            $fileRandName = Str::random(10);
+            $fileExt = $image->getClientOriginalExtension();
+
+            $fileName = $fileRandName . '.' . $fileExt;
             
-            // Store the image
-            Storage::disk('public')->put($imagePath, file_get_contents($image));
+            $path = 'user/' . Str::slug($request->name . '-' . $date ) . '/';
+
+            $image->move($path, $fileName);
             
-            $validatedData['image'] = $imagePath;
+            $originalImage = $path . $fileName;
+
+            $validatedData['image'] = $originalImage;
         }
 
         $user = User::create($validatedData);
