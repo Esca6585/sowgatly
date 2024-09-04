@@ -254,8 +254,7 @@ class UserController extends Controller
      *     @OA\Response(
      *         response=401,
      *         description="Unauthenticated",
-     *     ),
-     *     security={{"bearerAuth": {}}}
+     *     )
      * )
      */
     public function me(Request $request)
