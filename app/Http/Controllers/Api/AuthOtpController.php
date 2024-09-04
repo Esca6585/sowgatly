@@ -347,7 +347,7 @@ class AuthOtpController extends Controller
                 'token_type' => 'Bearer',
                 'otp' => $otpCode,
                 'user' => new UserResource($user),
-                'shops' => ShopResource::collection($user->shops),
+                'shops' => $user->shops ? ShopResource::collection($user->shops) : [],
                 'device' => new DeviceResource($device),
             ], 200);
         } catch (\Exception $e) {

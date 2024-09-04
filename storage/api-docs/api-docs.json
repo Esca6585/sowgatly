@@ -2936,7 +2936,7 @@
                 },
                 "security": [
                     {
-                        "bearerAuth": []
+                        "sanctum": []
                     }
                 ]
             }

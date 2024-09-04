@@ -149,6 +149,9 @@ class UserController extends Controller
      */
     public function update(UserUpdateRequest $request, $id)
     {
+        \Log::info('Update request received for user ID: ' . $id);
+        \Log::info('Validated data: ' . json_encode($request->validated()));
+
         try {
             $user = User::findOrFail($id);
 
@@ -189,13 +192,13 @@ class UserController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'User not found'
-            ], 404);
+            ], 200);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'An error occurred while updating the user',
                 'error' => $e->getMessage()
-            ], 500);
+            ], 200);
         }
     }
 
@@ -240,6 +243,7 @@ class UserController extends Controller
             'user' => new UserResource($user)
         ]);
     }
+
     /**
      * @OA\Get(
      *     path="/api/users/me",

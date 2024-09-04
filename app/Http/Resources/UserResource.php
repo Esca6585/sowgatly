@@ -50,9 +50,7 @@ class UserResource extends JsonResource
             'device_tokens' => $this->whenLoaded('devices', function () {
                 return $this->devices->pluck('device_token');
             }),
-            'shop' => $this->whenLoaded('shop', function () {
-                return new ShopResource($this->shop);
-            }),
+            'shop' => $user->shop ? ShopResource::collection($user->shop) : [],
         ];
     }
 }
