@@ -346,10 +346,10 @@ class ProductController extends Controller
         $filename = uniqid() . '.png';
 
         // Save the image to the storage
-        Storage::disk('public')->put('product_images/' . $filename, $imageData);
+        Storage::disk('public')->put('product/' . $filename, $imageData);
 
         // Return the file path
-        return 'product_images/' . $filename;
+        return 'product/' . $filename;
     }
 
     /**
