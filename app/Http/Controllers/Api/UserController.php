@@ -245,6 +245,7 @@ class UserController extends Controller
      *     path="/api/users/me",
      *     summary="Get authenticated user's information",
      *     tags={"Users"},
+     *     security={{"sanctum":{}}},
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
