@@ -47,7 +47,8 @@ class Product extends Model
 
     public function brands()
     {
-        return $this->belongsToMany(Brand::class, 'product_brand');
+        return $this->belongsToMany(Brand::class)
+                    ->whereIn('brands.id', $this->brand_ids);
     }
 
     public function images()
@@ -72,5 +73,10 @@ class Product extends Model
     public function scopeWithBrand($query, $brandId)
     {
         return $query->whereJsonContains('brand_ids', $brandId);
+    }
+
+    public function scopeWithFullDetails($query)
+    {
+        return $query->with(['category', 'shop', 'brands', 'images', 'compositions']);
     }
 }

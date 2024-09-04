@@ -1378,11 +1378,11 @@
                 "tags": [
                     "Products"
                 ],
-                "summary": "Create a new product",
+                "summary": "Create a new product with images",
                 "operationId": "785644b7d7dd38af4b51dafd0fbc1b6d",
                 "requestBody": {
                     "content": {
-                        "multipart/form-data": {
+                        "application/json": {
                             "schema": {
                                 "required": [
                                     "name",
@@ -1412,26 +1412,38 @@
                                         "example": "A comfortable and stylish t-shirt for everyday wear."
                                     },
                                     "gender": {
-                                        "description": "Men, Women, Children and etc",
                                         "type": "string",
                                         "example": "Unisex"
                                     },
                                     "sizes": {
-                                        "description": "JSON string: 42, 43,...,50 yaly olcegler",
-                                        "type": "string",
-                                        "example": "[42, 43, 44, 45]"
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        },
+                                        "example": [
+                                            42,
+                                            43,
+                                            44,
+                                            45
+                                        ]
                                     },
                                     "separated_sizes": {
-                                        "description": "JSON string: S, M, L yaly olcegler",
-                                        "type": "string",
-                                        "example": "[\\'S\\', \\'M\\', \\'L\\', \\'XL\\']"
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        },
+                                        "example": [
+                                            "S",
+                                            "M",
+                                            "L",
+                                            "XL"
+                                        ]
                                     },
                                     "color": {
                                         "type": "string",
                                         "example": "Blue"
                                     },
                                     "manufacturer": {
-                                        "description": "Cykarylan yurdy",
                                         "type": "string",
                                         "example": "FashionCo"
                                     },
@@ -1446,13 +1458,11 @@
                                         "example": 50
                                     },
                                     "weight": {
-                                        "description": "Hemmesi gram gorunusinde bellenmeli",
                                         "type": "number",
                                         "format": "float",
                                         "example": 200
                                     },
                                     "production_time": {
-                                        "description": "Hemme product time minutda gorkeziler",
                                         "type": "integer",
                                         "example": 300
                                     },
@@ -1461,12 +1471,10 @@
                                         "example": 1
                                     },
                                     "seller_status": {
-                                        "description": "Bu dukancy tarapyndan berilmeli status",
                                         "type": "boolean",
                                         "example": true
                                     },
                                     "status": {
-                                        "description": "Bu administrator tarapyndan berilmeli status",
                                         "type": "boolean",
                                         "example": true
                                     },
@@ -1479,17 +1487,29 @@
                                         "example": 3
                                     },
                                     "brand_ids": {
-                                        "description": "JSON string: Brand id-ler",
-                                        "type": "string",
-                                        "example": "[1, 2]"
-                                    },
-                                    "images[]": {
-                                        "description": "Product images",
                                         "type": "array",
                                         "items": {
-                                            "type": "string",
-                                            "format": "binary"
-                                        }
+                                            "type": "integer"
+                                        },
+                                        "example": [
+                                            1,
+                                            2,
+                                            3
+                                        ]
+                                    },
+                                    "images": {
+                                        "description": "Array of base64 encoded images",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        },
+                                        "example": [
+                                            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACklEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg==",
+                                            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACklEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg==",
+                                            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACklEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg==",
+                                            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACklEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg==",
+                                            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACklEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg=="
+                                        ]
                                     }
                                 },
                                 "type": "object"
@@ -1528,12 +1548,7 @@
                                             "example": "The given data was invalid."
                                         },
                                         "errors": {
-                                            "type": "object",
-                                            "example": {
-                                                "name": [
-                                                    "The name field is required."
-                                                ]
-                                            }
+                                            "type": "object"
                                         }
                                     },
                                     "type": "object"
@@ -1541,12 +1556,7 @@
                             }
                         }
                     }
-                },
-                "security": [
-                    {
-                        "sanctum": []
-                    }
-                ]
+                }
             }
         },
         "/api/products/{id}": {
@@ -1584,9 +1594,8 @@
                 "tags": [
                     "Products"
                 ],
-                "summary": "Update a product",
-                "description": "Update an existing product with new information",
-                "operationId": "updateProduct",
+                "summary": "Update an existing product with images",
+                "operationId": "416e4959a3919547eb609d87e3db9135",
                 "parameters": [
                     {
                         "name": "id",
@@ -1600,12 +1609,129 @@
                     }
                 ],
                 "requestBody": {
-                    "description": "Product information",
-                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/ProductResource"
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Updated Stylish T-Shirt"
+                                    },
+                                    "price": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 34.99
+                                    },
+                                    "discount": {
+                                        "type": "integer",
+                                        "example": 15
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "An updated comfortable and stylish t-shirt for everyday wear."
+                                    },
+                                    "gender": {
+                                        "type": "string",
+                                        "example": "Unisex"
+                                    },
+                                    "sizes": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        },
+                                        "example": [
+                                            42,
+                                            43,
+                                            44,
+                                            45,
+                                            46
+                                        ]
+                                    },
+                                    "separated_sizes": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        },
+                                        "example": [
+                                            "S",
+                                            "M",
+                                            "L",
+                                            "XL",
+                                            "XXL"
+                                        ]
+                                    },
+                                    "color": {
+                                        "type": "string",
+                                        "example": "Red"
+                                    },
+                                    "manufacturer": {
+                                        "type": "string",
+                                        "example": "UpdatedFashionCo"
+                                    },
+                                    "width": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 31
+                                    },
+                                    "height": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 51
+                                    },
+                                    "weight": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 210
+                                    },
+                                    "production_time": {
+                                        "type": "integer",
+                                        "example": 280
+                                    },
+                                    "min_order": {
+                                        "type": "integer",
+                                        "example": 2
+                                    },
+                                    "seller_status": {
+                                        "type": "boolean",
+                                        "example": true
+                                    },
+                                    "status": {
+                                        "type": "boolean",
+                                        "example": true
+                                    },
+                                    "shop_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "category_id": {
+                                        "type": "integer",
+                                        "example": 3
+                                    },
+                                    "brand_ids": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        },
+                                        "example": [
+                                            1,
+                                            2,
+                                            3,
+                                            4
+                                        ]
+                                    },
+                                    "images": {
+                                        "description": "Array of base64 encoded images",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        },
+                                        "example": [
+                                            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACklEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg==",
+                                            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACklEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg=="
+                                        ]
+                                    }
+                                },
+                                "type": "object"
                             }
                         }
                     }
@@ -1621,7 +1747,7 @@
                                             "type": "string",
                                             "example": "Product updated successfully"
                                         },
-                                        "data": {
+                                        "product": {
                                             "$ref": "#/components/schemas/ProductResource"
                                         }
                                     },
@@ -1657,29 +1783,7 @@
                                             "example": "The given data was invalid."
                                         },
                                         "errors": {
-                                            "type": "object",
-                                            "additionalProperties": {
-                                                "type": "array",
-                                                "items": {
-                                                    "type": "string"
-                                                }
-                                            }
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Unauthenticated."
+                                            "type": "object"
                                         }
                                     },
                                     "type": "object"
@@ -1687,12 +1791,7 @@
                             }
                         }
                     }
-                },
-                "security": [
-                    {
-                        "sanctum": []
-                    }
-                ]
+                }
             },
             "delete": {
                 "tags": [

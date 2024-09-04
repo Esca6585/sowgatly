@@ -73,7 +73,7 @@ class UserController extends Controller
 
             $fileName = $fileRandName . '.' . $fileExt;
             
-            $path = 'product/' . Str::slug($validatedData['name'] . '-' . $date ) . '/';
+            $path = 'user/' . Str::slug($validatedData['name'] . '-' . $date ) . '/';
 
             $image->move($path, $fileName);
             

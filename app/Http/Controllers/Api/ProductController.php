@@ -7,16 +7,18 @@ use App\Models\Product;
 use App\Models\Category;
 use App\Models\Brand;
 use Illuminate\Http\Request;
-use App\Http\Requests\ProductRequest;
+use App\Http\Requests\ProductUpdateRequest;
+use App\Http\Requests\ProductStoreRequest;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
-
 use App\OpenApi\Schemas\ProductResource;
 use App\OpenApi\Schemas\CategoryResource;
 use App\OpenApi\Schemas\ShopResource;
 use App\OpenApi\Schemas\ImageResource;
 use App\OpenApi\Schemas\CompositionResource;
 use App\OpenApi\Schemas\BrandResource;
+use Str;
+use Storage;
 
 /**
  * @OA\Tag(
@@ -85,42 +87,50 @@ class ProductController extends Controller
         }
     }
 
-    /**
+     /**
      * @OA\Post(
      *     path="/api/products",
-     *     summary="Create a new product",
+     *     summary="Create a new product with images",
      *     tags={"Products"},
-     *     security={{"sanctum":{}}},
      *     @OA\RequestBody(
-     *         @OA\MediaType(
-     *             mediaType="multipart/form-data",
-     *             @OA\Schema(
-     *                 required={"name", "price", "description", "seller_status", "status", "shop_id", "category_id"},
-     *                 @OA\Property(property="name", type="string", example="Stylish T-Shirt"),
-     *                 @OA\Property(property="price", type="number", format="float", example=29.99),
-     *                 @OA\Property(property="discount", type="integer", example=10),
-     *                 @OA\Property(property="description", type="string", example="A comfortable and stylish t-shirt for everyday wear."),
-     *                 @OA\Property(property="gender", type="string", description="Men, Women, Children and etc", example="Unisex"),
-     *                 @OA\Property(property="sizes", type="string", description="JSON string: 42, 43,...,50 yaly olcegler", example="[42, 43, 44, 45]"),
-     *                 @OA\Property(property="separated_sizes", type="string", description="JSON string: S, M, L yaly olcegler", example="[\'S\', \'M\', \'L\', \'XL\']"),
-     *                 @OA\Property(property="color", type="string", example="Blue"),
-     *                 @OA\Property(property="manufacturer", type="string", description="Cykarylan yurdy", example="FashionCo"),
-     *                 @OA\Property(property="width", type="number", format="float", example=30.5),
-     *                 @OA\Property(property="height", type="number", format="float", example=50.0),
-     *                 @OA\Property(property="weight", type="number", format="float", description="Hemmesi gram gorunusinde bellenmeli", example=200),
-     *                 @OA\Property(property="production_time", type="integer", description="Hemme product time minutda gorkeziler", example=300),
-     *                 @OA\Property(property="min_order", type="integer", example=1),
-     *                 @OA\Property(property="seller_status", type="boolean", description="Bu dukancy tarapyndan berilmeli status", example=true),
-     *                 @OA\Property(property="status", type="boolean", description="Bu administrator tarapyndan berilmeli status", example=true),
-     *                 @OA\Property(property="shop_id", type="integer", example=1),
-     *                 @OA\Property(property="category_id", type="integer", example=3),
-     *                 @OA\Property(property="brand_ids", type="string", description="JSON string: Brand id-ler", example="[1, 2]"),
-     *                 @OA\Property(property="images[]", type="array", @OA\Items(type="string", format="binary"), description="Product images")
-     *             )
+     *         @OA\JsonContent(
+     *             required={"name","price","description","seller_status","status","shop_id","category_id"},
+     *             @OA\Property(property="name", type="string", example="Stylish T-Shirt"),
+     *             @OA\Property(property="price", type="number", format="float", example=29.99),
+     *             @OA\Property(property="discount", type="integer", example=10),
+     *             @OA\Property(property="description", type="string", example="A comfortable and stylish t-shirt for everyday wear."),
+     *             @OA\Property(property="gender", type="string", example="Unisex"),
+     *             @OA\Property(property="sizes", type="array", @OA\Items(type="integer"), example={42, 43, 44, 45}),
+     *             @OA\Property(property="separated_sizes", type="array", @OA\Items(type="string"), example={"S", "M", "L", "XL"}),
+     *             @OA\Property(property="color", type="string", example="Blue"),
+     *             @OA\Property(property="manufacturer", type="string", example="FashionCo"),
+     *             @OA\Property(property="width", type="number", format="float", example=30.5),
+     *             @OA\Property(property="height", type="number", format="float", example=50.0),
+     *             @OA\Property(property="weight", type="number", format="float", example=200),
+     *             @OA\Property(property="production_time", type="integer", example=300),
+     *             @OA\Property(property="min_order", type="integer", example=1),
+     *             @OA\Property(property="seller_status", type="boolean", example=true),
+     *             @OA\Property(property="status", type="boolean", example=true),
+     *             @OA\Property(property="shop_id", type="integer", example=1),
+     *             @OA\Property(property="category_id", type="integer", example=3),
+     *             @OA\Property(property="brand_ids", type="array", @OA\Items(type="integer"), example={1, 2, 3}),
+    * @OA\Property(
+    *     property="images",
+    *     type="array",
+    *     @OA\Items(type="string"),
+    *     description="Array of base64 encoded images",
+    *     example={
+    *         "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACklEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg==",
+    *         "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACklEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg==",
+    *         "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACklEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg==",
+    *         "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACklEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg==",
+    *         "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACklEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg=="
+    *     }
+    * )
      *         )
      *     ),
      *     @OA\Response(
-     *         response="201", 
+     *         response=201,
      *         description="Product created successfully",
      *         @OA\JsonContent(
      *             @OA\Property(property="message", type="string", example="Product created successfully"),
@@ -128,76 +138,51 @@ class ProductController extends Controller
      *         )
      *     ),
      *     @OA\Response(
-     *         response="422", 
+     *         response=422,
      *         description="Validation error",
      *         @OA\JsonContent(
      *             @OA\Property(property="message", type="string", example="The given data was invalid."),
-     *             @OA\Property(property="errors", type="object", example={"name": {"The name field is required."}})
+     *             @OA\Property(property="errors", type="object")
      *         )
      *     )
      * )
      */
-    public function store(Request $request)
+    public function store(ProductStoreRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'description' => 'required|string',
-            'price' => 'required|numeric|min:0',
-            'discount' => 'nullable|integer|min:0|max:100',
-            'category_id' => 'required|exists:categories,id',
-            'shop_id' => 'required|exists:shops,id',
-            'brand_ids' => 'nullable|array',
-            'brand_ids.*' => 'exists:brands,id',
-            'status' => 'required|boolean',
-            'gender' => 'nullable|string',
-            'sizes' => 'nullable|array',
-            'separated_sizes' => 'nullable|array',
-            'color' => 'nullable|string',
-            'manufacturer' => 'nullable|string',
-            'width' => 'nullable|numeric',
-            'height' => 'nullable|numeric',
-            'weight' => 'nullable|numeric',
-            'production_time' => 'nullable|integer',
-            'min_order' => 'nullable|integer',
-            'seller_status' => 'required|boolean',
-            'images' => 'nullable|array',
-            'images.*' => 'nullable|string|regex:/^data:image\/[a-z]+;base64,/',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Validation error',
-                'errors' => $validator->errors()
-            ], 422);
-        }
-
         try {
             DB::beginTransaction();
 
-            $product = Product::create($request->except('images'));
+            $data = $request->validated();
 
-            // Process and save images if provided
-            if ($request->has('images') && is_array($request->images)) {
-                foreach ($request->images as $imageBase64) {
-                    if ($imageBase64) {
-                        $image = $this->saveBase64Image($imageBase64);
-                        $product->images()->create(['image_path' => $image]);
-                    }
+            // Convert array fields to JSON
+            $jsonFields = ['sizes', 'separated_sizes', 'brand_ids'];
+            foreach ($jsonFields as $field) {
+                if (isset($data[$field])) {
+                    $data[$field] = json_encode($data[$field]);
                 }
+            }
+
+            // Remove images from data array
+            $images = $data['images'] ?? [];
+            unset($data['images']);
+
+            $product = Product::create($data);
+
+            // Handle image uploads
+            foreach ($images as $base64Image) {
+                $imageUrl = $this->uploadBase64Image($base64Image);
+                $product->images()->create(['url' => $imageUrl]);
             }
 
             DB::commit();
 
             return response()->json([
-                'success' => true,
                 'message' => 'Product created successfully',
-                'data' => $product->load('images')
+                'product' => new ProductResource($product)
             ], 201);
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json([
-                'success' => false,
                 'message' => 'An error occurred while creating the product',
                 'error' => $e->getMessage()
             ], 500);
@@ -229,11 +214,8 @@ class ProductController extends Controller
     /**
      * @OA\Put(
      *     path="/api/products/{id}",
-     *     summary="Update a product",
-     *     description="Update an existing product with new information",
-     *     operationId="updateProduct",
+     *     summary="Update an existing product with images",
      *     tags={"Products"},
-     *     security={{"sanctum":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -242,16 +224,44 @@ class ProductController extends Controller
      *         @OA\Schema(type="integer", format="int64")
      *     ),
      *     @OA\RequestBody(
-     *         required=true,
-     *         description="Product information",
-     *         @OA\JsonContent(ref="#/components/schemas/ProductResource")
+     *         @OA\JsonContent(
+     *             @OA\Property(property="name", type="string", example="Updated Stylish T-Shirt"),
+     *             @OA\Property(property="price", type="number", format="float", example=34.99),
+     *             @OA\Property(property="discount", type="integer", example=15),
+     *             @OA\Property(property="description", type="string", example="An updated comfortable and stylish t-shirt for everyday wear."),
+     *             @OA\Property(property="gender", type="string", example="Unisex"),
+     *             @OA\Property(property="sizes", type="array", @OA\Items(type="integer"), example={42, 43, 44, 45, 46}),
+     *             @OA\Property(property="separated_sizes", type="array", @OA\Items(type="string"), example={"S", "M", "L", "XL", "XXL"}),
+     *             @OA\Property(property="color", type="string", example="Red"),
+     *             @OA\Property(property="manufacturer", type="string", example="UpdatedFashionCo"),
+     *             @OA\Property(property="width", type="number", format="float", example=31.0),
+     *             @OA\Property(property="height", type="number", format="float", example=51.0),
+     *             @OA\Property(property="weight", type="number", format="float", example=210),
+     *             @OA\Property(property="production_time", type="integer", example=280),
+     *             @OA\Property(property="min_order", type="integer", example=2),
+     *             @OA\Property(property="seller_status", type="boolean", example=true),
+     *             @OA\Property(property="status", type="boolean", example=true),
+     *             @OA\Property(property="shop_id", type="integer", example=1),
+     *             @OA\Property(property="category_id", type="integer", example=3),
+     *             @OA\Property(property="brand_ids", type="array", @OA\Items(type="integer"), example={1, 2, 3, 4}),
+     *             @OA\Property(
+     *                 property="images",
+     *                 type="array",
+     *                 @OA\Items(type="string"),
+     *                 description="Array of base64 encoded images",
+     *                 example={
+     *                     "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACklEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg==",
+     *                     "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACklEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg=="
+     *                 }
+     *             )
+     *         )
      *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Product updated successfully",
      *         @OA\JsonContent(
      *             @OA\Property(property="message", type="string", example="Product updated successfully"),
-     *             @OA\Property(property="data", ref="#/components/schemas/ProductResource")
+     *             @OA\Property(property="product", ref="#/components/schemas/ProductResource")
      *         )
      *     ),
      *     @OA\Response(
@@ -266,45 +276,35 @@ class ProductController extends Controller
      *         description="Validation error",
      *         @OA\JsonContent(
      *             @OA\Property(property="message", type="string", example="The given data was invalid."),
-     *             @OA\Property(
-     *                 property="errors",
-     *                 type="object",
-     *                 @OA\AdditionalProperties(
-     *                     type="array",
-     *                     @OA\Items(type="string")
-     *                 )
-     *             )
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=401,
-     *         description="Unauthenticated",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+     *             @OA\Property(property="errors", type="object")
      *         )
      *     )
      * )
      */
-    public function update(ProductRequest $request, $id)
+    public function update(ProductUpdateRequest $request, Product $product)
     {
         try {
-            $product = Product::findOrFail($id);
-
             DB::beginTransaction();
 
             // Update product details
-            $product->update($request->except('images'));
+            $product->update($request->except('images', 'brand_ids'));
 
-            // Handle image updates
-            if ($request->has('images') && is_array($request->images)) {
-                // Remove old images
-                $product->images()->delete();
+            // Handle brand_ids
+            if ($request->has('brand_ids')) {
+                $brandIds = json_decode($request->brand_ids, true);
+                $product->brands()->sync($brandIds);
+            }
 
-                // Add new images
+            // Handle images
+            if ($request->has('images')) {
                 foreach ($request->images as $imageBase64) {
                     if ($imageBase64) {
-                        $image = $this->saveBase64Image($imageBase64);
-                        $product->images()->create(['image_path' => $image]);
+                        try {
+                            $imagePath = $this->uploadBase64Image($imageBase64);
+                            $product->images()->create(['image_path' => $imagePath]);
+                        } catch (\Exception $e) {
+                            \Log::error('Failed to save image: ' . $e->getMessage());
+                        }
                     }
                 }
             }
@@ -312,44 +312,31 @@ class ProductController extends Controller
             DB::commit();
 
             return response()->json([
-                'success' => true,
                 'message' => 'Product updated successfully',
-                'data' => $product->load('images')
+                'data' => new ProductResource($product->load('images', 'brands'))
             ], 200);
-        } catch (ModelNotFoundException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Product not found'
-            ], 404);
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json([
-                'success' => false,
                 'message' => 'An error occurred while updating the product',
                 'error' => $e->getMessage()
             ], 500);
         }
     }
 
-    /**
-     * Save a base64 encoded image and return the file path.
-     *
-     * @param string $base64Image
-     * @return string
-     */
-    private function saveBase64Image($base64Image)
+    private function uploadBase64Image($base64Image)
     {
         // Extract the image data from the base64 string
         $imageData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $base64Image));
 
         // Generate a unique filename
-        $filename = uniqid() . '.png';
+        $filename = Str::random(40) . '.png';
 
-        // Save the image to the storage
-        Storage::disk('public')->put('product/' . $filename, $imageData);
+        // Store the image
+        Storage::disk('public')->put('product_images/' . $filename, $imageData);
 
-        // Return the file path
-        return 'product/' . $filename;
+        // Return the URL
+        return 'storage/product_images/' . $filename;
     }
 
     /**
