@@ -240,4 +240,25 @@ class UserController extends Controller
             'user' => new UserResource($user)
         ]);
     }
+    /**
+     * @OA\Get(
+     *     path="/api/users/me",
+     *     summary="Get authenticated user's information",
+     *     tags={"Users"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(ref="#/components/schemas/UserResource")
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated",
+     *     ),
+     *     security={{"bearerAuth": {}}}
+     * )
+     */
+    public function me(Request $request)
+    {
+        return new UserResource($request->user());
+    }
 }

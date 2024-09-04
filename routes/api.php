@@ -43,6 +43,7 @@ Route::middleware(['auth:sanctum', 'check.token'])->group(function () {
 
     // Users routes
     Route::apiResource('users', App\Http\Controllers\Api\UserController::class);
+    Route::get('users/me', [App\Http\Controllers\Api\UserController::class, 'me']);
 
     // Shops routes
     Route::apiResource('shops', App\Http\Controllers\Api\ShopController::class);

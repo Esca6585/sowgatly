@@ -2911,6 +2911,35 @@
                     }
                 ]
             }
+        },
+        "/api/users/me": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get authenticated user's information",
+                "operationId": "8f1353342e8459aea306a7a91b377112",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserResource"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
         }
     },
     "components": {
