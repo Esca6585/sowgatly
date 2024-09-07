@@ -186,8 +186,8 @@ class AuthOtpController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'message' => $validator->errors()->get(),
-            ], 200);
+                'message' => $validator->errors()->all(),
+            ], 422);
         }
 
         $user = User::where('phone_number', $request->phone_number)->first();
@@ -196,22 +196,25 @@ class AuthOtpController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'User not found.',
-            ], 200);
+            ], 404);
         }
 
-        $userOtp = UserOtp::where('otp', $request->otp)->where('user_id', $user->id)->latest()->first();
+        $userOtp = UserOtp::where('otp', $request->otp)
+                        ->where('user_id', $user->id)
+                        ->latest()
+                        ->first();
 
         $now = now();
         if (!$userOtp) {
             return response()->json([
                 'success' => false,
                 'message' => 'Your OTP is not correct!',
-            ], 200);
-        } else if ($userOtp && $now->isAfter($userOtp->expire_at)) {
+            ], 400);
+        } else if ($now->isAfter($userOtp->expire_at)) {
             return response()->json([
                 'success' => false,
                 'message' => 'Your OTP has been expired!',
-            ], 200);
+            ], 400);
         }
 
         $userOtp->update([
