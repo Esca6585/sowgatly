@@ -230,12 +230,20 @@ class AuthOtpController extends Controller
 
         $token = $user->createToken('api-token')->plainTextToken;
 
+        // Debug: Check if user has shops
+        \Log::info('User shops: ' . json_encode($user->shops));
+
+        $shops = $user->shops;
+        if ($shops === null) {
+            $shops = collect(); // Create an empty collection if shops is null
+        }
+
         return response()->json([
             'success' => true,
             'access_token' => $token,
             'token_type' => 'Bearer',
             'user' => new UserResource($user),
-            'shops' => ShopResource::collection($user->shops),
+            'shops' => ShopResource::collection($shops),
         ], 200);
     }
     /**
