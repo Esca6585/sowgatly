@@ -187,7 +187,7 @@ class AuthOtpController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => $validator->errors()->all(),
-            ], 422);
+            ], 200);
         }
 
         $user = User::where('phone_number', $request->phone_number)->first();
@@ -196,7 +196,7 @@ class AuthOtpController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'User not found.',
-            ], 404);
+            ], 200);
         }
 
         $userOtp = UserOtp::where('otp', $request->otp)
@@ -209,12 +209,12 @@ class AuthOtpController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Your OTP is not correct!',
-            ], 400);
+            ], 200);
         } else if ($now->isAfter($userOtp->expire_at)) {
             return response()->json([
                 'success' => false,
                 'message' => 'Your OTP has been expired!',
-            ], 400);
+            ], 200);
         }
 
         $userOtp->update([
@@ -238,13 +238,22 @@ class AuthOtpController extends Controller
             $shops = collect(); // Create an empty collection if shops is null
         }
 
-        return response()->json([
-            'success' => true,
-            'access_token' => $token,
-            'token_type' => 'Bearer',
-            'user' => new UserResource($user),
-            'shops' => ShopResource::collection($shops),
-        ], 200);
+        try {
+            return response()->json([
+                'success' => true,
+                'access_token' => $token,
+                'token_type' => 'Bearer',
+                'user' => new UserResource($user),
+                'shops' => ShopResource::collection($shops),
+            ], 200);
+        } catch (\Exception $e) {
+            \Log::error('Error in loginWithOtp: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred while processing your request.',
+                'error' => $e->getMessage(),
+            ], 200);
+        }
     }
     /**
      * @OA\Post(
